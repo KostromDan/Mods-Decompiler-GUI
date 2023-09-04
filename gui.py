@@ -77,7 +77,6 @@ class ProgressWindow:
             window.destroy()
             self.root.lift()
             self.do_merge = True
-            self.copy_assets = var.get()
 
         def dont_merge_mods():
             window.destroy()
@@ -92,14 +91,31 @@ class ProgressWindow:
                                            "And implementation, declaration, usages, etc ide buttons will work correct in 99% cases.")
         label.pack(pady=20)
 
-        var = tkinter.IntVar()
-
-        copy_assets_checkbox = tkinter.Checkbutton(window, text="Copy assets?",variable=var)
-        copy_assets_checkbox.select()
-        copy_assets_checkbox.pack()
-
         yes_button = tkinter.Button(window, text="Yes", command=merge_mods)
         no_button = tkinter.Button(window, text="No", command=dont_merge_mods)
+
+        yes_button.pack(padx=10, pady=10, side=tkinter.LEFT)
+        no_button.pack(padx=10, pady=10, side=tkinter.RIGHT)
+
+    def include_assets_ask(self):
+        window = tkinter.Toplevel(self.root)
+        window.title("Include resources?")
+
+        def yes():
+            window.destroy()
+            self.root.lift()
+            self.copy_assets=True
+
+        def no():
+            window.destroy()
+            self.root.lift()
+            self.copy_assets = False
+
+        label = tkinter.Label(window, text="Do you want to merge all resources? assets/data/etc\n")
+        label.pack(pady=20)
+
+        yes_button = tkinter.Button(window, text="Yes", command=yes)
+        no_button = tkinter.Button(window, text="No", command=no)
 
         yes_button.pack(padx=10, pady=10, side=tkinter.LEFT)
         no_button.pack(padx=10, pady=10, side=tkinter.RIGHT)

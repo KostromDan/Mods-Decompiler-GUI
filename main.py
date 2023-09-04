@@ -278,6 +278,9 @@ def start(mods_path, mdk_path, deobfed_mods_path, window):
     while window.do_merge is None:
         threading.Event().wait(1)
     if window.do_merge:
+        window.include_assets_ask()
+        while window.copy_assets is None:
+            threading.Event().wait(1)
         merge_all_mods_into_mdk(window)
 
     window.update_progress_value(100)
@@ -298,7 +301,7 @@ def del_folder(path):
 
 
 def main():
-    debug = False
+    debug = True
     if not debug:
         mdk_instruction()
         mdk_path = choose_file("Select mdk")
