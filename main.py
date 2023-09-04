@@ -15,7 +15,7 @@ from gui import *
 DECOMPILATION_THREADS = 10
 STAGES = 7
 
-mdk_path_str = """repositories {
+mdk_patch_str = """repositories {
     flatDir {
         dir 'libs'
     }
@@ -80,10 +80,10 @@ def mdk_instruction():
 
 def patch_mdk():
     with open('mdk/build.gradle', 'r') as file:
-        if mdk_path_str in file.read():
+        if mdk_patch_str in file.read():
             return
     with open('mdk/build.gradle', 'a') as file:
-        file.write(mdk_path_str)
+        file.write(mdk_patch_str)
 
 
 def copy_mods(mods_dir_path, window):
