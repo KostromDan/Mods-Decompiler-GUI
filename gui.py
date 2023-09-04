@@ -11,6 +11,7 @@ class ProgressWindow:
 
         self.do_merge = None
         self.copy_assets = None
+        self.top_level_opened = False
 
         self.create_widgets()
 
@@ -53,15 +54,19 @@ class ProgressWindow:
             self.progress_bars[task_id].update_idletasks()
 
     def start(self):
+        self.root.eval('tk::PlaceWindow . center')
         self.root.mainloop()
 
     def create_warn_window(self, text):
         window = tkinter.Toplevel(self.root)
+        self.top_level_opened =True
+        window.lift()
         window.title("Warn")
 
         def destroy():
             window.destroy()
             self.root.lift()
+            self.top_level_opened = False
 
         label = tkinter.Label(window, text=text)
         label.pack()
@@ -69,9 +74,13 @@ class ProgressWindow:
         ok_button = tkinter.Button(window, text="OK", command=destroy)
         ok_button.pack()
 
+        window.geometry(f"{150}x{75}+{self.root.winfo_x()}+{self.root.winfo_y()}")
+
+
     def merge_mods_ask(self):
         window = tkinter.Toplevel(self.root)
         window.title("Merge Mods")
+        window.lift()
 
         def merge_mods():
             window.destroy()
@@ -97,9 +106,13 @@ class ProgressWindow:
         yes_button.pack(padx=10, pady=10, side=tkinter.LEFT)
         no_button.pack(padx=10, pady=10, side=tkinter.RIGHT)
 
+        window.geometry(f"{475}x{200}+{self.root.winfo_x()}+{self.root.winfo_y()}")
+
+
     def include_assets_ask(self):
         window = tkinter.Toplevel(self.root)
         window.title("Include resources?")
+        window.lift()
 
         def yes():
             window.destroy()
@@ -119,6 +132,8 @@ class ProgressWindow:
 
         yes_button.pack(padx=10, pady=10, side=tkinter.LEFT)
         no_button.pack(padx=10, pady=10, side=tkinter.RIGHT)
+
+        window.geometry(f"{300}x{125}+{self.root.winfo_x()}+{self.root.winfo_y()}")
 
     def update_progress_value(self, progress_value):
         self.update_progress("Progress", progress_value)

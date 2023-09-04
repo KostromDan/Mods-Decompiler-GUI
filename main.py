@@ -288,6 +288,9 @@ def start(mods_path, mdk_path, deobfed_mods_path, window):
     window.create_warn_window("Finished!\n"
                               "See result and mdk folders.")
 
+    while window.top_level_opened:
+        threading.Event().wait(1)
+
     print("Finished with success!")
     window.destroy()
     sys.exit()
@@ -311,12 +314,12 @@ def main():
         mdk_path = "C:/Users/Даниил/Downloads/forge-1.19.2-43.2.23-mdk.zip"
         mods_path = "C:/curseforge/minecraft/Instances/wwoo/mods"
 
-    deobfed_mods_path = os.path.join(os.path.join(os.path.expanduser('~'),
-                                                  '.gradle',
-                                                  'caches',
-                                                  'forge_gradle',
-                                                  'deobf_dependencies',
-                                                  'local_mod_source_downloader'))
+    deobfed_mods_path = os.path.join(os.path.expanduser('~'),
+                                     '.gradle',
+                                     'caches',
+                                     'forge_gradle',
+                                     'deobf_dependencies',
+                                     'local_mod_source_downloader')
 
     del_folder("mdk")
     del_folder('result')
