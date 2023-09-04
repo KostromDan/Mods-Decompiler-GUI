@@ -298,7 +298,7 @@ def del_folder(path):
 
 
 def main():
-    debug = True
+    debug = False
     if not debug:
         mdk_instruction()
         mdk_path = choose_file("Select mdk")
