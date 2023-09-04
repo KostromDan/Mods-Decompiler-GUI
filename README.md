@@ -5,8 +5,10 @@ This is a very easy to use application. It allows you to get decompiled and deob
 The application also has functionality for merging all mods into mdk. This is necessary for the correct operation of ide indexing.
 
 1. Download mdk from minecraftforge https://files.minecraftforge.net/net/minecraftforge/forge
-2. Select mdk in file input
-3. Select mods folder in dir input
-4. Wait
-5. Done!
-6. See result parted in result folder or merged in mdk folder.
+2. Unzip program
+3. Run main.exe
+4. Select mdk in file input
+5. Select mods folder in dir input
+6. Wait
+7. Done!
+8. See result parted in result folder or merged in mdk folder.
