@@ -8,7 +8,8 @@ The application also has functionality for merging all mods into mdk. This is ne
 
 ⚠️ WARNING ⚠️: Check license of all mods from mods folder or usage of this tool can be eligible and cause license infringement.
 
-1. Unzip program
+1. Download the latest release of program from https://github.com/KostromDan/Mods-Decompiler-GUI/releases
+2. Unzip program
 2. Run main.exe
 3. Download mdk from minecraftforge https://files.minecraftforge.net/net/minecraftforge/forge
 4. Select mdk in file input
