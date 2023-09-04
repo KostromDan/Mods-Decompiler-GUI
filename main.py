@@ -318,7 +318,6 @@ def main():
                                                   'deobf_dependencies',
                                                   'local_mod_source_downloader'))
 
-
     del_folder("mdk")
     del_folder('result')
     del_folder(deobfed_mods_path)

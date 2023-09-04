@@ -104,7 +104,7 @@ class ProgressWindow:
         def yes():
             window.destroy()
             self.root.lift()
-            self.copy_assets=True
+            self.copy_assets = True
 
         def no():
             window.destroy()
