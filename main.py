@@ -207,15 +207,11 @@ def merge_all_mods_into_mdk(window):
 
 
 def deobf():
-    os.system('cd mdk &&  .\gradlew.bat build')
+    os.system('cd mdk && .\gradlew.bat build')
     shutil.rmtree(os.path.join('mdk', 'libs'))
 
 
 def deobf_mods(window, deobfed_mods_path, mods_path):
-    try:
-        shutil.rmtree(deobfed_mods_path)
-    except FileNotFoundError:
-        pass
     thread = threading.Thread(target=deobf)
     thread.start()
 
@@ -311,8 +307,8 @@ def main():
         mods_path = choose_dir("Select mods folder")
     else:
         mdk_instruction()
-        mdk_path = "C:/Users/Даниил/Downloads/forge-1.19.2-43.2.23-mdk.zip"
-        mods_path = "C:/curseforge/minecraft/Instances/wwoo/mods"
+        mdk_path = "C:/Users/Kostr/Downloads/forge-1.19.2-43.3.2-mdk.zip"
+        mods_path = "C:/Users/Kostr/curseforge/minecraft/Instances/test/mods"
 
     deobfed_mods_path = os.path.join(os.path.expanduser('~'),
                                      '.gradle',
@@ -320,6 +316,10 @@ def main():
                                      'forge_gradle',
                                      'deobf_dependencies',
                                      'local_mod_source_downloader')
+    try:
+        shutil.rmtree(deobfed_mods_path)
+    except FileNotFoundError:
+        pass
 
     del_folder("mdk")
     del_folder('result')
