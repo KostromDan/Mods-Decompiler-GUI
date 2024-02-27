@@ -4,12 +4,11 @@ import os
 import sys
 import zipfile
 
-from PySide6 import QtGui
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTextBrowser
 
-from MDGUtils.LocalConfig import LocalConfig
-from MDGUi.Ui_MDGMainWindow import Ui_MDGMainWindow
 from MDGHelpWindow import MDGHelpWindow
+from MDGUi.Ui_MDGMainWindow import Ui_MDGMainWindow
+from MDGUtils.LocalConfig import LocalConfig
 
 
 class MDGMainWindow(QMainWindow):
@@ -66,35 +65,56 @@ class MDGMainWindow(QMainWindow):
         self.ui.decomp_threads_spin_box.valueChanged.connect(self.decomp_threads_spin_box_value_changed)
 
         self.ui.help_mdk_button.clicked.connect(self.help_mdk_button_clicked)
-        # self.ui.help_deobf_button.clicked.connect()
-        # self.ui.help_merge_button.clicked.connect()
+        self.ui.help_deobf_button.clicked.connect(self.help_deobf_button_clicked)
+        self.ui.help_merge_button.clicked.connect(self.help_merge_button_clicked)
         self.ui.help_mods_button.clicked.connect(self.help_mods_button_clicked)
-        # self.ui.help_merge_button_2.clicked.connect()
-        # self.ui.help_decomp_button.clicked.connect()
-        # self.ui.help_deobf_failed_button.clicked.connect()
-        # self.ui.help_sources_button.clicked.connect()
-        # self.ui.help_decomp_threads_button.clicked.connect()
-        # self.ui.help_deobf_threads_button.clicked.connect()
+        self.ui.help_merge_button_2.clicked.connect(self.help_merge_2_button_clicked)
+        self.ui.help_decomp_button.clicked.connect(self.help_decomp_button_clicked)
+        self.ui.help_deobf_failed_button.clicked.connect(self.help_deobf_failed_button_clicked)
+        self.ui.help_sources_button.clicked.connect(self.help_sources_button_clicked)
+        self.ui.help_decomp_threads_button.clicked.connect(self.help_threads_button_clicked)
+        self.ui.help_deobf_threads_button.clicked.connect(self.help_threads_button_clicked)
 
         # self.completer = QCompleter(self) # This doesn't work... Fix later...
         # self.completer.setModel(QFileSystemModel(self.completer))
         # self.ui.mods_path_line_edit.setCompleter(self.completer)
 
-    def start_help_window(self):
-        if self.help_window == None:
-            self.help_window = MDGHelpWindow()
+        self.help_window = MDGHelpWindow()
+
+    def start_help_window(self, help_about):
         self.help_window.show()
         browsers = self.help_window.ui.scrollAreaWidgetContents.findChildren(QTextBrowser)
         for browser in browsers:
             browser.setStyleSheet("")
+        help_about.setStyleSheet("border: 1px solid red")
+        self.help_window.ui.scrollArea.ensureWidgetVisible(help_about)
 
     def help_mods_button_clicked(self):
-        self.start_help_window()
-        self.help_window.ui.mods_path.setStyleSheet("border: 1px solid yellow")
+        self.start_help_window(self.help_window.ui.mods_path)
 
     def help_mdk_button_clicked(self):
-        self.start_help_window()
-        self.help_window.ui.mdk_path.setStyleSheet("border: 1px solid yellow")
+        self.start_help_window(self.help_window.ui.mdk_path)
+
+    def help_sources_button_clicked(self):
+        self.start_help_window(self.help_window.ui.patch_mdk)
+
+    def help_deobf_button_clicked(self):
+        self.start_help_window(self.help_window.ui.deobf_mods)
+
+    def help_merge_button_clicked(self):
+        self.start_help_window(self.help_window.ui.merge)
+
+    def help_threads_button_clicked(self):
+        self.start_help_window(self.help_window.ui.threads)
+
+    def help_deobf_failed_button_clicked(self):
+        self.start_help_window(self.help_window.ui.deobf_failed)
+
+    def help_merge_2_button_clicked(self):
+        self.start_help_window(self.help_window.ui.merge_resources)
+
+    def help_decomp_button_clicked(self):
+        self.start_help_window(self.help_window.ui.decomp_mods)
 
     def deobf_threads_horizontal_slider_value_changed(self, value):
         self.ui.deobf_threads_spin_box.setValue(value)
