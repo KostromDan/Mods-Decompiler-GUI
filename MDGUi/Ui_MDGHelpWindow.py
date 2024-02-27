@@ -43,7 +43,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -604, 1163, 1627))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 1627))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)
@@ -291,7 +291,7 @@ class Ui_MDGHelpWindow(object):
 "<ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\">\n"
 "<li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Code: Decompiled "
                         "code of mods. </li>\n"
-"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Resources: Data, assets, etc. It's not recommended to disable this option since if you want to figure out what mode added some messages, they (translations) will be found here. </li></ul></body></html>", None))
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Resources: Data, assets, etc. It's not recommended to disable this option since if you want to figure out what mod added some messages, they (translations) will be found here. </li></ul></body></html>", None))
         self.patch_mdk.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
