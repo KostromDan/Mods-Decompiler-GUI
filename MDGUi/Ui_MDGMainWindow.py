@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'form.ui'
+## Form generated from reading UI file 'MDGMainWindow.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.6.2
 ##
@@ -17,14 +17,15 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QGroupBox, QHBoxLayout,
     QLabel, QLineEdit, QMainWindow, QMenuBar,
-    QPushButton, QRadioButton, QSizePolicy, QSpacerItem,
-    QStatusBar, QVBoxLayout, QWidget)
+    QPushButton, QRadioButton, QSizePolicy, QSlider,
+    QSpacerItem, QSpinBox, QStatusBar, QVBoxLayout,
+    QWidget)
 
 class Ui_MDGMainWindow(object):
     def setupUi(self, MDGMainWindow):
         if not MDGMainWindow.objectName():
             MDGMainWindow.setObjectName(u"MDGMainWindow")
-        MDGMainWindow.resize(737, 397)
+        MDGMainWindow.resize(582, 461)
         MDGMainWindow.setMaximumSize(QSize(16777215, 16777215))
         self.centralwidget = QWidget(MDGMainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -168,6 +169,48 @@ class Ui_MDGMainWindow(object):
 
         self.verticalLayout.addWidget(self.deobf_group_box)
 
+        self.deobf_threads_group_box = QGroupBox(self.centralwidget)
+        self.deobf_threads_group_box.setObjectName(u"deobf_threads_group_box")
+        self.horizontalLayout_12 = QHBoxLayout(self.deobf_threads_group_box)
+        self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
+        self.horizontalLayout_12.setContentsMargins(0, 0, 0, 0)
+        self.deobf_threads_label = QLabel(self.deobf_threads_group_box)
+        self.deobf_threads_label.setObjectName(u"deobf_threads_label")
+
+        self.horizontalLayout_12.addWidget(self.deobf_threads_label)
+
+        self.deobf_threads_spin_box = QSpinBox(self.deobf_threads_group_box)
+        self.deobf_threads_spin_box.setObjectName(u"deobf_threads_spin_box")
+        self.deobf_threads_spin_box.setMinimum(1)
+        self.deobf_threads_spin_box.setMaximum(32)
+
+        self.horizontalLayout_12.addWidget(self.deobf_threads_spin_box)
+
+        self.deobf_threads_horizontal_slider = QSlider(self.deobf_threads_group_box)
+        self.deobf_threads_horizontal_slider.setObjectName(u"deobf_threads_horizontal_slider")
+        self.deobf_threads_horizontal_slider.setMinimumSize(QSize(360, 0))
+        self.deobf_threads_horizontal_slider.setMinimum(1)
+        self.deobf_threads_horizontal_slider.setMaximum(32)
+        self.deobf_threads_horizontal_slider.setPageStep(1)
+        self.deobf_threads_horizontal_slider.setOrientation(Qt.Horizontal)
+
+        self.horizontalLayout_12.addWidget(self.deobf_threads_horizontal_slider)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_12.addItem(self.horizontalSpacer_2)
+
+        self.help_deobf_threads_button = QPushButton(self.deobf_threads_group_box)
+        self.help_deobf_threads_button.setObjectName(u"help_deobf_threads_button")
+        sizePolicy.setHeightForWidth(self.help_deobf_threads_button.sizePolicy().hasHeightForWidth())
+        self.help_deobf_threads_button.setSizePolicy(sizePolicy)
+        self.help_deobf_threads_button.setMaximumSize(QSize(20, 16777215))
+
+        self.horizontalLayout_12.addWidget(self.help_deobf_threads_button)
+
+
+        self.verticalLayout.addWidget(self.deobf_threads_group_box)
+
         self.deobf_failed_group_box = QGroupBox(self.centralwidget)
         self.deobf_failed_group_box.setObjectName(u"deobf_failed_group_box")
         self.horizontalLayout_3 = QHBoxLayout(self.deobf_failed_group_box)
@@ -230,6 +273,48 @@ class Ui_MDGMainWindow(object):
 
 
         self.verticalLayout.addWidget(self.decomp_group_box)
+
+        self.decomp_threads_group_box = QGroupBox(self.centralwidget)
+        self.decomp_threads_group_box.setObjectName(u"decomp_threads_group_box")
+        self.horizontalLayout_13 = QHBoxLayout(self.decomp_threads_group_box)
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
+        self.horizontalLayout_13.setContentsMargins(0, 0, 0, 0)
+        self.decomp_threads_label = QLabel(self.decomp_threads_group_box)
+        self.decomp_threads_label.setObjectName(u"decomp_threads_label")
+
+        self.horizontalLayout_13.addWidget(self.decomp_threads_label)
+
+        self.decomp_threads_spin_box = QSpinBox(self.decomp_threads_group_box)
+        self.decomp_threads_spin_box.setObjectName(u"decomp_threads_spin_box")
+        self.decomp_threads_spin_box.setMinimum(1)
+        self.decomp_threads_spin_box.setMaximum(32)
+
+        self.horizontalLayout_13.addWidget(self.decomp_threads_spin_box)
+
+        self.decomp_threads_horizontal_slider = QSlider(self.decomp_threads_group_box)
+        self.decomp_threads_horizontal_slider.setObjectName(u"decomp_threads_horizontal_slider")
+        self.decomp_threads_horizontal_slider.setMinimumSize(QSize(360, 0))
+        self.decomp_threads_horizontal_slider.setMinimum(1)
+        self.decomp_threads_horizontal_slider.setMaximum(32)
+        self.decomp_threads_horizontal_slider.setPageStep(1)
+        self.decomp_threads_horizontal_slider.setOrientation(Qt.Horizontal)
+
+        self.horizontalLayout_13.addWidget(self.decomp_threads_horizontal_slider)
+
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_13.addItem(self.horizontalSpacer_6)
+
+        self.help_decomp_threads_button = QPushButton(self.decomp_threads_group_box)
+        self.help_decomp_threads_button.setObjectName(u"help_decomp_threads_button")
+        sizePolicy.setHeightForWidth(self.help_decomp_threads_button.sizePolicy().hasHeightForWidth())
+        self.help_decomp_threads_button.setSizePolicy(sizePolicy)
+        self.help_decomp_threads_button.setMaximumSize(QSize(20, 16777215))
+
+        self.horizontalLayout_13.addWidget(self.help_decomp_threads_button)
+
+
+        self.verticalLayout.addWidget(self.decomp_threads_group_box)
 
         self.merge_horizontal_layout = QHBoxLayout()
         self.merge_horizontal_layout.setObjectName(u"merge_horizontal_layout")
@@ -325,7 +410,7 @@ class Ui_MDGMainWindow(object):
         MDGMainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGMainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 737, 22))
+        self.menubar.setGeometry(QRect(0, 0, 582, 22))
         MDGMainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MDGMainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -348,13 +433,17 @@ class Ui_MDGMainWindow(object):
         self.label_8.setText(QCoreApplication.translate("MDGMainWindow", u"accepts drag&drop", None))
         self.deobf_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Deobfuscate mods", None))
         self.help_deobf_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.deobf_threads_label.setText(QCoreApplication.translate("MDGMainWindow", u"Deobfuscation threads:", None))
+        self.help_deobf_threads_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.deobf_failed_label.setText(QCoreApplication.translate("MDGMainWindow", u"If deobfuscation of mod failed:", None))
         self.deobf_failed_radio_interrupt.setText(QCoreApplication.translate("MDGMainWindow", u"interrupt", None))
         self.deobf_failed_radio_skip.setText(QCoreApplication.translate("MDGMainWindow", u"skip mod", None))
         self.deobf_failed_radio_decompile.setText(QCoreApplication.translate("MDGMainWindow", u"decompile without deobfuscation", None))
         self.help_deobf_failed_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
-        self.decomp_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Decompile  mods", None))
+        self.decomp_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Decompile mods", None))
         self.help_decomp_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.decomp_threads_label.setText(QCoreApplication.translate("MDGMainWindow", u"Decompilation threads:", None))
+        self.help_decomp_threads_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.merge_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Merge result into mdk", None))
         self.help_merge_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.merge_label.setText(QCoreApplication.translate("MDGMainWindow", u"Merge:", None))

@@ -1,22 +1,21 @@
 # This Python file uses the following encoding: utf-8
+import multiprocessing
 import os
 import sys
 import zipfile
 
 from PySide6 import QtGui
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QCompleter, QFileSystemModel, QMessageBox
-# Important:
-# You need to run the following command to generate the ui_form.py file
-#     pyside6-uic form.ui -o ui_form.py, or
-#     pyside2-uic form.ui -o ui_form.py
-from ui_form import Ui_MDGMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTextBrowser
+
 from MDGUtils.LocalConfig import LocalConfig
+from MDGUi.Ui_MDGMainWindow import Ui_MDGMainWindow
+from MDGHelpWindow import MDGHelpWindow
 
 
 class MDGMainWindow(QMainWindow):
     was_decomp_enabled = False
     config = LocalConfig()
+    help_window = None
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -51,9 +50,65 @@ class MDGMainWindow(QMainWindow):
         self.ui.mdk_path_line_edit.setText(self.config.get("mdk_line_edit"))
         self.ui.mdk_path_line_edit.textChanged.connect(self.mdk_line_edit_changed)
 
+        if self.config.get("deobf_threads") == "":
+            self.config.set("deobf_threads", multiprocessing.cpu_count())
+        if self.config.get("decomp_threads") == "":
+            self.config.set("decomp_threads", multiprocessing.cpu_count())
+
+        self.ui.deobf_threads_horizontal_slider.valueChanged.connect(self.deobf_threads_horizontal_slider_value_changed)
+        self.ui.decomp_threads_horizontal_slider.valueChanged.connect(
+            self.decomp_threads_horizontal_slider_value_changed)
+
+        self.ui.deobf_threads_horizontal_slider.setValue(self.config.get("deobf_threads"))
+        self.ui.decomp_threads_horizontal_slider.setValue(self.config.get("decomp_threads"))
+
+        self.ui.deobf_threads_spin_box.valueChanged.connect(self.deobf_threads_spin_box_value_changed)
+        self.ui.decomp_threads_spin_box.valueChanged.connect(self.decomp_threads_spin_box_value_changed)
+
+        self.ui.help_mdk_button.clicked.connect(self.help_mdk_button_clicked)
+        # self.ui.help_deobf_button.clicked.connect()
+        # self.ui.help_merge_button.clicked.connect()
+        self.ui.help_mods_button.clicked.connect(self.help_mods_button_clicked)
+        # self.ui.help_merge_button_2.clicked.connect()
+        # self.ui.help_decomp_button.clicked.connect()
+        # self.ui.help_deobf_failed_button.clicked.connect()
+        # self.ui.help_sources_button.clicked.connect()
+        # self.ui.help_decomp_threads_button.clicked.connect()
+        # self.ui.help_deobf_threads_button.clicked.connect()
+
         # self.completer = QCompleter(self) # This doesn't work... Fix later...
         # self.completer.setModel(QFileSystemModel(self.completer))
         # self.ui.mods_path_line_edit.setCompleter(self.completer)
+
+    def start_help_window(self):
+        if self.help_window == None:
+            self.help_window = MDGHelpWindow()
+        self.help_window.show()
+        browsers = self.help_window.ui.scrollAreaWidgetContents.findChildren(QTextBrowser)
+        for browser in browsers:
+            browser.setStyleSheet("")
+
+    def help_mods_button_clicked(self):
+        self.start_help_window()
+        self.help_window.ui.mods_path.setStyleSheet("border: 1px solid yellow")
+
+    def help_mdk_button_clicked(self):
+        self.start_help_window()
+        self.help_window.ui.mdk_path.setStyleSheet("border: 1px solid yellow")
+
+    def deobf_threads_horizontal_slider_value_changed(self, value):
+        self.ui.deobf_threads_spin_box.setValue(value)
+        self.config.set("deobf_threads", value)
+
+    def deobf_threads_spin_box_value_changed(self, value):
+        self.ui.deobf_threads_horizontal_slider.setValue(value)
+
+    def decomp_threads_horizontal_slider_value_changed(self, value):
+        self.ui.decomp_threads_spin_box.setValue(value)
+        self.config.set("decomp_threads", value)
+
+    def decomp_threads_spin_box_value_changed(self, value):
+        self.ui.decomp_threads_horizontal_slider.setValue(value)
 
     def mods_line_edit_changed(self, text):
         self.config.set("mods_line_edit", text)
@@ -85,6 +140,7 @@ class MDGMainWindow(QMainWindow):
             QMessageBox.warning(self, 'Incorrect path', f'Not found a single .jar file in mods folder!\n'
                                                         f'Check mods folder path.',
                                 QMessageBox.StandardButton.Ok)
+            return
         if self.ui.mdk_path_vertical_group_box.isEnabled():
             mdk_path = self.ui.mdk_path_line_edit.text()
             if not os.path.exists(mdk_path):
@@ -106,8 +162,13 @@ class MDGMainWindow(QMainWindow):
                 except KeyError:
                     self.ui.mdk_path_line_edit.setStyleSheet("border: 1px solid red")
                     QMessageBox.warning(self, 'Incorrect path', f'"build.gradle" not found in mdk!\n'
-                                                                f'Check that the mdk is valid.',
+                                                                f'Check that mdk is valid.',
                                         QMessageBox.StandardButton.Ok)
+                    return
+        if not self.ui.deobf_check_box.isChecked() and not self.ui.decomp_check_box.isChecked():
+            QMessageBox.warning(self, 'Incorrect configuration', f'With this configuration program will do nothing.',
+                                QMessageBox.StandardButton.Ok)
+            return
 
     def drag_enter_event(self, event):
         if event.mimeData().hasUrls():
@@ -155,6 +216,7 @@ class MDGMainWindow(QMainWindow):
 
     def deobf_checkbox_changed(self, state):
         self.ui.deobf_failed_group_box.setEnabled(state == 2)
+        self.ui.deobf_threads_group_box.setEnabled(state == 2)
         self.check_mdk_needed()
 
     def decomp_checkbox_changed(self, state):
@@ -171,6 +233,7 @@ class MDGMainWindow(QMainWindow):
         self.ui.patch_mdk_group_box.setEnabled(state == 2 and self.ui.merge_check_box.isChecked())
 
         self.ui.merge_check_box.setEnabled(state == 2)
+        self.ui.decomp_threads_group_box.setEnabled(state == 2)
 
     def merge_checkbox_changed(self, state):
         self.ui.merge_group_box.setEnabled(state == 2)
@@ -183,8 +246,6 @@ class MDGMainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    if not (getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')):  # not inside PyInstaller
-        os.system("venv\\Scripts\\activate && pyside6-uic form.ui -o ui_form.py")
     app = QApplication(sys.argv)
     widget = MDGMainWindow()
     widget.show()
