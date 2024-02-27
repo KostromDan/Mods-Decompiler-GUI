@@ -162,3 +162,4 @@ cython_debug/
 /result/
 /vineflower*.jar
 /mods_decompiler_GUI.zip
+/local/*
