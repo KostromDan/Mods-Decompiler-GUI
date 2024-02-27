@@ -337,7 +337,7 @@ class Ui_MDGMainWindow(object):
     # setupUi
 
     def retranslateUi(self, MDGMainWindow):
-        MDGMainWindow.setWindowTitle(QCoreApplication.translate("MDGMainWindow", u"MDG (Mods Decompiler GUI)", None))
+        MDGMainWindow.setWindowTitle(QCoreApplication.translate("MDGMainWindow", u"MDG (Mods Decompiler Gui)", None))
         self.mods_path_label.setText(QCoreApplication.translate("MDGMainWindow", u"Mods folder path:", None))
         self.select_mods_button.setText(QCoreApplication.translate("MDGMainWindow", u"select", None))
         self.help_mods_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))

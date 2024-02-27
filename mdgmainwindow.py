@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import os
 import sys
+import zipfile
 
 from PySide6 import QtGui
 from PySide6.QtCore import Qt
@@ -56,12 +57,57 @@ class MDGMainWindow(QMainWindow):
 
     def mods_line_edit_changed(self, text):
         self.config.set("mods_line_edit", text)
+        self.ui.mods_path_line_edit.setStyleSheet("")
 
     def mdk_line_edit_changed(self, text):
         self.config.set("mdk_line_edit", text)
+        self.ui.mdk_path_line_edit.setStyleSheet("")
 
     def start_button(self):
-        pass
+        mods_folder_path = self.ui.mods_path_line_edit.text()
+        if not os.path.exists(mods_folder_path):
+            self.ui.mods_path_line_edit.setStyleSheet("border: 1px solid red")
+            QMessageBox.warning(self, 'Incorrect path', f'Path not exists!\n'
+                                                        f'Check mods folder path.',
+                                QMessageBox.StandardButton.Ok)
+            return
+        if not os.path.isdir(mods_folder_path):
+            self.ui.mods_path_line_edit.setStyleSheet("border: 1px solid red")
+            QMessageBox.warning(self, 'Incorrect path', f'Path is not to folder!\n'
+                                                        f'Check mods folder path.',
+                                QMessageBox.StandardButton.Ok)
+            return
+        for mod in os.listdir(mods_folder_path):
+            if mod.endswith('.jar'):
+                break
+        else:
+            self.ui.mods_path_line_edit.setStyleSheet("border: 1px solid red")
+            QMessageBox.warning(self, 'Incorrect path', f'Not found a single .jar file in mods folder!\n'
+                                                        f'Check mods folder path.',
+                                QMessageBox.StandardButton.Ok)
+        if self.ui.mdk_path_vertical_group_box.isEnabled():
+            mdk_path = self.ui.mdk_path_line_edit.text()
+            if not os.path.exists(mdk_path):
+                self.ui.mdk_path_line_edit.setStyleSheet("border: 1px solid red")
+                QMessageBox.warning(self, 'Incorrect path', f'Path not exists!\n'
+                                                            f'Check mdk archive path.',
+                                    QMessageBox.StandardButton.Ok)
+                return
+            if not zipfile.is_zipfile(mdk_path):
+                self.ui.mdk_path_line_edit.setStyleSheet("border: 1px solid red")
+                QMessageBox.warning(self, 'Incorrect path', f'Path is not to zip archive!\n'
+                                                            f'Check mdk archive path.',
+                                    QMessageBox.StandardButton.Ok)
+                return
+            with zipfile.ZipFile(mdk_path) as mdk:
+                try:
+                    with mdk.open('build.gradle') as gradle:
+                        pass
+                except KeyError:
+                    self.ui.mdk_path_line_edit.setStyleSheet("border: 1px solid red")
+                    QMessageBox.warning(self, 'Incorrect path', f'"build.gradle" not found in mdk!\n'
+                                                                f'Check that the mdk is valid.',
+                                        QMessageBox.StandardButton.Ok)
 
     def drag_enter_event(self, event):
         if event.mimeData().hasUrls():
