@@ -29,7 +29,8 @@ class Ui_MDGHelpWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MDGHelpWindow.sizePolicy().hasHeightForWidth())
         MDGHelpWindow.setSizePolicy(sizePolicy)
-        MDGHelpWindow.setMaximumSize(QSize(16777215, 16777215))
+        MDGHelpWindow.setMinimumSize(QSize(1200, 0))
+        MDGHelpWindow.setMaximumSize(QSize(1200, 16777215))
         self.centralwidget = QWidget(MDGHelpWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setEnabled(True)
@@ -42,7 +43,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 1617))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, -604, 1163, 1627))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)
@@ -123,8 +124,8 @@ class Ui_MDGHelpWindow(object):
         self.decomp_mods.setObjectName(u"decomp_mods")
         sizePolicy1.setHeightForWidth(self.decomp_mods.sizePolicy().hasHeightForWidth())
         self.decomp_mods.setSizePolicy(sizePolicy1)
-        self.decomp_mods.setMinimumSize(QSize(0, 100))
-        self.decomp_mods.setMaximumSize(QSize(16777215, 100))
+        self.decomp_mods.setMinimumSize(QSize(0, 110))
+        self.decomp_mods.setMaximumSize(QSize(16777215, 110))
         self.decomp_mods.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.decomp_mods.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
 
@@ -268,7 +269,8 @@ class Ui_MDGHelpWindow(object):
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Decompile mods:</span><br />Decompilation of Minecraft mods refers to the process of converting the compiled bytecode of a Minecraft modification (mod) back into human-readable and understandable source code. This process involves reversing the compilation process, typically done to analyze, understand, and/or modify the functionality of the mod. Decom"
                         "pilation is often used in Minecraft modding communities by developers who want to gain insights into how a mod works, fix issues, add new features, or create derivative works based on existing mods. </p>\n"
-"<p style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">If enabled: deobfusacted code will be decompiled. Results can be found in the &quot;<span style=\" font-weight:700;\">decompiled_mods</span>&quot; folder. </p></body></html>", None))
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">If enabled: deobfusacted code will be decompiled. Results can be found in the &quot;<span style=\" font-weight:700;\">decompiled_mods</span>&quot; folder. </p></body></html>", None))
         self.merge.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
