@@ -36,9 +36,12 @@ class MDGMainWindow(QMainWindow):
         self.ui.select_mods_button.clicked.connect(self.select_mods_button)
         self.ui.select_mdk_button.clicked.connect(self.select_mdk_button)
 
-        self.ui.mods_path_vertical_group_box.dragEnterEvent = self.drag_enter_event
-        self.ui.mdk_path_vertical_group_box.dragEnterEvent = self.drag_enter_event
+        self.ui.mods_path_vertical_group_box.dragEnterEvent = self.drag_enter_event_mods
+        self.ui.mods_path_vertical_group_box.dragLeaveEvent = self.drag_leave_event_mods
         self.ui.mods_path_vertical_group_box.dropEvent = self.drop_event_mods
+
+        self.ui.mdk_path_vertical_group_box.dragEnterEvent = self.drag_enter_event_mdk
+        self.ui.mdk_path_vertical_group_box.dragLeaveEvent = self.drag_leave_event_mdk
         self.ui.mdk_path_vertical_group_box.dropEvent = self.drop_event_mdk
 
         self.ui.start_button.clicked.connect(self.start_button)
@@ -190,21 +193,37 @@ class MDGMainWindow(QMainWindow):
                                 QMessageBox.StandardButton.Ok)
             return
 
-    def drag_enter_event(self, event):
+    def drag_enter_event(self, event, element):
         if event.mimeData().hasUrls():
             event.accept()
+            element.setObjectName("vertical_group_box")
+            element.setStyleSheet("#vertical_group_box { border: 2px solid blue; }")
         else:
             event.ignore()
+
+    def drag_enter_event_mods(self, event):
+        self.drag_enter_event(event, self.ui.mods_path_vertical_group_box)
+
+    def drag_leave_event_mods(self, event):
+        self.ui.mods_path_vertical_group_box.setStyleSheet("")
+
+    def drag_enter_event_mdk(self, event):
+        self.drag_enter_event(event, self.ui.mdk_path_vertical_group_box)
+
+    def drag_leave_event_mdk(self, event):
+        self.ui.mdk_path_vertical_group_box.setStyleSheet("")
 
     def drop_event_mods(self, event):
         result = self.drop_event(event)
         if result is not None:
             self.ui.mods_path_line_edit.setText(result)
+        self.ui.mods_path_vertical_group_box.setStyleSheet("")
 
     def drop_event_mdk(self, event):
         result = self.drop_event(event)
         if result is not None:
             self.ui.mdk_path_line_edit.setText(result)
+        self.ui.mdk_path_vertical_group_box.setStyleSheet("")
 
     def drop_event(self, event):
         mime_data = event.mimeData()
