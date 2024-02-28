@@ -6,7 +6,7 @@ import webbrowser
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 from MDGUtils.LocalConfig import LocalConfig
-from MDGUi.Ui_MDGHelpWindow import Ui_MDGHelpWindow
+from MDGui.Ui_MDGHelpWindow import Ui_MDGHelpWindow
 
 
 class MDGHelpWindow(QMainWindow):

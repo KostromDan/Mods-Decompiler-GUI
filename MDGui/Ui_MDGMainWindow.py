@@ -25,7 +25,7 @@ class Ui_MDGMainWindow(object):
     def setupUi(self, MDGMainWindow):
         if not MDGMainWindow.objectName():
             MDGMainWindow.setObjectName(u"MDGMainWindow")
-        MDGMainWindow.resize(582, 461)
+        MDGMainWindow.resize(686, 461)
         MDGMainWindow.setMaximumSize(QSize(16777215, 16777215))
         self.centralwidget = QWidget(MDGMainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -410,7 +410,7 @@ class Ui_MDGMainWindow(object):
         MDGMainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGMainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 582, 22))
+        self.menubar.setGeometry(QRect(0, 0, 686, 22))
         MDGMainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MDGMainWindow)
         self.statusbar.setObjectName(u"statusbar")

@@ -7,8 +7,8 @@ import zipfile
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTextBrowser
 
 from MDGHelpWindow import MDGHelpWindow
-from MDGUi.Ui_MDGMainWindow import Ui_MDGMainWindow
 from MDGUtils.LocalConfig import LocalConfig
+from MDGui.Ui_MDGMainWindow import Ui_MDGMainWindow
 
 
 class MDGMainWindow(QMainWindow):
@@ -83,6 +83,8 @@ class MDGMainWindow(QMainWindow):
         # self.ui.mods_path_line_edit.setCompleter(self.completer)
 
         self.help_window = MDGHelpWindow()
+
+        self.resize(self.width(), self.minimumSizeHint().height())
 
     def start_help_window(self, help_about):
         self.help_window.show()
