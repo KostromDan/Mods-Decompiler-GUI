@@ -1,20 +1,20 @@
 # This Python file uses the following encoding: utf-8
 import multiprocessing
 import os
-import sys
+import time
 import zipfile
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QTextBrowser
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QTextBrowser
 
-from MDGHelpWindow import MDGHelpWindow
-from MDGUtils.LocalConfig import LocalConfig
+from MDGUtil.LocalConfig import LocalConfig
+from MDGWindow.MDGHelpWindow import MDGHelpWindow
+from MDGWindow.MDGProgressWindow import MDGProgressWindow
 from MDGui.Ui_MDGMainWindow import Ui_MDGMainWindow
 
 
 class MDGMainWindow(QMainWindow):
     was_decomp_enabled = False
     config = LocalConfig()
-    help_window = None
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -195,6 +195,12 @@ class MDGMainWindow(QMainWindow):
                                 QMessageBox.StandardButton.Ok)
             return
 
+        self.progress_window = MDGProgressWindow(self)
+        self.progress_window.show()
+        self.setEnabled(False)
+        self.hide()
+        self.progress_window.start()
+
     def drag_enter_event(self, event, element):
         if event.mimeData().hasUrls():
             event.accept()
@@ -284,10 +290,3 @@ class MDGMainWindow(QMainWindow):
     def check_mdk_needed(self):
         self.ui.mdk_path_vertical_group_box.setEnabled(
             self.ui.deobf_check_box.isChecked() or self.ui.merge_check_box.isChecked())
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    widget = MDGMainWindow()
-    widget.show()
-    sys.exit(app.exec())
