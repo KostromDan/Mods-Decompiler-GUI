@@ -25,7 +25,7 @@ class Ui_MDGMainWindow(object):
     def setupUi(self, MDGMainWindow):
         if not MDGMainWindow.objectName():
             MDGMainWindow.setObjectName(u"MDGMainWindow")
-        MDGMainWindow.resize(686, 461)
+        MDGMainWindow.resize(671, 493)
         MDGMainWindow.setMaximumSize(QSize(16777215, 16777215))
         self.centralwidget = QWidget(MDGMainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -316,6 +316,30 @@ class Ui_MDGMainWindow(object):
 
         self.verticalLayout.addWidget(self.decomp_threads_group_box)
 
+        self.decomp_cmd_layout = QHBoxLayout()
+        self.decomp_cmd_layout.setObjectName(u"decomp_cmd_layout")
+        self.decomp_cmd_label = QLabel(self.centralwidget)
+        self.decomp_cmd_label.setObjectName(u"decomp_cmd_label")
+
+        self.decomp_cmd_layout.addWidget(self.decomp_cmd_label)
+
+        self.decomp_cmd_line_edit = QLineEdit(self.centralwidget)
+        self.decomp_cmd_line_edit.setObjectName(u"decomp_cmd_line_edit")
+        self.decomp_cmd_line_edit.setClearButtonEnabled(False)
+
+        self.decomp_cmd_layout.addWidget(self.decomp_cmd_line_edit)
+
+        self.decomp_cmd_reset_button = QPushButton(self.centralwidget)
+        self.decomp_cmd_reset_button.setObjectName(u"decomp_cmd_reset_button")
+        sizePolicy.setHeightForWidth(self.decomp_cmd_reset_button.sizePolicy().hasHeightForWidth())
+        self.decomp_cmd_reset_button.setSizePolicy(sizePolicy)
+        self.decomp_cmd_reset_button.setMaximumSize(QSize(40, 16777215))
+
+        self.decomp_cmd_layout.addWidget(self.decomp_cmd_reset_button)
+
+
+        self.verticalLayout.addLayout(self.decomp_cmd_layout)
+
         self.merge_horizontal_layout = QHBoxLayout()
         self.merge_horizontal_layout.setObjectName(u"merge_horizontal_layout")
         self.merge_check_box = QCheckBox(self.centralwidget)
@@ -410,7 +434,7 @@ class Ui_MDGMainWindow(object):
         MDGMainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGMainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 686, 22))
+        self.menubar.setGeometry(QRect(0, 0, 671, 22))
         MDGMainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MDGMainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -444,6 +468,9 @@ class Ui_MDGMainWindow(object):
         self.help_decomp_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.decomp_threads_label.setText(QCoreApplication.translate("MDGMainWindow", u"Decompilation threads:", None))
         self.help_decomp_threads_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.decomp_cmd_label.setText(QCoreApplication.translate("MDGMainWindow", u"Decompilation cmd:", None))
+        self.decomp_cmd_line_edit.setText(QCoreApplication.translate("MDGMainWindow", u"java -jar vineflower-1.9.3.jar -dgs=1 {path_to_jar} .\\{out_path}", None))
+        self.decomp_cmd_reset_button.setText(QCoreApplication.translate("MDGMainWindow", u"reset", None))
         self.merge_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Merge result into mdk", None))
         self.help_merge_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.merge_label.setText(QCoreApplication.translate("MDGMainWindow", u"Merge:", None))

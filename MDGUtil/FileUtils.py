@@ -9,8 +9,23 @@ def remove_folder(path):
         pass
 
 
+def create_folder(path):
+    try:
+        os.mkdir(path)
+    except FileExistsError:
+        pass
+
+
 def clear_tmp_folders():
     remove_folder('tmp')
+
+
+def create_tmp_folders():
+    create_folder('tmp')
+
+
+def create_result_folders():
+    create_folder('result')
 
 
 def clear_result_folders():
@@ -18,8 +33,8 @@ def clear_result_folders():
 
 
 def init_folders():
-    os.mkdir('tmp')
-    os.mkdir('result')
+    create_result_folders()
+    create_tmp_folders()
 
 
 def clear_folders():

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>686</width>
-    <height>461</height>
+    <width>671</width>
+    <height>493</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -582,6 +582,46 @@
        </widget>
       </item>
       <item>
+       <layout class="QHBoxLayout" name="decomp_cmd_layout">
+        <item>
+         <widget class="QLabel" name="decomp_cmd_label">
+          <property name="text">
+           <string>Decompilation cmd:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="decomp_cmd_line_edit">
+          <property name="text">
+           <string>java -jar vineflower-1.9.3.jar -dgs=1 {path_to_jar} .\{out_path}</string>
+          </property>
+          <property name="clearButtonEnabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="decomp_cmd_reset_button">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>40</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>reset</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
        <layout class="QHBoxLayout" name="merge_horizontal_layout">
         <item>
          <widget class="QCheckBox" name="merge_check_box">
@@ -770,7 +810,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>686</width>
+     <width>671</width>
      <height>22</height>
     </rect>
    </property>
