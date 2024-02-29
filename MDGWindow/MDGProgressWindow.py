@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QMainWindow, QMessageBox
 
 from MDGLogic.CopyThread import CopyThread
 from MDGLogic.InitThread import InitThread
+from MDGLogic.MdkInitThread import MdkInitThread
 from MDGUtil.MDGLogger import MDGLogger
 from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 
@@ -62,6 +63,9 @@ class MDGProgressWindow(QMainWindow):
         self.start_thread(CopyThread, self.ui.copy_progress_bar, self.init_mdk)
 
     def init_mdk(self):
+        self.start_thread(MdkInitThread, self.ui.mdk_init_progress_bar, self.deobf_mods)
+
+    def deobf_mods(self):
         pass
 
     def set_progress(self, value, text):
@@ -84,6 +88,7 @@ class MDGProgressWindow(QMainWindow):
         scrollbar = self.ui.logger_text_edit.verticalScrollBar()
         if scrollbar.value() == scrollbar.maximum():
             is_down = True
+
         cursor = self.ui.logger_text_edit.textCursor()
         cursor.movePosition(QTextCursor.End)
         cursor.movePosition(QTextCursor.End)
@@ -94,5 +99,6 @@ class MDGProgressWindow(QMainWindow):
 
         cursor.insertText(msg)
         cursor.insertText("\n")
+
         if is_down:
             scrollbar.setValue(scrollbar.maximum())
