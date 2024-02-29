@@ -1,6 +1,5 @@
 import logging
 import os
-import time
 
 from PySide6.QtCore import Signal
 
@@ -15,7 +14,6 @@ class InitThread(AbstractMDGThread):
         super().__init__()
         self.decomp_cmd = decomp_cmd
 
-
     def run(self):
         self.progress.emit(10, "Checking decompiler/decompiler cmd are correct")
         try:
@@ -25,7 +23,7 @@ class InitThread(AbstractMDGThread):
         except Exception:
             self.decomp_cmd_check_failed.emit()
             return
-        logging.info("Checking decompiler/decompiler cmd are correct: Success.")
+        logging.info("Checked decompiler/decompiler cmd are correct successfully.")
 
         self.progress.emit(40, "Clearing tmp folder")
         FileUtils.clear_tmp_folders()

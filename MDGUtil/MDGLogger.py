@@ -22,6 +22,13 @@ class RelativePathFilter(logging.Filter):
         return True
 
 
+class LoggerSignal(QObject):
+    append_logger_signal = Signal(str, str)
+
+    def append_logger(self, color, msg):
+        self.append_logger_signal.emit(color, msg)
+
+
 class PySideHandler(logging.Handler):
     def __init__(self):
         super().__init__()
@@ -29,13 +36,6 @@ class PySideHandler(logging.Handler):
     def emit(self, record):
         msg = self.format(record)
         MDGLogger().logger_signal.append_logger(LOGGER_WIDGET_COLORS[record.levelname], msg)
-
-
-class LoggerSignal(QObject):
-    append_logger_signal = Signal(str, str)
-
-    def append_logger(self, color, msg):
-        self.append_logger_signal.emit(color, msg)
 
 
 class MDGLogger:

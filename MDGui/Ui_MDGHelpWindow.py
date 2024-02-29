@@ -15,15 +15,15 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QMainWindow, QMenuBar,
-    QPushButton, QScrollArea, QSizePolicy, QStatusBar,
-    QTextBrowser, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QHBoxLayout, QMainWindow,
+    QMenuBar, QPushButton, QScrollArea, QSizePolicy,
+    QStatusBar, QTextBrowser, QVBoxLayout, QWidget)
 
 class Ui_MDGHelpWindow(object):
     def setupUi(self, MDGHelpWindow):
         if not MDGHelpWindow.objectName():
             MDGHelpWindow.setObjectName(u"MDGHelpWindow")
-        MDGHelpWindow.resize(1200, 947)
+        MDGHelpWindow.resize(1200, 953)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -43,7 +43,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -616, 1163, 1763))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 1765))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)
@@ -82,10 +82,20 @@ class Ui_MDGHelpWindow(object):
 
         self.verticalLayout_2.addWidget(self.mdk_path)
 
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.mdk_help_download_button = QPushButton(self.scrollAreaWidgetContents)
+        self.mdk_help_download_button.setObjectName(u"mdk_help_download_button")
+
+        self.horizontalLayout.addWidget(self.mdk_help_download_button)
+
         self.mdk_button = QPushButton(self.scrollAreaWidgetContents)
         self.mdk_button.setObjectName(u"mdk_button")
 
-        self.verticalLayout_2.addWidget(self.mdk_button)
+        self.horizontalLayout.addWidget(self.mdk_button)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout)
 
         self.deobf_mods = QTextBrowser(self.scrollAreaWidgetContents)
         self.deobf_mods.setObjectName(u"deobf_mods")
@@ -179,6 +189,11 @@ class Ui_MDGHelpWindow(object):
 
         self.verticalLayout.addWidget(self.scrollArea)
 
+        self.close_button = QPushButton(self.centralwidget)
+        self.close_button.setObjectName(u"close_button")
+
+        self.verticalLayout.addWidget(self.close_button)
+
         MDGHelpWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGHelpWindow)
         self.menubar.setObjectName(u"menubar")
@@ -234,7 +249,8 @@ class Ui_MDGHelpWindow(object):
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0;"
                         " text-indent:0px;\">You can find it on the MinecraftForge downloads page.</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">After downloading the MDK, select the file without unarchiving it, using the same method as selecting the mods folder. </p></body></html>", None))
-        self.mdk_button.setText(QCoreApplication.translate("MDGHelpWindow", u"Open MinecraftForge downloads page.", None))
+        self.mdk_help_download_button.setText(QCoreApplication.translate("MDGHelpWindow", u"how to download mdk?", None))
+        self.mdk_button.setText(QCoreApplication.translate("MDGHelpWindow", u"open MinecraftForge downloads page", None))
         self.deobf_mods.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -337,5 +353,6 @@ class Ui_MDGHelpWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-ri"
                         "ght:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-style:italic;\"> }</span> </p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-style:italic;\">}</span></p></body></html>", None))
+        self.close_button.setText(QCoreApplication.translate("MDGHelpWindow", u"close", None))
     # retranslateUi
 

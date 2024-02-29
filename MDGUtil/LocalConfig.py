@@ -8,7 +8,6 @@ class LocalConfig:
     config = dict()
     config_path = os.path.join("local", "config.json")
 
-
     def __init__(self):
         self.load()
 

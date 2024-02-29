@@ -1,12 +1,10 @@
+import faulthandler
 import sys
 
 from PySide6.QtWidgets import QApplication
 
 from MDGUtil.MDGLogger import MDGLogger
 from MDGWindow.MDGMainWindow import MDGMainWindow
-
-
-import faulthandler
 
 if __name__ == "__main__":
     MDGLogger()

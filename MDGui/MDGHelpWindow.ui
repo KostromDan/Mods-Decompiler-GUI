@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>947</height>
+    <height>953</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -51,9 +51,9 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-616</y>
+         <y>0</y>
          <width>1163</width>
-         <height>1763</height>
+         <height>1765</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -183,11 +183,22 @@ li.checked::marker { content: &quot;\2612&quot;; }
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="mdk_button">
-          <property name="text">
-           <string>Open MinecraftForge downloads page.</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="mdk_help_download_button">
+            <property name="text">
+             <string>how to download mdk?</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="mdk_button">
+            <property name="text">
+             <string>open MinecraftForge downloads page</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="QTextBrowser" name="deobf_mods">
@@ -522,6 +533,13 @@ li.checked::marker { content: &quot;\2612&quot;; }
         </item>
        </layout>
       </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="close_button">
+      <property name="text">
+       <string>close</string>
+      </property>
      </widget>
     </item>
    </layout>
