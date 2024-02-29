@@ -10,20 +10,18 @@ from MDGUtil import FileUtils
 class InitThread(AbstractMDGThread):
     decomp_cmd_check_failed = Signal()
 
-    def __init__(self, decomp_cmd: str):
-        super().__init__()
-        self.decomp_cmd = decomp_cmd
-
     def run(self):
-        self.progress.emit(10, "Checking decompiler/decompiler cmd are correct")
-        try:
-            os.system(self.decomp_cmd.format(path_to_jar='decompiler/decompiler_test_mod.jar',
-                                             out_path='tmp/decompiler_test'))
-            assert len(os.listdir('tmp/decompiler_test')) >= 1
-        except Exception:
-            self.decomp_cmd_check_failed.emit()
-            return
-        logging.info("Checked decompiler/decompiler cmd are correct successfully.")
+        decomp_cmd = self.serialized_widgets['decomp_cmd_line_edit']['text']
+        if self.serialized_widgets['decomp_cmd_groupbox']['isEnabled']:
+            self.progress.emit(10, "Checking decompiler/decompiler cmd are correct")
+            try:
+                os.system(decomp_cmd.format(path_to_jar='decompiler/decompiler_test_mod.jar',
+                                            out_path='tmp/decompiler_test'))
+                assert len(os.listdir('tmp/decompiler_test')) >= 1
+            except Exception:
+                self.decomp_cmd_check_failed.emit()
+                return
+            logging.info("Checked decompiler/decompiler cmd are correct successfully.")
 
         self.progress.emit(40, "Clearing tmp folder")
         FileUtils.clear_tmp_folders()

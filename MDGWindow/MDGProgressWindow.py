@@ -1,9 +1,11 @@
 # This Python file uses the following encoding: utf-8
+import copy
 import logging
 
 from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 
+from MDGLogic.CopyThread import CopyThread
 from MDGLogic.InitThread import InitThread
 from MDGUtil.MDGLogger import MDGLogger
 from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
@@ -42,15 +44,24 @@ class MDGProgressWindow(QMainWindow):
         self.main_window.show()
         self.destroy()
 
+    def start_thread(self, thread_class, progress_bar, on_finished):
+        self.current_progress_bar = progress_bar
+        thread = thread_class(copy.deepcopy(self.main_window.serialized_widgets))
+        self.thread_list.clear()
+        self.thread_list.append(thread)
+        thread.progress.connect(self.set_progress)
+        thread.finished.connect(on_finished)
+        thread.start()
+        return thread
+
     def start(self):
-        init_thread = InitThread(self.main_window.ui.decomp_cmd_line_edit.text())
-        self.thread_list.append(init_thread)
-        init_thread.start()
-        init_thread.progress.connect(self.set_progress)
-        init_thread.decomp_cmd_check_failed.connect(self.decomp_cmd_check_failed)
-        init_thread.finished.connect(self.copy_mods)
+        thread = self.start_thread(InitThread, self.ui.init_progress_bar, self.copy_mods)
+        thread.decomp_cmd_check_failed.connect(self.decomp_cmd_check_failed)
 
     def copy_mods(self):
+        self.start_thread(CopyThread, self.ui.copy_progress_bar, self.init_mdk)
+
+    def init_mdk(self):
         pass
 
     def set_progress(self, value, text):
@@ -69,6 +80,10 @@ class MDGProgressWindow(QMainWindow):
         self.destroy()
 
     def append_logger(self, color, msg):
+        is_down = False
+        scrollbar = self.ui.logger_text_edit.verticalScrollBar()
+        if scrollbar.value() == scrollbar.maximum():
+            is_down = True
         cursor = self.ui.logger_text_edit.textCursor()
         cursor.movePosition(QTextCursor.End)
         cursor.movePosition(QTextCursor.End)
@@ -79,3 +94,5 @@ class MDGProgressWindow(QMainWindow):
 
         cursor.insertText(msg)
         cursor.insertText("\n")
+        if is_down:
+            scrollbar.setValue(scrollbar.maximum())

@@ -10,7 +10,7 @@ from MDGUtil.FileUtils import create_folder, remove_folder
 LOGGER_FORMAT = "[%(asctime)s] [%(levelname)s]: %(message)s"
 LOGGER_WIDGET_COLORS = {
     'INFO': 'black',
-    'WARN': 'orange',
+    'WARNING': 'orange',
     'CRITICAL': 'red'
 }
 

@@ -2,6 +2,7 @@
 import multiprocessing
 import os
 import zipfile
+from collections import defaultdict
 
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QTextBrowser
 
@@ -211,12 +212,25 @@ class MDGMainWindow(QMainWindow):
             QMessageBox.warning(self, 'Incorrect configuration', f'With this configuration program will do nothing.',
                                 QMessageBox.StandardButton.Ok)
             return
-
+        self.serialized_widgets = self.serialize_to_dict()
         self.progress_window = MDGProgressWindow(self)
         self.progress_window.show()
         self.setEnabled(False)
         self.hide()
         self.progress_window.start()
+
+    def serialize_to_dict(self):
+        out = defaultdict(dict)
+        members = [attr for attr in dir(self.ui) if not callable(getattr(self.ui, attr)) and not attr.startswith("__")]
+        for member_name in members:
+            member_object = getattr(self.ui, member_name)
+            member_attrs = [attr for attr in dir(member_object) if not attr.startswith("__")]
+            print(member_attrs)
+            required_fields = ('text', 'value', 'isChecked', 'isEnabled')
+            for field in required_fields:
+                if field in member_attrs:
+                    out[member_name][field] = getattr(member_object, field)()
+        return out
 
     def drag_enter_event(self, event, element):
         if event.mimeData().hasUrls():
