@@ -6,3 +6,7 @@ class AbstractMDGThread(QThread):
 
     def __init__(self):
         super().__init__()
+        self.setTerminationEnabled(True)
+
+    def stop(self):
+        self.terminate()

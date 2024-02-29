@@ -178,7 +178,7 @@
      </layout>
     </item>
     <item>
-     <widget class="QTextEdit" name="textEdit">
+     <widget class="QTextEdit" name="logger_text_edit">
       <property name="accessibleName">
        <string/>
       </property>
@@ -188,7 +188,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="stop_button">
       <property name="text">
        <string>Stop</string>
       </property>

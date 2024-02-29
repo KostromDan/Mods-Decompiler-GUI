@@ -133,16 +133,16 @@ class Ui_MDGProgressWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout_3)
 
-        self.textEdit = QTextEdit(self.centralwidget)
-        self.textEdit.setObjectName(u"textEdit")
-        self.textEdit.setReadOnly(True)
+        self.logger_text_edit = QTextEdit(self.centralwidget)
+        self.logger_text_edit.setObjectName(u"logger_text_edit")
+        self.logger_text_edit.setReadOnly(True)
 
-        self.verticalLayout.addWidget(self.textEdit)
+        self.verticalLayout.addWidget(self.logger_text_edit)
 
-        self.pushButton = QPushButton(self.centralwidget)
-        self.pushButton.setObjectName(u"pushButton")
+        self.stop_button = QPushButton(self.centralwidget)
+        self.stop_button.setObjectName(u"stop_button")
 
-        self.verticalLayout.addWidget(self.pushButton)
+        self.verticalLayout.addWidget(self.stop_button)
 
         MDGProgressWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGProgressWindow)
@@ -176,8 +176,8 @@ class Ui_MDGProgressWindow(object):
         self.label_2.setText(QCoreApplication.translate("MDGProgressWindow", u"Currently:", None))
         self.currently_label.setText(QCoreApplication.translate("MDGProgressWindow", u"init", None))
 #if QT_CONFIG(accessibility)
-        self.textEdit.setAccessibleName("")
+        self.logger_text_edit.setAccessibleName("")
 #endif // QT_CONFIG(accessibility)
-        self.pushButton.setText(QCoreApplication.translate("MDGProgressWindow", u"Stop", None))
+        self.stop_button.setText(QCoreApplication.translate("MDGProgressWindow", u"Stop", None))
     # retranslateUi
 
