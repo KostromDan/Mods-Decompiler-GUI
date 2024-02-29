@@ -32,10 +32,10 @@ class PySideHandler(logging.Handler):
 
 
 class LoggerSignal(QObject):
-    logger_signal = Signal(str, str)
+    append_logger_signal = Signal(str, str)
 
     def append_logger(self, color, msg):
-        self.logger_signal.emit(color, msg)
+        self.append_logger_signal.emit(color, msg)
 
 
 class MDGLogger:

@@ -22,7 +22,7 @@ class MDGProgressWindow(QMainWindow):
 
         self.ui.stop_button.clicked.connect(self.stop_button)
 
-        MDGLogger().logger_signal.logger_signal.connect(self.append_logger)
+        MDGLogger().logger_signal.append_logger_signal.connect(self.append_logger)
 
         logging.info("Progress window started.")
 
