@@ -95,6 +95,7 @@ class MDGMainWindow(QMainWindow):
     def decomp_cmd_line_edit_changed(self, value):
         self.ui.decomp_cmd_reset_button.setEnabled(value != DEFAULT_DECOMPILER_CMD)
         self.config.set("decomp_cmd", value if value != DEFAULT_DECOMPILER_CMD else "")
+        self.ui.decomp_cmd_line_edit.setStyleSheet("")
 
     def reset_decomp_cmd(self):
         self.ui.decomp_cmd_line_edit.setText(DEFAULT_DECOMPILER_CMD)
@@ -297,7 +298,7 @@ class MDGMainWindow(QMainWindow):
 
         self.ui.merge_check_box.setEnabled(state == 2)
         self.ui.decomp_threads_group_box.setEnabled(state == 2)
-        self.ui.decomp_cmd_layout.setEnabled(state == 2)
+        self.ui.decomp_cmd_groupbox.setEnabled(state == 2)
 
     def merge_checkbox_changed(self, state):
         self.ui.merge_group_box.setEnabled(state == 2)
