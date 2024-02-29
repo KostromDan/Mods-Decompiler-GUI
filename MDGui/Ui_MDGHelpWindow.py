@@ -43,7 +43,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -743, 1163, 1718))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, -616, 1163, 1763))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)
@@ -135,8 +135,8 @@ class Ui_MDGHelpWindow(object):
         self.decomp_cmd.setObjectName(u"decomp_cmd")
         sizePolicy1.setHeightForWidth(self.decomp_cmd.sizePolicy().hasHeightForWidth())
         self.decomp_cmd.setSizePolicy(sizePolicy1)
-        self.decomp_cmd.setMinimumSize(QSize(0, 85))
-        self.decomp_cmd.setMaximumSize(QSize(16777215, 85))
+        self.decomp_cmd.setMinimumSize(QSize(0, 130))
+        self.decomp_cmd.setMaximumSize(QSize(16777215, 130))
         self.decomp_cmd.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.decomp_cmd.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
 
@@ -290,9 +290,9 @@ class Ui_MDGHelpWindow(object):
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Decompilation cmd:</span><br />With this, you can configure console command with which program decompiles mod.</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Add additional flags, change the decompiler, etc...</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-"
-                        "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Touch only if you are sure of what you are doing.</p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Add additional flags, change the decompiler, etc...<br />String must contain:<br />{path_to_jar} - will be replace"
+                        "d with path to jar that we are going to decompile.<br />{out_path} - will be replaced with path to folder with decompiler output.</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Touch only if you are sure of what you are doing.</p></body></html>", None))
         self.merge.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

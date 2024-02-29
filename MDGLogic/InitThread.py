@@ -15,8 +15,9 @@ class InitThread(AbstractMDGThread):
         super().__init__()
         self.decomp_cmd = decomp_cmd
 
+
     def run(self):
-        self.progress.emit(10, "Checking decompiler/decompiler cmd is correct")
+        self.progress.emit(10, "Checking decompiler/decompiler cmd are correct")
         try:
             os.system(self.decomp_cmd.format(path_to_jar='decompiler/decompiler_test_mod.jar',
                                              out_path='tmp/decompiler_test'))
@@ -24,17 +25,15 @@ class InitThread(AbstractMDGThread):
         except Exception:
             self.decomp_cmd_check_failed.emit()
             return
-        logging.info("Checking decompiler/decompiler cmd is correct: Success.")
+        logging.info("Checking decompiler/decompiler cmd are correct: Success.")
 
-        self.progress.emit(10, "Clearing tmp folders")
+        self.progress.emit(40, "Clearing tmp folder")
         FileUtils.clear_tmp_folders()
         logging.info("Cleared tmp folders.")
 
-        self.progress.emit(50, "Clearing result folders")
+        self.progress.emit(50, "Clearing result folder")
         FileUtils.clear_result_folders()
         logging.info("Cleared result folders.")
-
-        time.sleep(5)
 
         self.progress.emit(80, "Creating new folders")
         FileUtils.init_folders()

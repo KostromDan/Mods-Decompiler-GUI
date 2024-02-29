@@ -63,6 +63,7 @@ class MDGProgressWindow(QMainWindow):
         self.main_window.ui.decomp_cmd_line_edit.setStyleSheet("border: 1px solid red")
         QMessageBox.critical(self, 'Incorrect decompiler cmd',
                              f"With this decompiler/decompiler cmd program won't work.\n"
+                             "This message indicates that {path_to_jar} is not decompiled to {out_path}.\n"
                              f'Check decompiler/decompiler cmd: path, syntax, etc. And try again.',
                              QMessageBox.StandardButton.Ok)
         self.destroy()
@@ -70,7 +71,6 @@ class MDGProgressWindow(QMainWindow):
     def append_logger(self, color, msg):
         cursor = self.ui.logger_text_edit.textCursor()
         cursor.movePosition(QTextCursor.End)
-        cursor.insertText("\n")
         cursor.movePosition(QTextCursor.End)
 
         line_format = cursor.charFormat()
@@ -78,3 +78,4 @@ class MDGProgressWindow(QMainWindow):
         cursor.setCharFormat(line_format)
 
         cursor.insertText(msg)
+        cursor.insertText("\n")
