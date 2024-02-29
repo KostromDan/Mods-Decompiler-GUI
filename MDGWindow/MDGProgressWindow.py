@@ -1,10 +1,7 @@
 # This Python file uses the following encoding: utf-8
-import sys
 import time
-from threading import Thread
 
-from PySide6.QtCore import QThread
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QMainWindow
 
 from MDGLogic.InitThread import InitThread
 from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
@@ -22,8 +19,14 @@ class MDGProgressWindow(QMainWindow):
         self.current_progress_bar = self.ui.init_progress_bar
 
     def start(self):
-        self.init_thread = InitThread(self)
+        self.init_thread = InitThread()
         self.init_thread.start()
+        self.init_thread.progress.connect(self.set_progress)
+        self.init_thread.finished.connect(self.copy_mods)
+
+    def copy_mods(self):
+        print(1)
+        violition
 
     def set_progress(self, value, text):
         self.current_progress_bar.setValue(value)

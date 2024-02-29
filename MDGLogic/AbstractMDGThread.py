@@ -1,9 +1,8 @@
-from threading import Thread
-
-from PySide6.QtCore import QThread
+from PySide6.QtCore import QThread, Signal
 
 
 class AbstractMDGThread(QThread):
-    def __init__(self, progress_window):
+    progress = Signal(int, str)
+
+    def __init__(self):
         super().__init__()
-        self.progress_window = progress_window
