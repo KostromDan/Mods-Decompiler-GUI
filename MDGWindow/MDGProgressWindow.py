@@ -22,7 +22,8 @@ class MDGProgressWindow(QMainWindow):
 
         self.ui.stop_button.clicked.connect(self.stop_button)
 
-        MDGLogger().pyside_logger_function = self.append_logger
+        MDGLogger().logger_signal.logger_signal.connect(self.append_logger)
+
         logging.info("Progress window started.")
 
     def destroy(self, destroyWindow=..., destroySubWindows=...):
@@ -33,7 +34,6 @@ class MDGProgressWindow(QMainWindow):
                 thread.stop()
             self.thread_list.clear()
             logging.info("Killed threads.")
-        MDGLogger().pyside_logger_function = None
         logging.info("MDGProgressWindow finished.")
         super().destroy()
 

@@ -3,9 +3,11 @@ import os
 import sys
 from datetime import datetime
 
+from PySide6.QtCore import QObject, Signal
+
 from MDGUtil.FileUtils import create_folder, remove_folder
 
-LOGGER_FORMAT = "[%(asctime)s] [%(levelname)s] [%(relativepath)s:%(lineno)d]: %(message)s"
+LOGGER_FORMAT = "[%(asctime)s] [%(levelname)s]: %(message)s"
 LOGGER_WIDGET_COLORS = {
     'INFO': 'black',
     'WARN': 'orange',
@@ -26,8 +28,14 @@ class PySideHandler(logging.Handler):
 
     def emit(self, record):
         msg = self.format(record)
-        if MDGLogger().pyside_logger_function is not None:
-            MDGLogger().pyside_logger_function(LOGGER_WIDGET_COLORS[record.levelname], msg)
+        MDGLogger().logger_signal.append_logger(LOGGER_WIDGET_COLORS[record.levelname], msg)
+
+
+class LoggerSignal(QObject):
+    logger_signal = Signal(str, str)
+
+    def append_logger(self, color, msg):
+        self.logger_signal.emit(color, msg)
 
 
 class MDGLogger:
@@ -47,7 +55,7 @@ class MDGLogger:
         if getattr(sys, 'frozen', True) and not hasattr(sys, '_MEIPASS'):  # not inside pyinstaller
             remove_folder('logs')
 
-        self.pyside_logger_function = None
+        self.logger_signal = LoggerSignal()
 
         create_folder('logs')
 
