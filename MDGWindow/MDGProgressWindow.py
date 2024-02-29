@@ -26,7 +26,6 @@ class MDGProgressWindow(QMainWindow):
 
     def copy_mods(self):
         print(1)
-        violition
 
     def set_progress(self, value, text):
         self.current_progress_bar.setValue(value)
