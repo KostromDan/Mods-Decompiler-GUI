@@ -22,6 +22,11 @@ dependencies {
 
 class MdkInitThread(AbstractMDGThread):
     def run(self):
+        if not self.serialized_widgets['mdk_path_line_edit']['isEnabled']:
+            self.progress.emit(100, "Initialisation of mdk skipped.")
+            logging.info("Initialisation of mdk skipped.")
+            return
+
         mdk_path = self.serialized_widgets['mdk_path_line_edit']['text']
 
         self.progress.emit(10, "Unzipping mdk.")

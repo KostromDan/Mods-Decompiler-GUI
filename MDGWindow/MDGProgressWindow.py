@@ -6,6 +6,7 @@ from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 
 from MDGLogic.CopyThread import CopyThread
+from MDGLogic.CriticalMBThread import CriticalMBThread
 from MDGLogic.InitThread import InitThread
 from MDGLogic.MdkInitThread import MdkInitThread
 from MDGUtil.MDGLogger import MDGLogger
@@ -29,15 +30,15 @@ class MDGProgressWindow(QMainWindow):
 
         logging.info("Progress window started.")
 
-    def destroy(self, destroyWindow=..., destroySubWindows=...):
+    def destroy(self):
         if len(self.thread_list) >= 1:
             logging.info("Killing threads.")
-
             for thread in self.thread_list:
-                thread.stop()
+                thread.terminate()
             self.thread_list.clear()
             logging.info("Killed threads.")
         logging.info("MDGProgressWindow finished.")
+        self.setEnabled(False)
         super().destroy()
 
     def stop_button(self):
@@ -46,9 +47,10 @@ class MDGProgressWindow(QMainWindow):
         self.destroy()
 
     def start_thread(self, thread_class, progress_bar, on_finished):
+        if not self.isEnabled():
+            return
         self.current_progress_bar = progress_bar
         thread = thread_class(copy.deepcopy(self.main_window.serialized_widgets))
-        self.thread_list.clear()
         self.thread_list.append(thread)
         thread.progress.connect(self.set_progress)
         thread.finished.connect(on_finished)
@@ -73,14 +75,9 @@ class MDGProgressWindow(QMainWindow):
         self.ui.currently_label.setText(text)
 
     def decomp_cmd_check_failed(self):
-        self.main_window.setEnabled(True)
-        self.main_window.show()
-        self.main_window.ui.decomp_cmd_line_edit.setStyleSheet("border: 1px solid red")
-        QMessageBox.critical(self, 'Incorrect decompiler cmd',
-                             f"With this decompiler/decompiler cmd program won't work.\n"
-                             "This message indicates that {path_to_jar} is not decompiled to {out_path}.\n"
-                             f'Check decompiler/decompiler cmd: path, syntax, etc. And try again.',
-                             QMessageBox.StandardButton.Ok)
+        self.main_window.mb = CriticalMBThread(None)
+        self.main_window.mb.finished.connect(self.main_window.decomp_cmd_check_failed)
+        self.main_window.mb.start()
         self.destroy()
 
     def append_logger(self, color, msg):

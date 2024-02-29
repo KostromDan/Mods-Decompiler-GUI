@@ -14,8 +14,5 @@ class AbstractMDGThread(QThread):
         self.finished.connect(self.finished_signal)
         self.serialized_widgets: defaultdict[dict] = serialized_widgets
 
-    def stop(self):
-        self.terminate()
-
     def finished_signal(self):
         logging.info(f'Finished {self.__class__.__name__}.')

@@ -225,12 +225,21 @@ class MDGMainWindow(QMainWindow):
         for member_name in members:
             member_object = getattr(self.ui, member_name)
             member_attrs = [attr for attr in dir(member_object) if not attr.startswith("__")]
-            print(member_attrs)
             required_fields = ('text', 'value', 'isChecked', 'isEnabled')
             for field in required_fields:
                 if field in member_attrs:
                     out[member_name][field] = getattr(member_object, field)()
         return out
+
+    def decomp_cmd_check_failed(self):
+        self.setEnabled(True)
+        self.show()
+        self.ui.decomp_cmd_line_edit.setStyleSheet("border: 1px solid red")
+        QMessageBox.critical(self, 'Incorrect decompiler cmd',
+                             f"With this decompiler/decompiler cmd program won't work.\n"
+                             "This message indicates that {path_to_jar} is not decompiled to {out_path}.\n"
+                             f'Check decompiler/decompiler cmd: path, syntax, etc. And try again.',
+                             QMessageBox.StandardButton.Ok)
 
     def drag_enter_event(self, event, element):
         if event.mimeData().hasUrls():
