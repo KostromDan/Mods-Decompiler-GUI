@@ -1,10 +1,13 @@
 import json
 import os
 
+DEFAULT_DECOMPILER_CMD = r"java -jar decompiler\vineflower-1.9.3.jar -dgs=1 {path_to_jar} {out_path}"
+
 
 class LocalConfig:
     config = dict()
     config_path = os.path.join("local", "config.json")
+
 
     def __init__(self):
         self.load()

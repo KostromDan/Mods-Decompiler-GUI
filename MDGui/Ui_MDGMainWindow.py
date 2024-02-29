@@ -25,7 +25,7 @@ class Ui_MDGMainWindow(object):
     def setupUi(self, MDGMainWindow):
         if not MDGMainWindow.objectName():
             MDGMainWindow.setObjectName(u"MDGMainWindow")
-        MDGMainWindow.resize(671, 493)
+        MDGMainWindow.resize(675, 493)
         MDGMainWindow.setMaximumSize(QSize(16777215, 16777215))
         self.centralwidget = QWidget(MDGMainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -337,6 +337,14 @@ class Ui_MDGMainWindow(object):
 
         self.decomp_cmd_layout.addWidget(self.decomp_cmd_reset_button)
 
+        self.help_decomp_cmd_button = QPushButton(self.centralwidget)
+        self.help_decomp_cmd_button.setObjectName(u"help_decomp_cmd_button")
+        sizePolicy.setHeightForWidth(self.help_decomp_cmd_button.sizePolicy().hasHeightForWidth())
+        self.help_decomp_cmd_button.setSizePolicy(sizePolicy)
+        self.help_decomp_cmd_button.setMaximumSize(QSize(20, 16777215))
+
+        self.decomp_cmd_layout.addWidget(self.help_decomp_cmd_button)
+
 
         self.verticalLayout.addLayout(self.decomp_cmd_layout)
 
@@ -434,7 +442,7 @@ class Ui_MDGMainWindow(object):
         MDGMainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGMainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 671, 22))
+        self.menubar.setGeometry(QRect(0, 0, 675, 22))
         MDGMainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MDGMainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -469,8 +477,9 @@ class Ui_MDGMainWindow(object):
         self.decomp_threads_label.setText(QCoreApplication.translate("MDGMainWindow", u"Decompilation threads:", None))
         self.help_decomp_threads_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.decomp_cmd_label.setText(QCoreApplication.translate("MDGMainWindow", u"Decompilation cmd:", None))
-        self.decomp_cmd_line_edit.setText(QCoreApplication.translate("MDGMainWindow", u"java -jar vineflower-1.9.3.jar -dgs=1 {path_to_jar} .\\{out_path}", None))
+        self.decomp_cmd_line_edit.setText("")
         self.decomp_cmd_reset_button.setText(QCoreApplication.translate("MDGMainWindow", u"reset", None))
+        self.help_decomp_cmd_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.merge_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Merge result into mdk", None))
         self.help_merge_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.merge_label.setText(QCoreApplication.translate("MDGMainWindow", u"Merge:", None))

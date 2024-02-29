@@ -1,12 +1,11 @@
 # This Python file uses the following encoding: utf-8
 import multiprocessing
 import os
-import time
 import zipfile
 
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QTextBrowser
 
-from MDGUtil.LocalConfig import LocalConfig
+from MDGUtil.LocalConfig import LocalConfig, DEFAULT_DECOMPILER_CMD
 from MDGWindow.MDGHelpWindow import MDGHelpWindow
 from MDGWindow.MDGProgressWindow import MDGProgressWindow
 from MDGui.Ui_MDGMainWindow import Ui_MDGMainWindow
@@ -77,6 +76,7 @@ class MDGMainWindow(QMainWindow):
         self.ui.help_sources_button.clicked.connect(self.help_sources_button_clicked)
         self.ui.help_decomp_threads_button.clicked.connect(self.help_threads_button_clicked)
         self.ui.help_deobf_threads_button.clicked.connect(self.help_threads_button_clicked)
+        self.ui.help_decomp_cmd_button.clicked.connect(self.help_decomp_cmd_button_clicked)
 
         # self.completer = QCompleter(self) # This doesn't work... Fix later...
         # self.completer.setModel(QFileSystemModel(self.completer))
@@ -85,6 +85,19 @@ class MDGMainWindow(QMainWindow):
         self.help_window = MDGHelpWindow()
 
         self.resize(self.width(), self.minimumSizeHint().height())
+
+        self.ui.decomp_cmd_reset_button.clicked.connect(self.reset_decomp_cmd)
+        self.ui.decomp_cmd_line_edit.textChanged.connect(self.decomp_cmd_line_edit_changed)
+
+        self.ui.decomp_cmd_line_edit.setText(
+            self.config.get("decomp_cmd") if self.config.get("decomp_cmd") != "" else DEFAULT_DECOMPILER_CMD)
+
+    def decomp_cmd_line_edit_changed(self, value):
+        self.ui.decomp_cmd_reset_button.setEnabled(value != DEFAULT_DECOMPILER_CMD)
+        self.config.set("decomp_cmd", value if value != DEFAULT_DECOMPILER_CMD else "")
+
+    def reset_decomp_cmd(self):
+        self.ui.decomp_cmd_line_edit.setText(DEFAULT_DECOMPILER_CMD)
 
     def start_help_window(self, help_about):
         self.help_window.show()
@@ -96,6 +109,9 @@ class MDGMainWindow(QMainWindow):
 
     def help_mods_button_clicked(self):
         self.start_help_window(self.help_window.ui.mods_path)
+
+    def help_decomp_cmd_button_clicked(self):
+        self.start_help_window(self.help_window.ui.decomp_cmd)
 
     def help_mdk_button_clicked(self):
         self.start_help_window(self.help_window.ui.mdk_path)
@@ -281,6 +297,7 @@ class MDGMainWindow(QMainWindow):
 
         self.ui.merge_check_box.setEnabled(state == 2)
         self.ui.decomp_threads_group_box.setEnabled(state == 2)
+        self.ui.decomp_cmd_layout.setEnabled(state == 2)
 
     def merge_checkbox_changed(self, state):
         self.ui.merge_group_box.setEnabled(state == 2)
