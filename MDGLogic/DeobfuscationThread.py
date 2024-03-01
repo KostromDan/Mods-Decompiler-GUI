@@ -1,11 +1,8 @@
 import multiprocessing
 import os.path
 import shutil
-import signal
 import subprocess
 import time
-
-import psutil
 
 from MDGLogic.MdkInitialisationThread import unzip_and_patch_mdk
 from MDGUtil.SubprocessKiller import kill_subprocess

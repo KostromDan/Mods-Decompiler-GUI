@@ -104,7 +104,7 @@ class DeobfuscationMainThread(AbstractMDGThread):
         clear_gradle()
 
         if not self.serialized_widgets['merge_check_box']['isEnabled'] or not \
-        self.serialized_widgets['merge_check_box']['isChecked']:
+                self.serialized_widgets['merge_check_box']['isChecked']:
             shutil.rmtree('result/merged_mdk')
 
     def terminate(self):

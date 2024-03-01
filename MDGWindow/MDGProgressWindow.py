@@ -2,6 +2,7 @@
 import copy
 import logging
 
+from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow
 
@@ -13,7 +14,6 @@ from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
 from MDGUtil.MDGLogger import MDGLogger
-from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 
 
 def only_if_enabled(func):
