@@ -7,7 +7,7 @@ from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGUtil import FileUtils
 
 
-class InitThread(AbstractMDGThread):
+class InitialisationThread(AbstractMDGThread):
     decomp_cmd_check_failed = Signal()
 
     def run(self):

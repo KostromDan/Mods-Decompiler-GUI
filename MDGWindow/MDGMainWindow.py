@@ -240,6 +240,12 @@ class MDGMainWindow(QMainWindow):
                              "This message indicates that {path_to_jar} is not decompiled to {out_path}.\n"
                              f'Check decompiler/decompiler cmd: path, syntax, etc. And try again.',
                              QMessageBox.StandardButton.Ok)
+    def deobf_iterrupt(self,mod_name):
+        self.setEnabled(True)
+        self.show()
+        QMessageBox.critical(self, 'Deobfuscation failed',
+                             f"Deobfuscation of {mod_name} failed!",
+                             QMessageBox.StandardButton.Ok)
 
     def drag_enter_event(self, event, element):
         if event.mimeData().hasUrls():

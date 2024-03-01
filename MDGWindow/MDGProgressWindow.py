@@ -3,12 +3,15 @@ import copy
 import logging
 
 from PySide6.QtGui import QTextCursor, QColor
-from PySide6.QtWidgets import QMainWindow, QMessageBox
+from PySide6.QtWidgets import QMainWindow
 
 from MDGLogic.CopyThread import CopyThread
 from MDGLogic.CriticalMBThread import CriticalMBThread
-from MDGLogic.InitThread import InitThread
-from MDGLogic.MdkInitThread import MdkInitThread
+from MDGLogic.DecompilationThread import DecompilationThread
+from MDGLogic.DeobfuscationMainThread import DeobfuscationMainThread
+from MDGLogic.InitialisationThread import InitialisationThread
+from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
+from MDGLogic.MergingThread import MergingThread
 from MDGUtil.MDGLogger import MDGLogger
 from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 
@@ -31,6 +34,7 @@ class MDGProgressWindow(QMainWindow):
         logging.info("Progress window started.")
 
     def destroy(self):
+        self.setEnabled(False)
         if len(self.thread_list) >= 1:
             logging.info("Killing threads.")
             for thread in self.thread_list:
@@ -38,7 +42,6 @@ class MDGProgressWindow(QMainWindow):
             self.thread_list.clear()
             logging.info("Killed threads.")
         logging.info("MDGProgressWindow finished.")
-        self.setEnabled(False)
         super().destroy()
 
     def stop_button(self):
@@ -53,21 +56,32 @@ class MDGProgressWindow(QMainWindow):
         thread = thread_class(copy.deepcopy(self.main_window.serialized_widgets))
         self.thread_list.append(thread)
         thread.progress.connect(self.set_progress)
+        thread.progress_bar.connect(self.update_progress_bar)
         thread.finished.connect(on_finished)
         thread.start()
         return thread
 
     def start(self):
-        thread = self.start_thread(InitThread, self.ui.init_progress_bar, self.copy_mods)
+        thread = self.start_thread(InitialisationThread, self.ui.init_progress_bar, self.copy_mods)
         thread.decomp_cmd_check_failed.connect(self.decomp_cmd_check_failed)
 
     def copy_mods(self):
         self.start_thread(CopyThread, self.ui.copy_progress_bar, self.init_mdk)
 
     def init_mdk(self):
-        self.start_thread(MdkInitThread, self.ui.mdk_init_progress_bar, self.deobf_mods)
+        self.start_thread(MdkInitialisationThread, self.ui.mdk_init_progress_bar, self.deobf_mods)
 
     def deobf_mods(self):
+        thread = self.start_thread(DeobfuscationMainThread, self.ui.deobf_progress_bar, self.decomp_mods)
+        thread.interrupt_signal.connect(self.deobf_iterrupt)
+
+    def decomp_mods(self):
+        self.start_thread(DecompilationThread, self.ui.decomp_progress_bar, self.merge_mods)
+
+    def merge_mods(self):
+        self.start_thread(MergingThread, self.ui.merge_progress_bar, self.complete)
+
+    def complete(self):
         pass
 
     def set_progress(self, value, text):
@@ -99,3 +113,12 @@ class MDGProgressWindow(QMainWindow):
 
         if is_down:
             scrollbar.setValue(scrollbar.maximum())
+
+    def update_progress_bar(self, i):
+        self.current_progress_bar.setValue(i)
+
+    def deobf_iterrupt(self,mod_name):
+        self.main_window.mb = CriticalMBThread(mod_name)
+        self.main_window.mb.str_signal.connect(self.main_window.deobf_iterrupt)
+        self.main_window.mb.start()
+        self.destroy()
