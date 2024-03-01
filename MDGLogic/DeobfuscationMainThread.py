@@ -56,6 +56,7 @@ class DeobfuscationMainThread(AbstractMDGThread):
 
         clear_gradle()
         create_folder('deobfuscation_MDKs')
+        create_folder('result/deobfuscated_mods')
 
         while processed_mods_count < mods_to_deobf_count:
             if len(self.deobf_threads) < allocated_threads_count and started_mods_count < mods_to_deobf_count:
@@ -75,7 +76,7 @@ class DeobfuscationMainThread(AbstractMDGThread):
                     processed_mods_count += 1
                     self.progress_bar.emit((processed_mods_count / mods_to_deobf_count) * 100)
 
-                    if thread.success:
+                    if thread.is_success():
                         logging.info(f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with success.')
                         os.remove(thread.mod_path)
                     else:
@@ -92,6 +93,7 @@ class DeobfuscationMainThread(AbstractMDGThread):
                                 f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with error. Mod will be decompiled without deofuscation.')
 
             self.deobf_threads = new_threads
+            self.sleep(0.1)
 
         logging.info('Deobfuscation complete.')
 
@@ -101,7 +103,8 @@ class DeobfuscationMainThread(AbstractMDGThread):
 
         clear_gradle()
 
-        if not self.serialized_widgets['merge_check_box']['isEnabled'] or not self.serialized_widgets['merge_check_box']['isChecked']:
+        if not self.serialized_widgets['merge_check_box']['isEnabled'] or not \
+        self.serialized_widgets['merge_check_box']['isChecked']:
             shutil.rmtree('result/merged_mdk')
 
     def terminate(self):

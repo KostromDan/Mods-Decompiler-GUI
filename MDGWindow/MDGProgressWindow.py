@@ -16,6 +16,15 @@ from MDGUtil.MDGLogger import MDGLogger
 from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 
 
+def only_if_enabled(func):
+    def wrapper(self, *args, **kwargs):
+        if self.isEnabled():
+            result = func(self, *args, **kwargs)
+            return result
+
+    return wrapper
+
+
 class MDGProgressWindow(QMainWindow):
     def __init__(self, main_window, parent=None):
         super().__init__(parent)
@@ -37,7 +46,7 @@ class MDGProgressWindow(QMainWindow):
         self.setEnabled(False)
         if len(self.thread_list) >= 1:
             logging.info("Killing threads.")
-            for thread in self.thread_list:
+            for thread in reversed(self.thread_list):
                 thread.terminate()
             self.thread_list.clear()
             logging.info("Killed threads.")
@@ -65,22 +74,28 @@ class MDGProgressWindow(QMainWindow):
         thread = self.start_thread(InitialisationThread, self.ui.init_progress_bar, self.copy_mods)
         thread.decomp_cmd_check_failed.connect(self.decomp_cmd_check_failed)
 
+    @only_if_enabled
     def copy_mods(self):
         self.start_thread(CopyThread, self.ui.copy_progress_bar, self.init_mdk)
 
+    @only_if_enabled
     def init_mdk(self):
         self.start_thread(MdkInitialisationThread, self.ui.mdk_init_progress_bar, self.deobf_mods)
 
+    @only_if_enabled
     def deobf_mods(self):
         thread = self.start_thread(DeobfuscationMainThread, self.ui.deobf_progress_bar, self.decomp_mods)
         thread.interrupt_signal.connect(self.deobf_iterrupt)
 
+    @only_if_enabled
     def decomp_mods(self):
         self.start_thread(DecompilationThread, self.ui.decomp_progress_bar, self.merge_mods)
 
+    @only_if_enabled
     def merge_mods(self):
         self.start_thread(MergingThread, self.ui.merge_progress_bar, self.complete)
 
+    @only_if_enabled
     def complete(self):
         pass
 
@@ -117,7 +132,7 @@ class MDGProgressWindow(QMainWindow):
     def update_progress_bar(self, i):
         self.current_progress_bar.setValue(i)
 
-    def deobf_iterrupt(self,mod_name):
+    def deobf_iterrupt(self, mod_name):
         self.main_window.mb = CriticalMBThread(mod_name)
         self.main_window.mb.str_signal.connect(self.main_window.deobf_iterrupt)
         self.main_window.mb.start()

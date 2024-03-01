@@ -1,9 +1,11 @@
 import logging
 import os
+import subprocess
 import zipfile
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGUtil.FileUtils import create_folder
+from MDGUtil.SubprocessKiller import kill_subprocess
 
 MDK_PATCH_STRING = """repositories {
     flatDir {
@@ -49,7 +51,12 @@ class MdkInitialisationThread(AbstractMDGThread):
         self.progress.emit(30, "Started initialisation of mdk.")
         logging.info("Started initialisation of mdk.")
         logging.warning(f'If you initializing mdk of this version first time on you pc, it can take some time.')
-        os.system("cd result/merged_mdk && .\gradlew.bat build")
+        self.cmd = subprocess.Popen(["gradlew.bat", "build"], cwd=os.path.join('result', 'merged_mdk'), shell=True)
+        self.cmd.wait()
         logging.info("Finished initialisation of mdk.")
 
         self.progress.emit(100, "Initialisation of mdk complete.")
+
+    def terminate(self):
+        kill_subprocess(self.cmd.pid)
+        super().terminate()

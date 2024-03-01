@@ -6,6 +6,8 @@ from PySide6.QtWidgets import QApplication
 from MDGUtil.MDGLogger import MDGLogger
 from MDGWindow.MDGMainWindow import MDGMainWindow
 
+from hanging_threads import start_monitoring
+
 if __name__ == "__main__":
     MDGLogger()
     faulthandler.enable()
