@@ -20,12 +20,16 @@ dependencies {
 }"""
 
 
-def unzip_and_patch_mdk(mdk_path, unzip_to_path, deobf_to_folder_name, do_pacth):
+def patch_mdk(mdk_path, deobf_to_folder_name):
+    with open(os.path.join(mdk_path, 'build.gradle'), 'a') as file:
+        file.write(MDK_PATCH_STRING.replace('local_MDG', deobf_to_folder_name))
+    create_folder(os.path.join(mdk_path, 'libs'))
+
+
+def unzip_and_patch_mdk(mdk_path, unzip_to_path, deobf_to_folder_name, do_patch):
     zipfile.ZipFile(mdk_path).extractall(path=unzip_to_path)
-    if do_pacth:
-        with open(os.path.join(unzip_to_path, 'build.gradle'), 'a') as file:
-            file.write(MDK_PATCH_STRING.replace('local_MDG', deobf_to_folder_name))
-        create_folder(os.path.join(unzip_to_path, 'libs'))
+    if do_patch:
+        patch_mdk(unzip_to_path, deobf_to_folder_name)
 
 
 class MdkInitialisationThread(AbstractMDGThread):
@@ -39,13 +43,13 @@ class MdkInitialisationThread(AbstractMDGThread):
 
         self.progress.emit(10, "Unzipping and patching mdk.")
         logging.info('Started unzipping and patching mdk.')
-        unzip_and_patch_mdk(mdk_path, 'tmp/mdk', 'local_MDG',False)
+        unzip_and_patch_mdk(mdk_path, 'result/merged_mdk', 'local_MDG', False)
         logging.info('Finished unzipping and patching mdk.')
 
         self.progress.emit(30, "Started initialisation of mdk.")
         logging.info("Started initialisation of mdk.")
         logging.warning(f'If you initializing mdk of this version first time on you pc, it can take some time.')
-        os.system("cd tmp/mdk && .\gradlew.bat build")
+        os.system("cd result/merged_mdk && .\gradlew.bat build")
         logging.info("Finished initialisation of mdk.")
 
         self.progress.emit(100, "Initialisation of mdk complete.")

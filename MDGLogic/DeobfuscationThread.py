@@ -16,7 +16,6 @@ class DeobfuscationThread(threading.Thread):
         super().__init__()
 
     def run(self):
-        create_folder('deobfuscation_MDKs')
         current_mdk_path = f'tmp/deobfuscation_MDKs/mdk_{self.thread_number}'
         deobfed_folder_name = f'local_MDG_{self.thread_number}'
         unzip_and_patch_mdk(self.serialized_widgets['mdk_path_line_edit']['text'],
@@ -24,7 +23,7 @@ class DeobfuscationThread(threading.Thread):
                             deobfed_folder_name,
                             True)
         shutil.copy(self.mod_path, os.path.join(current_mdk_path, 'libs'))
-        os.system(f"cd {current_mdk_path} && .\gradlew.bat build")
+        os.system(f"cd {current_mdk_path} && .\gradlew.bat compileJava")
         deobfed_mods_path = os.path.join(os.path.expanduser('~'),
                                          '.gradle',
                                          'caches',

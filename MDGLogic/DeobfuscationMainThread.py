@@ -6,6 +6,7 @@ from PySide6.QtCore import Signal
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGLogic.DeobfuscationThread import DeobfuscationThread
+from MDGUtil.FileUtils import create_folder
 
 
 class FailLogic:
@@ -54,6 +55,7 @@ class DeobfuscationMainThread(AbstractMDGThread):
         started_mods_count = 0
 
         clear_gradle()
+        create_folder('deobfuscation_MDKs')
 
         while processed_mods_count < mods_to_deobf_count:
             if len(self.deobf_threads) < allocated_threads_count and started_mods_count < mods_to_deobf_count:
@@ -95,7 +97,12 @@ class DeobfuscationMainThread(AbstractMDGThread):
 
         self.progress.emit(100, "Deobfuscation complete.")
 
+        shutil.rmtree('tmp/deobfuscation_MDKs')
+
         clear_gradle()
+
+        if not self.serialized_widgets['merge_check_box']['isEnabled'] or not self.serialized_widgets['merge_check_box']['isChecked']:
+            shutil.rmtree('result/merged_mdk')
 
     def terminate(self):
         for thread in self.deobf_threads:
