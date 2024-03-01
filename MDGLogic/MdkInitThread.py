@@ -34,7 +34,7 @@ class MdkInitThread(AbstractMDGThread):
         zipfile.ZipFile(mdk_path).extractall(path='tmp/mdk')
         logging.info('Finished unzipping mdk.')
 
-        self.progress.emit(10, "Patching mdk.")
+        self.progress.emit(20, "Patching mdk.")
         with open('tmp/mdk/build.gradle', 'a') as file:
             file.write(MDK_PATCH_STRING)
         create_folder('tmp/mdk/libs')
