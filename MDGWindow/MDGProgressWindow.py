@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QMainWindow
 
 from MDGLogic.CopyThread import CopyThread
 from MDGLogic.CriticalMBThread import CriticalMBThread
-from MDGLogic.DecompilationThread import DecompilationThread
+from MDGLogic.DecompilationMainThread import DecompilationThread, DecompilationMainThread
 from MDGLogic.DeobfuscationMainThread import DeobfuscationMainThread
 from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
@@ -89,7 +89,7 @@ class MDGProgressWindow(QMainWindow):
 
     @only_if_enabled
     def decomp_mods(self):
-        self.start_thread(DecompilationThread, self.ui.decomp_progress_bar, self.merge_mods)
+        self.start_thread(DecompilationMainThread, self.ui.decomp_progress_bar, self.merge_mods)
 
     @only_if_enabled
     def merge_mods(self):

@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+import time
 
 from PySide6.QtCore import Signal
 
@@ -93,7 +94,7 @@ class DeobfuscationMainThread(AbstractMDGThread):
                                 f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with error. Mod will be decompiled without deofuscation.')
 
             self.deobf_threads = new_threads
-            self.sleep(0.1)
+            time.sleep(0.1)
 
         logging.info('Deobfuscation complete.')
 

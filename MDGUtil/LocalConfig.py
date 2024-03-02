@@ -1,7 +1,7 @@
 import json
 import os
 
-DEFAULT_DECOMPILER_CMD = r"java -jar decompiler\vineflower-1.9.3.jar -dgs=1 {path_to_jar} {out_path}"
+DEFAULT_DECOMPILER_CMD = r"java -jar decompiler\fernflower.jar -dgs=1 -din=1 {path_to_jar} {out_path}"
 
 
 class LocalConfig:
