@@ -6,6 +6,7 @@ from PySide6.QtCore import QThread, Signal
 
 class AbstractMDGThread(QThread):
     progress = Signal(int, str)
+    critical_signal = Signal(str, str)
     progress_bar = Signal(int)
 
     def __init__(self, serialized_widgets):

@@ -3,6 +3,8 @@ import os
 import subprocess
 import zipfile
 
+from PySide6.QtCore import Signal
+
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGUtil.FileUtils import create_folder
 from MDGUtil.SubprocessKiller import kill_subprocess
@@ -35,6 +37,8 @@ def unzip_and_patch_mdk(mdk_path, unzip_to_path, deobf_to_folder_name, do_patch)
 
 
 class MdkInitialisationThread(AbstractMDGThread):
+    mdk_init_failed = Signal(str)
+
     def run(self):
         if not self.serialized_widgets['mdk_path_line_edit']['isEnabled']:
             self.progress.emit(100, "Initialisation of mdk skipped.")
@@ -51,8 +55,20 @@ class MdkInitialisationThread(AbstractMDGThread):
         self.progress.emit(30, "Started initialisation of mdk.")
         logging.info("Started initialisation of mdk.")
         logging.warning(f'If you initializing mdk of this version first time on you pc, it can take some time.')
-        self.cmd = subprocess.Popen(["gradlew.bat", "build"], cwd=os.path.join('result', 'merged_mdk'), shell=True)
+        self.cmd = subprocess.Popen(["gradlew.bat", "build"], cwd=os.path.join('result', 'merged_mdk'), shell=True,
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out, err = self.cmd.communicate()
+        exitcode = self.cmd.returncode
+        print(out, err, exitcode)
         self.cmd.wait()
+        if 'BUILD SUCCESSFUL' not in out.decode():
+            if 'Could not determine java version from' in err.decode():
+                self.critical_signal.emit('Wrong java version',
+                                          'MDK init failed due to wrong java version.\n'
+                                          'Check what your java version is fit for this MDK.')
+            else:
+                self.critical_signal.emit('MDK init failed', 'MDK init failed.')
+
         logging.info("Finished initialisation of mdk.")
 
         self.progress.emit(100, "Initialisation of mdk complete.")

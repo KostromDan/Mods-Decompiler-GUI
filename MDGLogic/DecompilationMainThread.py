@@ -21,8 +21,9 @@ def get_mods_iter():
 
 
 class DecompilationMainThread(AbstractMDGThread):
-    interrupt_signal = Signal(str)
-    decomp_threads: list[DecompilationThread] = []
+    def __init__(self,widgets):
+        super().__init__(widgets)
+        self.decomp_threads: list[DecompilationThread] = []
 
     def run(self):
         if not self.serialized_widgets['decomp_check_box']['isChecked']:
@@ -31,7 +32,7 @@ class DecompilationMainThread(AbstractMDGThread):
             return
 
         logging.info('Started decompilation.')
-        self.progress.emit(100, "Started decompilation.")
+        self.progress.emit(0, "Started decompilation.")
 
         allocated_threads_count = self.serialized_widgets['decomp_threads_horizontal_slider']['value']
 

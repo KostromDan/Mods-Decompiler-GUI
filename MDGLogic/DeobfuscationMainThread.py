@@ -28,8 +28,10 @@ def clear_gradle():
 
 
 class DeobfuscationMainThread(AbstractMDGThread):
-    interrupt_signal = Signal(str)
-    deobf_threads: list[DeobfuscationThread] = []
+
+    def __init__(self, widgets):
+        super().__init__(widgets)
+        self.deobf_threads: list[DeobfuscationThread] = []
 
     def run(self):
         if not self.serialized_widgets['deobf_check_box']['isChecked']:
@@ -88,7 +90,8 @@ class DeobfuscationMainThread(AbstractMDGThread):
                         elif deofb_fail_logic == FailLogic.INTERRUPT:
                             logging.critical(
                                 f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with error. Interrupted.')
-                            self.interrupt_signal.emit(os.path.basename(thread.mod_path))
+                            self.critical_signal.emit('Deobfuscation failed',
+                                                      f"Deobfuscation of {os.path.basename(thread.mod_path)} failed!")
                         elif deofb_fail_logic == FailLogic.DECOMPILE:
                             logging.warning(
                                 f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with error. Mod will be decompiled without deofuscation.')

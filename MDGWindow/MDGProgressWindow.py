@@ -58,7 +58,7 @@ class MDGProgressWindow(QMainWindow):
         self.main_window.show()
         self.destroy()
 
-    def start_thread(self, thread_class, progress_bar, on_finished):
+    def start_thread(self, thread_class, progress_bar, on_finished, critical_signal = None):
         if not self.isEnabled():
             return
         self.current_progress_bar = progress_bar
@@ -67,12 +67,16 @@ class MDGProgressWindow(QMainWindow):
         thread.progress.connect(self.set_progress)
         thread.progress_bar.connect(self.update_progress_bar)
         thread.finished.connect(on_finished)
+        if critical_signal is None:
+            thread.critical_signal.connect(self.critical_signal)
+        else:
+            thread.critical_signal.connect(critical_signal)
         thread.start()
         return thread
 
     def start(self):
-        thread = self.start_thread(InitialisationThread, self.ui.init_progress_bar, self.copy_mods)
-        thread.decomp_cmd_check_failed.connect(self.decomp_cmd_check_failed)
+        self.start_thread(InitialisationThread, self.ui.init_progress_bar, self.copy_mods, self.decomp_cmd_check_failed)
+
 
     @only_if_window_active
     def copy_mods(self):
@@ -84,8 +88,7 @@ class MDGProgressWindow(QMainWindow):
 
     @only_if_window_active
     def deobf_mods(self):
-        thread = self.start_thread(DeobfuscationMainThread, self.ui.deobf_progress_bar, self.decomp_mods)
-        thread.interrupt_signal.connect(self.deobf_iterrupt)
+        self.start_thread(DeobfuscationMainThread, self.ui.deobf_progress_bar, self.decomp_mods)
 
     @only_if_window_active
     def decomp_mods(self):
@@ -102,12 +105,6 @@ class MDGProgressWindow(QMainWindow):
     def set_progress(self, value, text):
         self.current_progress_bar.setValue(value)
         self.ui.currently_label.setText(text)
-
-    def decomp_cmd_check_failed(self):
-        self.main_window.mb = CriticalMBThread(None)
-        self.main_window.mb.finished.connect(self.main_window.decomp_cmd_check_failed)
-        self.main_window.mb.start()
-        self.destroy()
 
     def append_logger(self, color, msg):
         is_down = False
@@ -132,8 +129,14 @@ class MDGProgressWindow(QMainWindow):
     def update_progress_bar(self, i):
         self.current_progress_bar.setValue(i)
 
-    def deobf_iterrupt(self, mod_name):
-        self.main_window.mb = CriticalMBThread(mod_name)
-        self.main_window.mb.str_signal.connect(self.main_window.deobf_iterrupt)
+    def critical_signal(self, s1, s2):
+        self.main_window.mb = CriticalMBThread(s1, s2)
+        self.main_window.mb.critical_signal.connect(self.main_window.critical_from_progress_window)
+        self.main_window.mb.start()
+        self.destroy()
+
+    def decomp_cmd_check_failed(self, s1, s2):
+        self.main_window.mb = CriticalMBThread(s1, s2)
+        self.main_window.mb.critical_signal.connect(self.main_window.decomp_cmd_check_failed)
         self.main_window.mb.start()
         self.destroy()

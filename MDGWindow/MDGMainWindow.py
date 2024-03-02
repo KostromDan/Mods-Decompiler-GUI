@@ -231,22 +231,14 @@ class MDGMainWindow(QMainWindow):
                     out[member_name][field] = getattr(member_object, field)()
         return out
 
-    def decomp_cmd_check_failed(self):
-        self.setEnabled(True)
-        self.show()
+    def decomp_cmd_check_failed(self, s1, s2):
         self.ui.decomp_cmd_line_edit.setStyleSheet("border: 1px solid red")
-        QMessageBox.critical(self, 'Incorrect decompiler cmd',
-                             f"With this decompiler/decompiler cmd program won't work.\n"
-                             "This message indicates that {path_to_jar} is not decompiled to {out_path}.\n"
-                             f'Check decompiler/decompiler cmd: path, syntax, etc. And try again.',
-                             QMessageBox.StandardButton.Ok)
+        self.critical_from_progress_window(s1, s2)
 
-    def deobf_iterrupt(self, mod_name):
+    def critical_from_progress_window(self, s1, s2):
         self.setEnabled(True)
         self.show()
-        QMessageBox.critical(self, 'Deobfuscation failed',
-                             f"Deobfuscation of {mod_name} failed!",
-                             QMessageBox.StandardButton.Ok)
+        QMessageBox.critical(self, s1, s2, QMessageBox.StandardButton.Ok)
 
     def drag_enter_event(self, event, element):
         if event.mimeData().hasUrls():
