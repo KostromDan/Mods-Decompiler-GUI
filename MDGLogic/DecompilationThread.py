@@ -23,7 +23,6 @@ class DecompilationThread(multiprocessing.Process):
         result_folder = os.path.join('result', 'decompiled_mods', os.path.basename(self.mod_path.rstrip('.jar')))
         create_folder(result_folder)
         decomp_cmd_formatted = decomp_cmd.format(path_to_jar=self.mod_path, out_path=result_folder)
-        print(decomp_cmd_formatted)
         self.cmd = subprocess.Popen(decomp_cmd_formatted.split(' '), shell=True)
         with self.is_cmd_started.get_lock():
             self.is_cmd_started.value = True

@@ -37,8 +37,6 @@ def unzip_and_patch_mdk(mdk_path, unzip_to_path, deobf_to_folder_name, do_patch)
 
 
 class MdkInitialisationThread(AbstractMDGThread):
-    mdk_init_failed = Signal(str)
-
     def run(self):
         if not self.serialized_widgets['mdk_path_line_edit']['isEnabled']:
             self.progress.emit(100, "Initialisation of mdk skipped.")
@@ -59,7 +57,6 @@ class MdkInitialisationThread(AbstractMDGThread):
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = self.cmd.communicate()
         exitcode = self.cmd.returncode
-        print(out, err, exitcode)
         self.cmd.wait()
         if 'BUILD SUCCESSFUL' not in out.decode():
             if 'Could not determine java version from' in err.decode():
