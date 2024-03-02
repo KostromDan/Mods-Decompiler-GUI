@@ -32,7 +32,7 @@ class DecompilationThread(multiprocessing.Process):
             if self.kill_cmd.value:
                 kill_subprocess(self.cmd.pid)
                 return
-        decompiled_jar_path = os.path.join(result_folder,os.path.basename(self.mod_path))
+        decompiled_jar_path = os.path.join(result_folder, os.path.basename(self.mod_path))
         zipfile.ZipFile(decompiled_jar_path).extractall(result_folder)
         os.remove(decompiled_jar_path)
 

@@ -2,21 +2,21 @@
 import copy
 import logging
 
-from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow
 
 from MDGLogic.CopyThread import CopyThread
 from MDGLogic.CriticalMBThread import CriticalMBThread
-from MDGLogic.DecompilationMainThread import DecompilationThread, DecompilationMainThread
+from MDGLogic.DecompilationMainThread import DecompilationMainThread
 from MDGLogic.DeobfuscationMainThread import DeobfuscationMainThread
 from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
 from MDGUtil.MDGLogger import MDGLogger
+from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 
 
-def only_if_enabled(func):
+def only_if_window_active(func):
     def wrapper(self, *args, **kwargs):
         if self.isEnabled():
             result = func(self, *args, **kwargs)
@@ -74,28 +74,28 @@ class MDGProgressWindow(QMainWindow):
         thread = self.start_thread(InitialisationThread, self.ui.init_progress_bar, self.copy_mods)
         thread.decomp_cmd_check_failed.connect(self.decomp_cmd_check_failed)
 
-    @only_if_enabled
+    @only_if_window_active
     def copy_mods(self):
         self.start_thread(CopyThread, self.ui.copy_progress_bar, self.init_mdk)
 
-    @only_if_enabled
+    @only_if_window_active
     def init_mdk(self):
         self.start_thread(MdkInitialisationThread, self.ui.mdk_init_progress_bar, self.deobf_mods)
 
-    @only_if_enabled
+    @only_if_window_active
     def deobf_mods(self):
         thread = self.start_thread(DeobfuscationMainThread, self.ui.deobf_progress_bar, self.decomp_mods)
         thread.interrupt_signal.connect(self.deobf_iterrupt)
 
-    @only_if_enabled
+    @only_if_window_active
     def decomp_mods(self):
-        self.start_thread(DecompilationMainThread, self.ui.decomp_progress_bar, self.merge_mods)
+        self.start_thread(DecompilationMainThread, self.ui.decomp_progress_bar, self.complete)
 
-    @only_if_enabled
+    @only_if_window_active
     def merge_mods(self):
         self.start_thread(MergingThread, self.ui.merge_progress_bar, self.complete)
 
-    @only_if_enabled
+    @only_if_window_active
     def complete(self):
         pass
 

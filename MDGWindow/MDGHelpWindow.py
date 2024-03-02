@@ -2,10 +2,10 @@
 import sys
 import webbrowser
 
-from MDGui.Ui_MDGHelpWindow import Ui_MDGHelpWindow
 from PySide6.QtWidgets import QApplication, QMainWindow
 
 from MDGWindow.MDGMdkWindow import MDGMdkWindow
+from MDGui.Ui_MDGHelpWindow import Ui_MDGHelpWindow
 
 
 class MDGHelpWindow(QMainWindow):

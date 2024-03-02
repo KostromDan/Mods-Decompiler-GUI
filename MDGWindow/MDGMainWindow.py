@@ -4,12 +4,12 @@ import os
 import zipfile
 from collections import defaultdict
 
-from MDGui.Ui_MDGMainWindow import Ui_MDGMainWindow
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QTextBrowser
 
 from MDGUtil.LocalConfig import LocalConfig, DEFAULT_DECOMPILER_CMD
 from MDGWindow.MDGHelpWindow import MDGHelpWindow
 from MDGWindow.MDGProgressWindow import MDGProgressWindow
+from MDGui.Ui_MDGMainWindow import Ui_MDGMainWindow
 
 
 class MDGMainWindow(QMainWindow):

@@ -6,17 +6,18 @@ from PySide6.QtCore import Signal
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGLogic.DecompilationThread import DecompilationThread
-from MDGLogic.DeobfuscationThread import DeobfuscationThread
 from MDGUtil.FileUtils import create_folder
 
 
 def get_mods_iter():
-    for mod in os.listdir('tmp/mods'):
-        yield os.path.join('tmp', 'mods', mod)
+    try:
+        for mod in os.listdir('tmp/mods'):
+            yield os.path.join('tmp', 'mods', mod)
 
-    for mod in os.listdir('result/deobfuscated_mods'):
-        yield os.path.join('result', 'deobfuscated_mods', mod)
-
+        for mod in os.listdir('result/deobfuscated_mods'):
+            yield os.path.join('result', 'deobfuscated_mods', mod)
+    except FileNotFoundError:
+        pass
 
 
 class DecompilationMainThread(AbstractMDGThread):
@@ -30,6 +31,7 @@ class DecompilationMainThread(AbstractMDGThread):
             return
 
         logging.info('Started decompilation.')
+        self.progress.emit(100, "Started decompilation.")
 
         allocated_threads_count = self.serialized_widgets['decomp_threads_horizontal_slider']['value']
 
@@ -46,7 +48,7 @@ class DecompilationMainThread(AbstractMDGThread):
                 mod_name = os.path.basename(mod_path)
                 logging.info(f'Started decompilation of {mod_name}')
                 decomp_thread = DecompilationThread(mod_path,
-                                                   started_mods_count, self.serialized_widgets)
+                                                    started_mods_count, self.serialized_widgets)
                 started_mods_count += 1
                 self.decomp_threads.append(decomp_thread)
                 decomp_thread.start()

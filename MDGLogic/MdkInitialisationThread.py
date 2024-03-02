@@ -58,5 +58,8 @@ class MdkInitialisationThread(AbstractMDGThread):
         self.progress.emit(100, "Initialisation of mdk complete.")
 
     def terminate(self):
-        kill_subprocess(self.cmd.pid)
+        try:
+            kill_subprocess(self.cmd.pid)
+        except AttributeError:
+            pass
         super().terminate()
