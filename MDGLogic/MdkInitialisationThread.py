@@ -78,8 +78,6 @@ class MdkInitialisationThread(AbstractMDGThread):
         self.cmd = subprocess.Popen(["gradlew.bat", "build"], cwd=os.path.join('result', 'merged_mdk'), shell=True,
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = self.cmd.communicate()
-        exitcode = self.cmd.returncode
-        self.cmd.wait()
         if 'BUILD SUCCESSFUL' not in out.decode():
             if 'Could not determine java version from' in err.decode():
                 self.critical_signal.emit('Wrong java version',
