@@ -48,10 +48,10 @@ class DeobfuscationThread(multiprocessing.Process):
                     old_size = cur_size
                     cur_size = os.path.getsize(path_to_jar)
                     time.sleep(0.1)
-                # time_fisihed=datetime.datetime.now()
+                # time_finished=datetime.datetime.now()
                 # while self.cmd.poll() is None:
                 #     pass
-                # print(f'Time saved: {datetime.datetime.now()-time_fisihed}.')
+                # print(f'Time saved: {datetime.datetime.now()-time_finished}.')
 
             if path_to_jar_list or self.kill_cmd.value:
                 kill_subprocess(self.cmd.pid)
