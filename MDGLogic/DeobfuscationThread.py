@@ -3,6 +3,7 @@ import os.path
 import shutil
 import subprocess
 import time
+from pathlib import Path
 
 from MDGLogic.MdkInitialisationThread import unzip_and_patch_mdk
 from MDGUtil.SubprocessKiller import kill_subprocess
@@ -27,39 +28,49 @@ class DeobfuscationThread(multiprocessing.Process):
                             deobfed_folder_name,
                             True)
         shutil.copy(self.mod_path, os.path.join(current_mdk_path, 'libs'))
-        self.cmd = subprocess.Popen(["gradlew.bat", "compileJava"], cwd=current_mdk_path, shell=True)
-        with self.is_cmd_started.get_lock():
-            self.is_cmd_started.value = True
-        while self.cmd.poll() is None:
-            time.sleep(0.1)
-            if self.kill_cmd.value:
-                kill_subprocess(self.cmd.pid)
-                return
         deobfed_mods_path = os.path.join(os.path.expanduser('~'),
                                          '.gradle',
                                          'caches',
                                          'forge_gradle',
                                          'deobf_dependencies',
                                          deobfed_folder_name)
-        if not os.path.exists(deobfed_mods_path):
+        self.cmd = subprocess.Popen(["gradlew.bat", "compileJava"], cwd=current_mdk_path, shell=True)
+        with self.is_cmd_started.get_lock():
+            self.is_cmd_started.value = True
+        while self.cmd.poll() is None:
+            time.sleep(0.1)
+            path_to_jar_list = list(Path(deobfed_mods_path).rglob('*.jar'))
+            if path_to_jar_list:
+                path_to_jar = os.path.join(path_to_jar_list[0])
+                cur_size = os.path.getsize(path_to_jar)
+                old_size = -1
+                while cur_size == 0 or cur_size > old_size:
+                    old_size = cur_size
+                    cur_size = os.path.getsize(path_to_jar)
+                    time.sleep(0.1)
+                # time_fisihed=datetime.datetime.now()
+                # while self.cmd.poll() is None:
+                #     pass
+                # print(f'Time saved: {datetime.datetime.now()-time_fisihed}.')
+
+            if path_to_jar_list or self.kill_cmd.value:
+                kill_subprocess(self.cmd.pid)
+
+            if self.kill_cmd.value:
+                return
+
+        if not path_to_jar_list:
             return
 
-        for mod_dir in os.listdir(deobfed_mods_path):
-            dir_2 = os.path.join(deobfed_mods_path, mod_dir)
-            jar_dir = os.path.join(dir_2, os.listdir(dir_2)[0])
-            for file in os.listdir(jar_dir):
-                if file.endswith('.jar'):
-                    path_to_jar = os.path.join(jar_dir, file)
-                    mod_original_name = os.path.basename(self.mod_path)
-                    mod_new_mapped_name = mod_original_name.rstrip('.jar') + '_mapped_official.jar'
-                    new_jar_path = os.path.join(os.path.dirname(path_to_jar), mod_new_mapped_name)
-                    try:
-                        os.rename(path_to_jar,
-                                  new_jar_path)
-                    except FileExistsError:
-                        pass
-                    shutil.copy(new_jar_path, 'result/deobfuscated_mods')
-                    break
+        mod_original_name = os.path.basename(self.mod_path)
+        mod_new_mapped_name = mod_original_name.rstrip('.jar') + '_mapped_official.jar'
+        new_jar_path = os.path.join(os.path.dirname(path_to_jar), mod_new_mapped_name)
+        try:
+            os.rename(path_to_jar,
+                      new_jar_path)
+        except FileExistsError:
+            pass
+        shutil.copy(new_jar_path, 'result/deobfuscated_mods')
         with self.success.get_lock():
             self.success.value = True
 

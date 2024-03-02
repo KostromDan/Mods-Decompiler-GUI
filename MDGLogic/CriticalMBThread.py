@@ -1,7 +1,5 @@
 import time
 
-from PySide6.QtCore import Signal
-
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 
 

@@ -2,8 +2,6 @@ import logging
 import os
 import time
 
-from PySide6.QtCore import Signal
-
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGLogic.DecompilationThread import DecompilationThread
 from MDGUtil.FileUtils import create_folder
@@ -21,7 +19,7 @@ def get_mods_iter():
 
 
 class DecompilationMainThread(AbstractMDGThread):
-    def __init__(self,widgets):
+    def __init__(self, widgets):
         super().__init__(widgets)
         self.decomp_threads: list[DecompilationThread] = []
 

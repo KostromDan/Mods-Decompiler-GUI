@@ -3,8 +3,6 @@ import os
 import shutil
 import time
 
-from PySide6.QtCore import Signal
-
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGLogic.DeobfuscationThread import DeobfuscationThread
 from MDGUtil.FileUtils import create_folder
@@ -22,9 +20,9 @@ def clear_gradle():
                                      'caches',
                                      'forge_gradle',
                                      'deobf_dependencies')
-    for dir in os.listdir(deobfed_mods_path):
-        if dir.startswith('local_MDG_'):
-            shutil.rmtree(os.path.join(deobfed_mods_path, dir))
+    for folder in os.listdir(deobfed_mods_path):
+        if folder.startswith('local_MDG_'):
+            shutil.rmtree(os.path.join(deobfed_mods_path, folder))
 
 
 class DeobfuscationMainThread(AbstractMDGThread):
@@ -83,18 +81,21 @@ class DeobfuscationMainThread(AbstractMDGThread):
                         logging.info(f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with success.')
                         os.remove(thread.mod_path)
                     else:
-                        if deofb_fail_logic == FailLogic.SKIP:
-                            logging.warning(
-                                f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with error. Mod will be skipped.')
-                            os.remove(thread.mod_path)
-                        elif deofb_fail_logic == FailLogic.INTERRUPT:
-                            logging.critical(
-                                f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with error. Interrupted.')
-                            self.critical_signal.emit('Deobfuscation failed',
-                                                      f"Deobfuscation of {os.path.basename(thread.mod_path)} failed!")
-                        elif deofb_fail_logic == FailLogic.DECOMPILE:
-                            logging.warning(
-                                f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with error. Mod will be decompiled without deofuscation.')
+                        match deofb_fail_logic:
+                            case FailLogic.SKIP:
+                                logging.warning(
+                                    f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with error. Mod will be skipped.')
+                                os.remove(thread.mod_path)
+
+                            case FailLogic.DECOMPILE:
+                                logging.warning(
+                                    f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with error. Mod will be decompiled without deofuscation.')
+
+                            case FailLogic.INTERRUPT:
+                                logging.critical(
+                                    f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with error. Interrupted.')
+                                self.critical_signal.emit('Deobfuscation failed',
+                                                          f"Deobfuscation of {os.path.basename(thread.mod_path)} failed!")
 
             self.deobf_threads = new_threads
             time.sleep(0.1)

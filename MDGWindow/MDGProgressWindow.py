@@ -58,7 +58,7 @@ class MDGProgressWindow(QMainWindow):
         self.main_window.show()
         self.destroy()
 
-    def start_thread(self, thread_class, progress_bar, on_finished, critical_signal = None):
+    def start_thread(self, thread_class, progress_bar, on_finished, critical_signal=None):
         if not self.isEnabled():
             return
         self.current_progress_bar = progress_bar
@@ -76,7 +76,6 @@ class MDGProgressWindow(QMainWindow):
 
     def start(self):
         self.start_thread(InitialisationThread, self.ui.init_progress_bar, self.copy_mods, self.decomp_cmd_check_failed)
-
 
     @only_if_window_active
     def copy_mods(self):

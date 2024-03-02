@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+import traceback
 from datetime import datetime
 
 from PySide6.QtCore import QObject, Signal
@@ -11,8 +12,14 @@ LOGGER_FORMAT = "[%(asctime)s] [%(levelname)s]: %(message)s"
 LOGGER_WIDGET_COLORS = {
     'INFO': 'black',
     'WARNING': 'orange',
-    'CRITICAL': 'red'
+    'CRITICAL': 'red',
+    'ERROR': 'darkRed'
 }
+
+
+def log_exceptions(type, value, tb):
+    logging.error(''.join(list(traceback.TracebackException(type, value, tb).format(chain=True))))
+    sys.__excepthook__(type, value, tb)
 
 
 class RelativePathFilter(logging.Filter):
@@ -73,6 +80,8 @@ class MDGLogger:
         pyside_handler = PySideHandler()
         pyside_handler.setFormatter(logging.Formatter(LOGGER_FORMAT))
         logger.addHandler(pyside_handler)
+
+        sys.excepthook = log_exceptions
 
         logging.info("Logger initialisation complete.")
 
