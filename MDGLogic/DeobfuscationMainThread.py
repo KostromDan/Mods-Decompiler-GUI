@@ -56,7 +56,7 @@ class DeobfuscationMainThread(AbstractMDGThread):
         started_mods_count = 0
 
         clear_gradle()
-        create_folder('deobfuscation_MDKs')
+        create_folder('tmp/deobfuscation_MDKs')
         create_folder('result/deobfuscated_mods')
 
         while processed_mods_count < mods_to_deobf_count:

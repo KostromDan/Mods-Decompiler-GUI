@@ -91,7 +91,7 @@ class MDGProgressWindow(QMainWindow):
 
     @only_if_window_active
     def decomp_mods(self):
-        self.start_thread(DecompilationMainThread, self.ui.decomp_progress_bar, self.complete)
+        self.start_thread(DecompilationMainThread, self.ui.decomp_progress_bar, self.merge_mods)
 
     @only_if_window_active
     def merge_mods(self):
@@ -99,6 +99,7 @@ class MDGProgressWindow(QMainWindow):
 
     @only_if_window_active
     def complete(self):
+        self.ui.stop_button.setText('exit')
         pass
 
     def set_progress(self, value, text):

@@ -2,6 +2,7 @@ import multiprocessing
 import os.path
 import shutil
 import subprocess
+import threading
 import time
 from pathlib import Path
 
@@ -9,7 +10,7 @@ from MDGLogic.MdkInitialisationThread import unzip_and_patch_mdk
 from MDGUtil.SubprocessKiller import kill_subprocess
 
 
-class DeobfuscationThread(multiprocessing.Process):
+class DeobfuscationThread(threading.Thread):
 
     def __init__(self, mod_path: str, thread_number: int, serialized_widgets: dict):
         super().__init__()
@@ -48,10 +49,6 @@ class DeobfuscationThread(multiprocessing.Process):
                     old_size = cur_size
                     cur_size = os.path.getsize(path_to_jar)
                     time.sleep(0.1)
-                # time_finished=datetime.datetime.now()
-                # while self.cmd.poll() is None:
-                #     pass
-                # print(f'Time saved: {datetime.datetime.now()-time_finished}.')
 
             if path_to_jar_list or self.kill_cmd.value:
                 kill_subprocess(self.cmd.pid)
