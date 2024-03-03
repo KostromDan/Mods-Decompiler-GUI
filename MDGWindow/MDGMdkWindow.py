@@ -1,10 +1,9 @@
 # This Python file uses the following encoding: utf-8
 import webbrowser
 
+from MDGui.Ui_MDGMdkWindow import Ui_MDGMdkWindow
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QMainWindow
-
-from MDGui.Ui_MDGMdkWindow import Ui_MDGMdkWindow
 
 
 class MDGMdkWindow(QMainWindow):
@@ -16,7 +15,7 @@ class MDGMdkWindow(QMainWindow):
         self.ui.forge_button.clicked.connect(self.open_minecraft_forge)
         self.ui.close_button.clicked.connect(self.hide)
 
-        self.ui.label.setPixmap(QPixmap(u"images/mdk_instruction.png"))
+        self.ui.label.setPixmap(QPixmap(u'images/mdk_instruction.png'))
 
         self.setFixedSize(self.minimumSizeHint().width(), self.minimumSizeHint().height())
 

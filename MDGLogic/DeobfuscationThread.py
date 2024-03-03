@@ -34,7 +34,7 @@ class DeobfuscationThread(threading.Thread):
                                          'forge_gradle',
                                          'deobf_dependencies',
                                          deobfed_folder_name)
-        self.cmd = subprocess.Popen(["gradlew.bat", "compileJava"], cwd=current_mdk_path, shell=True)
+        self.cmd = subprocess.Popen(['gradlew.bat', 'compileJava'], cwd=current_mdk_path, shell=True)
         self.is_cmd_started = True
         while self.cmd.poll() is None:
             time.sleep(0.1)

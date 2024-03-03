@@ -2,6 +2,7 @@
 import copy
 import logging
 
+from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow
 
@@ -13,7 +14,6 @@ from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
 from MDGUtil.MDGLogger import MDGLogger
-from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 
 
 def only_if_window_active(func):
@@ -40,17 +40,17 @@ class MDGProgressWindow(QMainWindow):
 
         MDGLogger().logger_signal.append_logger_signal.connect(self.append_logger)
 
-        logging.info("Progress window started.")
+        logging.info('Progress window started.')
 
     def destroy(self):
         self.setEnabled(False)
         if len(self.thread_list) >= 1:
-            logging.info("Killing threads.")
+            logging.info('Killing threads.')
             for thread in reversed(self.thread_list):
                 thread.terminate()
             self.thread_list.clear()
-            logging.info("Killed threads.")
-        logging.info("MDGProgressWindow finished.")
+            logging.info('Killed threads.')
+        logging.info('MDGProgressWindow finished.')
         super().destroy()
 
     def stop_button(self):
@@ -121,7 +121,7 @@ class MDGProgressWindow(QMainWindow):
         cursor.setCharFormat(line_format)
 
         cursor.insertText(msg)
-        cursor.insertText("\n")
+        cursor.insertText('\n')
 
         if is_down:
             scrollbar.setValue(scrollbar.maximum())

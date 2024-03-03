@@ -5,23 +5,23 @@ import shutil
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 
 SKIP = [
-    ".cache",
-    "win32-x86-64",
-    "win32-x86",
-    "linux-x86-64",
+    '.cache',
+    'win32-x86-64',
+    'win32-x86',
+    'linux-x86-64',
 
 ]
 TO_RESOURCES = [
-    "assets",
-    "data",
-    "META-INF",
-    "spectrelib",
-    "reports",
-    "modernfix",
-    "licenses",
-    "kubejsadditions",
-    "google",
-    "coremods",
+    'assets',
+    'data',
+    'META-INF',
+    'spectrelib',
+    'reports',
+    'modernfix',
+    'licenses',
+    'kubejsadditions',
+    'google',
+    'coremods',
 ]
 
 
@@ -29,12 +29,12 @@ class MergingThread(AbstractMDGThread):
     def run(self):
         if not self.serialized_widgets['merge_check_box']['isChecked'] or not \
                 self.serialized_widgets['merge_check_box']['isEnabled']:
-            self.progress.emit(100, "Merging skipped.")
-            logging.info("Merging skipped.")
+            self.progress.emit(100, 'Merging skipped.')
+            logging.info('Merging skipped.')
             return
 
         logging.info('Merging started.')
-        self.progress.emit(0, "Merging started.")
+        self.progress.emit(0, 'Merging started.')
 
         mods_path = os.path.join('result', 'decompiled_mods')
         mods_count = len(mods_path)
@@ -43,8 +43,8 @@ class MergingThread(AbstractMDGThread):
         merge_resources = self.serialized_widgets['merge_resources_check_box']['isChecked']
 
         for n, decompiled_mod in enumerate(os.listdir(mods_path)):
-            self.progress.emit(int((n / mods_count) * 100), f"Started merging of {decompiled_mod}.")
-            logging.info(f"Started merging of {decompiled_mod}.")
+            self.progress.emit(int((n / mods_count) * 100), f'Started merging of {decompiled_mod}.')
+            logging.info(f'Started merging of {decompiled_mod}.')
             path_to_mod = os.path.join(mods_path, decompiled_mod)
             for file in os.listdir(path_to_mod):
                 path_to_file = os.path.join(path_to_mod, file)
@@ -62,8 +62,8 @@ class MergingThread(AbstractMDGThread):
                     if merge_resources:
                         shutil.copytree(path_to_file, 'result/merged_mdk/src/main/resources', dirs_exist_ok=True)
                     continue
-                if merge_code and not '_common_' in file:
+                if merge_code and '_common_' not in file:
                     shutil.copytree(path_to_file, f'result/merged_mdk/src/main/java/{file}', dirs_exist_ok=True)
 
         logging.info('Merging complete.')
-        self.progress.emit(100, "Merging complete.")
+        self.progress.emit(100, 'Merging complete.')

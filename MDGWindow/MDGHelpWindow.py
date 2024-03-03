@@ -1,11 +1,10 @@
 # This Python file uses the following encoding: utf-8
-import sys
 import webbrowser
 
-from PySide6.QtWidgets import QApplication, QMainWindow
+from MDGui.Ui_MDGHelpWindow import Ui_MDGHelpWindow
+from PySide6.QtWidgets import QMainWindow
 
 from MDGWindow.MDGMdkWindow import MDGMdkWindow
-from MDGui.Ui_MDGHelpWindow import Ui_MDGHelpWindow
 
 
 class MDGHelpWindow(QMainWindow):
@@ -24,10 +23,3 @@ class MDGHelpWindow(QMainWindow):
     def open_mdk_help(self):
         self.mdk_help_window = MDGMdkWindow()
         self.mdk_help_window.show()
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    widget = MDGHelpWindow()
-    widget.show()
-    sys.exit(app.exec())

@@ -12,20 +12,20 @@ class InitialisationThread(AbstractMDGThread):
     def run(self):
         decomp_cmd = self.serialized_widgets['decomp_cmd_line_edit']['text']
 
-        self.progress.emit(20, "Clearing tmp folder")
+        self.progress.emit(20, 'Clearing tmp folder')
         FileUtils.clear_tmp_folders()
-        logging.info("Cleared tmp folders.")
+        logging.info('Cleared tmp folders.')
 
-        self.progress.emit(40, "Clearing result folder")
+        self.progress.emit(40, 'Clearing result folder')
         FileUtils.clear_result_folders()
-        logging.info("Cleared result folders.")
+        logging.info('Cleared result folders.')
 
-        self.progress.emit(50, "Creating new folders")
+        self.progress.emit(50, 'Creating new folders')
         FileUtils.init_folders()
-        logging.info("Created new folders.")
+        logging.info('Created new folders.')
 
         if self.serialized_widgets['decomp_cmd_groupbox']['isEnabled']:
-            self.progress.emit(80, "Checking decompiler/decompiler cmd are correct")
+            self.progress.emit(80, 'Checking decompiler/decompiler cmd are correct')
             create_folder('tmp/decompiler_test')
             decomp_cmd_formatted = None
             try:
@@ -36,16 +36,16 @@ class InitialisationThread(AbstractMDGThread):
                 assert len(os.listdir('tmp/decompiler_test')) >= 1
             except Exception as e:
                 self.critical_signal.emit('Incorrect decompiler cmd',
-                                          f"With this decompiler/decompiler cmd program won't work.\n"
-                                          "This message indicates that {path_to_jar} is not decompiled to {out_path}.\n"
-                                          f'Check decompiler/decompiler cmd: path, syntax, etc. And try again.\n'
+                                          "With this decompiler/decompiler cmd program won't work.\n"
+                                          'This message indicates that {path_to_jar} is not decompiled to {out_path}.\n'
+                                          'Check decompiler/decompiler cmd: path, syntax, etc. And try again.\n'
                                           f'Cmd: {decomp_cmd_formatted}\n'
                                           f'Err: {e}')
                 return
-            logging.info("Checked decompiler/decompiler cmd are correct successfully.")
+            logging.info('Checked decompiler/decompiler cmd are correct successfully.')
 
-        self.progress.emit(100, "Initialisation complete")
-        logging.info("Initialisation completed.")
+        self.progress.emit(100, 'Initialisation complete')
+        logging.info('Initialisation completed.')
 
     def terminate(self):
         try:

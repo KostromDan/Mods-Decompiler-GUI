@@ -33,11 +33,11 @@ class DeobfuscationMainThread(AbstractMDGThread):
 
     def run(self):
         if not self.serialized_widgets['deobf_check_box']['isChecked']:
-            self.progress.emit(100, "Deobfuscation skipped.")
-            logging.info("Deobfuscation skipped.")
+            self.progress.emit(100, 'Deobfuscation skipped.')
+            logging.info('Deobfuscation skipped.')
             return
 
-        self.progress.emit(0, "Deobfuscation started.")
+        self.progress.emit(0, 'Deobfuscation started.')
         logging.info('Deobfuscation started.')
 
         allocated_threads_count = self.serialized_widgets['deobf_threads_horizontal_slider']['value']
@@ -95,14 +95,14 @@ class DeobfuscationMainThread(AbstractMDGThread):
                                 logging.critical(
                                     f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with error. Interrupted.')
                                 self.critical_signal.emit('Deobfuscation failed',
-                                                          f"Deobfuscation of {os.path.basename(thread.mod_path)} failed!")
+                                                          f'Deobfuscation of {os.path.basename(thread.mod_path)} failed!')
 
             self.deobf_threads = new_threads
             time.sleep(0.1)
 
         logging.info('Deobfuscation complete.')
 
-        self.progress.emit(100, "Deobfuscation complete.")
+        self.progress.emit(100, 'Deobfuscation complete.')
 
         shutil.rmtree('tmp/deobfuscation_MDKs')
 

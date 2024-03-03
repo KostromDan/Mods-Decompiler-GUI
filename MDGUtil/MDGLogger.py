@@ -8,7 +8,7 @@ from PySide6.QtCore import QObject, Signal
 
 from MDGUtil.FileUtils import create_folder, remove_folder
 
-LOGGER_FORMAT = "[%(asctime)s] [%(levelname)s]: %(message)s"
+LOGGER_FORMAT = '[%(asctime)s] [%(levelname)s]: %(message)s'
 LOGGER_WIDGET_COLORS = {
     'INFO': 'black',
     'WARNING': 'orange',
@@ -67,7 +67,7 @@ class MDGLogger:
         create_folder('logs')
 
         logging.basicConfig(level=logging.INFO, filename=os.path.join('logs', self.get_log_name()),
-                            filemode="w",
+                            filemode='w',
                             format=LOGGER_FORMAT)
 
         logger = logging.getLogger()
@@ -83,7 +83,7 @@ class MDGLogger:
 
         sys.excepthook = log_exceptions
 
-        logging.info("Logger initialisation complete.")
+        logging.info('Logger initialisation complete.')
 
     def get_log_name(self):
         current_date = datetime.now().strftime('%Y-%m-%d')

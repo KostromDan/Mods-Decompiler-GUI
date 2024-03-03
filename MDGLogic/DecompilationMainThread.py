@@ -25,12 +25,12 @@ class DecompilationMainThread(AbstractMDGThread):
 
     def run(self):
         if not self.serialized_widgets['decomp_check_box']['isChecked']:
-            self.progress.emit(100, "Decompilation skipped.")
-            logging.info("Decompilation skipped.")
+            self.progress.emit(100, 'Decompilation skipped.')
+            logging.info('Decompilation skipped.')
             return
 
         logging.info('Started decompilation.')
-        self.progress.emit(0, "Started decompilation.")
+        self.progress.emit(0, 'Started decompilation.')
 
         allocated_threads_count = self.serialized_widgets['decomp_threads_horizontal_slider']['value']
 
@@ -66,7 +66,7 @@ class DecompilationMainThread(AbstractMDGThread):
 
         logging.info('Decompilation complete.')
 
-        self.progress.emit(100, "Decompilation complete.")
+        self.progress.emit(100, 'Decompilation complete.')
 
     def terminate(self):
         for thread in self.decomp_threads:
