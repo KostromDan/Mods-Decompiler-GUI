@@ -25,41 +25,6 @@ TO_RESOURCES = [
 ]
 
 
-# def merge_all_mods_into_mdk(window):
-#
-#     mods_count = len(os.listdir('result'))
-#
-#     copy_assets = window.copy_assets
-#
-#     window.update_progress_text("Merging mods")
-#     window.update_progress_value(int((7 * 100) / STAGES))
-#     window.update_task_text("")
-#     window.update_task_value(0)
-#
-#     for k, mod in enumerate(os.listdir('result')):
-#         print(mod)
-#         window.update_task_value(int(((k + 1) / mods_count) * 100))
-#         window.update_task_text(f"Merged {k + 1}/{mods_count}")
-#
-#         for i in os.listdir(os.path.join('result', mod)):
-#             if i in SKIP:
-#                 continue
-#             path = os.path.join('result', mod, i)
-#             if os.path.isfile(path) or i in TO_RESOURCES:
-#                 if copy_assets:
-#                     if os.path.isfile(path):
-#                         pass
-#                         os.system(fr'echo F|xcopy.exe .\{path} .\mdk\src\main\resources\{i} /F /S /Y /E')
-#                     else:
-#                         pass
-#                         os.system(fr'echo D|xcopy.exe .\{path}\* .\mdk\src\main\resources\{i} /F /S /Y /E')
-#                 continue
-#             if i == "resources":
-#                 if copy_assets:
-#                     os.system(fr'echo D|xcopy.exe .\{path}\* .\mdk\src\main\{i} /F /S /Y /E')
-#                 continue
-#             if not '_common_' in i:
-#                 os.system(fr'echo D|xcopy.exe .\{path}\* .\mdk\src\main\java\{i} /F /S /Y /E')
 class MergingThread(AbstractMDGThread):
     def run(self):
         if not self.serialized_widgets['merge_check_box']['isChecked'] or not \
