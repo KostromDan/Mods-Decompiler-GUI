@@ -6,6 +6,7 @@ import zipfile
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGUtil.FileUtils import create_folder
 from MDGUtil.SubprocessKiller import kill_subprocess
+from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
 
 MDK_PATCH_STRING_DEOBF = """repositories {
     flatDir {
@@ -77,14 +78,19 @@ class MdkInitialisationThread(AbstractMDGThread):
         logging.warning('If you initializing mdk of this version first time on you pc, it can take some time.')
         self.cmd = subprocess.Popen(['gradlew.bat', 'build'], cwd=os.path.join('result', 'merged_mdk'), shell=True,
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = self.cmd.communicate()
-        if 'BUILD SUCCESSFUL' not in out.decode():
-            if 'Could not determine java version from' in err.decode():
+
+        cmd_out_analyse_thread = SubprocessOutsAnalyseThread(self.cmd)
+        cmd_out_analyse_thread.start()
+        cmd_out_analyse_thread.join()
+
+        if 'BUILD SUCCESSFUL' not in cmd_out_analyse_thread.out:
+            if 'Could not determine java version from' in cmd_out_analyse_thread.err:
                 self.critical_signal.emit('Wrong java version',
                                           'MDK init failed due to wrong java version.\n'
                                           'Check what your java version is fit for this MDK.')
             else:
-                self.critical_signal.emit('MDK init failed', 'MDK init failed.')
+                self.critical_signal.emit('MDK init failed', 'MDK init failed.\n'
+                                                             'Check the lastest log for more details.')
 
         logging.info('Finished initialisation of mdk.')
 

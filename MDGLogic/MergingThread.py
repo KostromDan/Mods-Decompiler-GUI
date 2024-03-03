@@ -42,6 +42,8 @@ class MergingThread(AbstractMDGThread):
         merge_code = self.serialized_widgets['merge_code_check_box']['isChecked']
         merge_resources = self.serialized_widgets['merge_resources_check_box']['isChecked']
 
+        shutil.rmtree('result/merged_mdk/src/main')
+
         for n, decompiled_mod in enumerate(os.listdir(mods_path)):
             self.progress.emit(int((n / mods_count) * 100), f'Started merging of {decompiled_mod}.')
             logging.info(f'Started merging of {decompiled_mod}.')

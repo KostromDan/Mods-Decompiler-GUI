@@ -91,4 +91,4 @@ class MDGLogger:
         for file in os.listdir('logs'):
             if file.startswith(current_date):
                 current_date_count += 1
-        return f'{current_date}-{current_date_count}'
+        return f'{current_date}-{current_date_count}.log'

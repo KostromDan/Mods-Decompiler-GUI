@@ -23,4 +23,4 @@ class CopyThread(AbstractMDGThread):
             if ' ' in mod:
                 os.rename(os.path.join('tmp', 'mods', mod), os.path.join('tmp', 'mods', mod.replace(' ', '_')))
             logging.info(f'Finished copying {mod}')
-        self.progress.emit(100, f'Finished copying mods.')
+        self.progress.emit(100, 'Finished copying mods.')

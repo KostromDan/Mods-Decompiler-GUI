@@ -1,12 +1,23 @@
 import logging
 import os
 import subprocess
+import threading
+import time
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGUtil import FileUtils
 from MDGUtil.FileUtils import create_folder
 from MDGUtil.SubprocessKiller import kill_subprocess
+from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
+from PySide6.QtCore import QThread
 
+
+class ExceptionThread(QThread):
+    def __init__(self,e):
+        super().__init__()
+        self.e =e
+    def run(self):
+        raise self.e
 
 class InitialisationThread(AbstractMDGThread):
     def run(self):
@@ -26,21 +37,26 @@ class InitialisationThread(AbstractMDGThread):
 
         if self.serialized_widgets['decomp_cmd_groupbox']['isEnabled']:
             self.progress.emit(80, 'Checking decompiler/decompiler cmd are correct')
+            logging.info('Checking decompiler/decompiler cmd are correct')
             create_folder('tmp/decompiler_test')
-            decomp_cmd_formatted = None
             try:
                 decomp_cmd_formatted = decomp_cmd.format(path_to_jar='decompiler/decompiler_test_mod.jar',
                                                          out_path='tmp/decompiler_test')
-                self.cmd = subprocess.Popen(decomp_cmd_formatted.split(' '), shell=True)
-                self.cmd.wait()
+                self.cmd = subprocess.Popen(decomp_cmd_formatted.split(' '), shell=True,
+                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                cmd_analyse_thread = SubprocessOutsAnalyseThread(self.cmd)
+                cmd_analyse_thread.start()
+                cmd_analyse_thread.join()
                 assert len(os.listdir('tmp/decompiler_test')) >= 1
             except Exception as e:
+                thread = ExceptionThread(e)
+                thread.start()
+                time.sleep(0.1)
                 self.critical_signal.emit('Incorrect decompiler cmd',
                                           "With this decompiler/decompiler cmd program won't work.\n"
                                           'This message indicates that {path_to_jar} is not decompiled to {out_path}.\n'
                                           'Check decompiler/decompiler cmd: path, syntax, etc. And try again.\n'
-                                          f'Cmd: {decomp_cmd_formatted}\n'
-                                          f'Err: {e}')
+                                          'Open the lastest log for more details.\n')
                 return
             logging.info('Checked decompiler/decompiler cmd are correct successfully.')
 

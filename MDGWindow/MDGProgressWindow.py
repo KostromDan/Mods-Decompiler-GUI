@@ -2,9 +2,8 @@
 import copy
 import logging
 
-from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 from PySide6.QtGui import QTextCursor, QColor
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QMainWindow, QMessageBox
 
 from MDGLogic.CopyThread import CopyThread
 from MDGLogic.CriticalMBThread import CriticalMBThread
@@ -14,6 +13,7 @@ from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
 from MDGUtil.MDGLogger import MDGLogger
+from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 
 
 def only_if_window_active(func):
@@ -40,6 +40,8 @@ class MDGProgressWindow(QMainWindow):
 
         MDGLogger().logger_signal.append_logger_signal.connect(self.append_logger)
 
+        self.completed = False
+
         logging.info('Progress window started.')
 
     def destroy(self):
@@ -57,6 +59,17 @@ class MDGProgressWindow(QMainWindow):
         self.main_window.setEnabled(True)
         self.main_window.show()
         self.destroy()
+
+    def closeEvent(self, event):
+        if not self.completed:
+            reply = QMessageBox.question(self, 'Confirmation', 'Are you sure you want to quit?',
+                                         QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if reply == QMessageBox.Yes:
+                self.stop_button()
+                event.accept()
+            else:
+                event.ignore()
+        self.stop_button()
 
     def start_thread(self, thread_class, progress_bar, on_finished, critical_signal=None):
         if not self.isEnabled():
@@ -100,6 +113,7 @@ class MDGProgressWindow(QMainWindow):
     @only_if_window_active
     def complete(self):
         self.ui.stop_button.setText('exit')
+        self.completed = True
         pass
 
     def set_progress(self, value, text):

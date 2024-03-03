@@ -178,6 +178,6 @@ class Ui_MDGProgressWindow(object):
 #if QT_CONFIG(accessibility)
         self.logger_text_edit.setAccessibleName("")
 #endif // QT_CONFIG(accessibility)
-        self.stop_button.setText(QCoreApplication.translate("MDGProgressWindow", u"Stop", None))
+        self.stop_button.setText(QCoreApplication.translate("MDGProgressWindow", u"stop", None))
     # retranslateUi
 
