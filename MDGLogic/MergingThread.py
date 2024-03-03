@@ -78,7 +78,7 @@ class MergingThread(AbstractMDGThread):
         merge_resources = self.serialized_widgets['merge_resources_check_box']['isChecked']
 
         for n, decompiled_mod in enumerate(os.listdir(mods_path)):
-            self.progress.emit((n / mods_count) * 100, f"Started merging of {decompiled_mod}.")
+            self.progress.emit(int((n / mods_count) * 100), f"Started merging of {decompiled_mod}.")
             path_to_mod = os.path.join(mods_path, decompiled_mod)
             for file in os.listdir(path_to_mod):
                 path_to_file = os.path.join(path_to_mod, file)
@@ -87,7 +87,8 @@ class MergingThread(AbstractMDGThread):
                 if os.path.isfile(path_to_file) or file in TO_RESOURCES:
                     if merge_resources:
                         if os.path.isdir(path_to_file):
-                            shutil.copytree(path_to_file, f'result/merged_mdk/src/main/resources/{file}',dirs_exist_ok=True)
+                            shutil.copytree(path_to_file, f'result/merged_mdk/src/main/resources/{file}',
+                                            dirs_exist_ok=True)
                         else:
                             shutil.copy(path_to_file, 'result/merged_mdk/src/main/resources')
                     continue
@@ -96,7 +97,7 @@ class MergingThread(AbstractMDGThread):
                         shutil.copy(path_to_file, 'result/merged_mdk/src/main/resources')
                     continue
                 if merge_code and not '_common_' in file:
-                    shutil.copytree(path_to_file, f'result/merged_mdk/src/main/java/{file}',dirs_exist_ok=True)
+                    shutil.copytree(path_to_file, f'result/merged_mdk/src/main/java/{file}', dirs_exist_ok=True)
 
         logging.info('Merging complete.')
         self.progress.emit(100, "Merging complete.")

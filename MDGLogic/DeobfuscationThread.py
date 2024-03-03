@@ -1,4 +1,3 @@
-import multiprocessing
 import os.path
 import shutil
 import subprocess
@@ -17,9 +16,9 @@ class DeobfuscationThread(threading.Thread):
         self.mod_path = mod_path
         self.thread_number = thread_number
         self.serialized_widgets = serialized_widgets
-        self.is_cmd_started = multiprocessing.Value('b', False)
-        self.kill_cmd = multiprocessing.Value('b', False)
-        self.success = multiprocessing.Value('b', False)
+        self.is_cmd_started = False
+        self.kill_cmd = False
+        self.success = False
 
     def run(self):
         current_mdk_path = f'tmp/deobfuscation_MDKs/mdk_{self.thread_number}'
@@ -36,8 +35,7 @@ class DeobfuscationThread(threading.Thread):
                                          'deobf_dependencies',
                                          deobfed_folder_name)
         self.cmd = subprocess.Popen(["gradlew.bat", "compileJava"], cwd=current_mdk_path, shell=True)
-        with self.is_cmd_started.get_lock():
-            self.is_cmd_started.value = True
+        self.is_cmd_started = True
         while self.cmd.poll() is None:
             time.sleep(0.1)
             path_to_jar_list = list(Path(deobfed_mods_path).rglob('*.jar'))
@@ -50,10 +48,10 @@ class DeobfuscationThread(threading.Thread):
                     cur_size = os.path.getsize(path_to_jar)
                     time.sleep(0.1)
 
-            if path_to_jar_list or self.kill_cmd.value:
+            if path_to_jar_list or self.kill_cmd:
                 kill_subprocess(self.cmd.pid)
 
-            if self.kill_cmd.value:
+            if self.kill_cmd:
                 return
 
         if not path_to_jar_list:
@@ -68,16 +66,14 @@ class DeobfuscationThread(threading.Thread):
         except FileExistsError:
             pass
         shutil.copy(new_jar_path, 'result/deobfuscated_mods')
-        with self.success.get_lock():
-            self.success.value = True
+        self.success = True
 
     def is_success(self):
-        return self.success.value
+        return self.success
 
     def terminate(self):
-        with self.kill_cmd.get_lock():
-            self.kill_cmd.value = True
-        if not self.is_cmd_started.value:
+        self.kill_cmd = True
+        if not self.is_cmd_started:
             try:
                 super().kill()
             except AttributeError:
