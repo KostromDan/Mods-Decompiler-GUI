@@ -41,8 +41,11 @@ class DeobfuscationThread(threading.Thread):
                             True)
         shutil.copy(self.mod_path, os.path.join(current_mdk_path, 'libs'))
         new_mod_name = remove_unsupported_symbols(os.path.basename(self.mod_path))
-        os.rename(os.path.join(current_mdk_path, 'libs', os.path.basename(self.mod_path)),
-                  os.path.join(current_mdk_path, 'libs', new_mod_name))
+        try:
+            os.rename(os.path.join(current_mdk_path, 'libs', os.path.basename(self.mod_path)),
+                      os.path.join(current_mdk_path, 'libs', new_mod_name))
+        except FileExistsError:
+            pass
         deobfed_mods_path = os.path.join(os.path.expanduser('~'),
                                          '.gradle',
                                          'caches',
