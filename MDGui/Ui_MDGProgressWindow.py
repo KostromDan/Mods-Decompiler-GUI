@@ -24,7 +24,7 @@ class Ui_MDGProgressWindow(object):
     def setupUi(self, MDGProgressWindow):
         if not MDGProgressWindow.objectName():
             MDGProgressWindow.setObjectName(u"MDGProgressWindow")
-        MDGProgressWindow.resize(1039, 546)
+        MDGProgressWindow.resize(1100, 546)
         MDGProgressWindow.setMaximumSize(QSize(16777215, 16777215))
         self.centralwidget = QWidget(MDGProgressWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -147,7 +147,7 @@ class Ui_MDGProgressWindow(object):
         MDGProgressWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGProgressWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1039, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1100, 22))
         MDGProgressWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MDGProgressWindow)
         self.statusbar.setObjectName(u"statusbar")

@@ -3,6 +3,8 @@ import os
 import shutil
 import time
 
+from PySide6.QtCore import Signal
+
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGLogic.DeobfuscationThread import DeobfuscationThread
 from MDGUtil.FileUtils import create_folder
@@ -26,6 +28,8 @@ def clear_gradle():
 
 
 class DeobfuscationMainThread(AbstractMDGThread):
+    failed_mod_signal = Signal(str)
+    fail_logic_signal = Signal(object)
 
     def __init__(self, widgets):
         super().__init__(widgets)
@@ -48,6 +52,8 @@ class DeobfuscationMainThread(AbstractMDGThread):
             deofb_fail_logic = FailLogic.SKIP
         elif self.serialized_widgets['deobf_failed_radio_decompile']['isChecked']:
             deofb_fail_logic = FailLogic.DECOMPILE
+
+        self.fail_logic_signal.emit(deofb_fail_logic)
 
         mods_list = os.listdir('tmp/mods')
         mods_iter = iter(mods_list)
@@ -96,6 +102,7 @@ class DeobfuscationMainThread(AbstractMDGThread):
                                     f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with error. Interrupted.')
                                 self.critical_signal.emit('Deobfuscation failed',
                                                           f'Deobfuscation of {os.path.basename(thread.mod_path)} failed!')
+                        self.failed_mod_signal.emit(os.path.basename(thread.mod_path))
 
             self.deobf_threads = new_threads
             time.sleep(0.1)

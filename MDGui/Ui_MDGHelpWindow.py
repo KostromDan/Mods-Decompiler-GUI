@@ -43,7 +43,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 1765))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 1745))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)
@@ -53,8 +53,8 @@ class Ui_MDGHelpWindow(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.textBrowser_2.sizePolicy().hasHeightForWidth())
         self.textBrowser_2.setSizePolicy(sizePolicy1)
-        self.textBrowser_2.setMinimumSize(QSize(0, 250))
-        self.textBrowser_2.setMaximumSize(QSize(16777215, 250))
+        self.textBrowser_2.setMinimumSize(QSize(0, 230))
+        self.textBrowser_2.setMaximumSize(QSize(16777215, 230))
         self.textBrowser_2.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.textBrowser_2.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
 
@@ -217,10 +217,9 @@ class Ui_MDGHelpWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> </p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt; font-weight:700;\">MDG (Mods Decompiler Gui)</span><span style=\" font-size:12pt; font-weight:700;\">:</span><br />The program is designed to simplify and make deobfuscation and decompilation of mods a one-click solution for everyone interest"
-                        "ed.<br />In almost all English-speaking modding communities, the topic of decompilation is prohibited. If someone tries to discuss decompilation and deobfuscation, ARR hamsters will immediately ban them. Since someone will be able to decompile their paid mods and disrupt their profits. Although the majority (95%) those who are interested in this really need to see how something works, find a bug, they are not going to decompile their paid mods in order to break the protection. So it is almost impossible for a novice modder, and even more so for a modpackmaker, to learn how to do what this program does. I want to overcome this and make sure that mods decompilation and deobfuscation can be used by any person, who needs it, even those who only came to modding. A superintuitive one-click solution. You don't know how things work? Just one click and you got your decomplied code!<br />This tool could save us hundreds of hours when developing modpacks or fixing conflicts in mods. For example, it has already saved me a"
-                        "round 30 hours. Instead of binary searching in mods, which takes a couple of hours, this program allows us to find conflicts/problematic mod within 5 minutes.<br />If you don't know whether you need a specific option, use the documentation below. Every option is documented.<br />If you just want the code of your modpack to see how things work, simply don't modify the settings. The program will already do what you need with default settings.<br />Program works by this algorithm; is some option disabled, it will be skipped: </p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> <span style=\" font-size:16pt; font-weight:700;\">MDG (Mods Decompiler Gui)</span><span style=\" font-size:12pt; font-weight:700;\">:</span><br />The program is designed to simplify and make deobfuscation and decompilation of mods a one-click solution for everyone interested.<br />In almost all English-speaking modding communities, the topic of decompilation is prohibited. If someone tries to discuss"
+                        " decompilation and deobfuscation, ARR hamsters will immediately ban them. Since someone will be able to decompile their paid mods and disrupt their profits. Although the majority (95%) those who are interested in this really need to see how something works, find a bug, they are not going to decompile their paid mods in order to break the protection. So it is almost impossible for a novice modder, and even more so for a modpackmaker, to learn how to do what this program does. I want to overcome this and make sure that mods decompilation and deobfuscation can be used by any person, who needs it, even those who only came to modding. A superintuitive one-click solution. You don't know how things work? Just one click and you got your decomplied code!<br />This tool could save us hundreds of hours when developing modpacks or fixing conflicts in mods. For example, it has already saved me around 30 hours. Instead of binary searching in mods, which takes a couple of hours, this program allows us to find conflicts/probl"
+                        "ematic mod within 5 minutes.<br />If you don't know whether you need a specific option, use the documentation below. Every option is documented.<br />If you just want the code of your modpack to see how things work, simply don't modify the settings. The program will already do what you need with default settings.<br />Program works by this algorithm; is some option disabled, it will be skipped: </p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">deobfuscate -&gt; decompile -&gt; merge to mdk</p></body></html>", None))
         self.mods_path.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"

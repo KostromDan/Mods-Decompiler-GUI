@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import multiprocessing
 import os
+import sys
 import zipfile
 from collections import defaultdict
 
@@ -331,3 +332,7 @@ class MDGMainWindow(QMainWindow):
     def check_mdk_needed(self):
         self.ui.mdk_path_vertical_group_box.setEnabled(
             self.ui.deobf_check_box.isChecked() or self.ui.merge_check_box.isChecked())
+
+    def closeEvent(self, event):
+        event.accept()
+        sys.exit()

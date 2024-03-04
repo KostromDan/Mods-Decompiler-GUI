@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import copy
 import logging
+import sys
 
 from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow, QMessageBox
@@ -13,14 +14,14 @@ from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
 from MDGUtil.MDGLogger import MDGLogger
+from MDGWindow.MDGResultWindow import MDGResultWindow
 from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 
 
 def only_if_window_active(func):
     def wrapper(self, *args, **kwargs):
         if self.isEnabled():
-            result = func(self, *args, **kwargs)
-            return result
+            return func(self, *args, **kwargs)
 
     return wrapper
 
@@ -42,6 +43,11 @@ class MDGProgressWindow(QMainWindow):
 
         self.completed = False
 
+        self.failed_deobfuscation_mods = []
+        self.fail_logic = None
+
+        self.result_window = None
+
         logging.info('Progress window started.')
 
     def destroy(self):
@@ -58,6 +64,8 @@ class MDGProgressWindow(QMainWindow):
     def stop_button(self):
         self.main_window.setEnabled(True)
         self.main_window.show()
+        if self.completed:
+            sys.exit()
         self.destroy()
 
     def closeEvent(self, event):
@@ -71,9 +79,11 @@ class MDGProgressWindow(QMainWindow):
                 event.ignore()
         self.stop_button()
 
-    def start_thread(self, thread_class, progress_bar, on_finished, critical_signal=None):
+    def start_thread(self, thread_class, progress_bar, on_finished, critical_signal=None, thread_signals=None):
         if not self.isEnabled():
             return
+        if thread_signals is None:
+            thread_signals = dict()
         self.current_progress_bar = progress_bar
         thread = thread_class(copy.deepcopy(self.main_window.serialized_widgets))
         self.thread_list.append(thread)
@@ -84,6 +94,8 @@ class MDGProgressWindow(QMainWindow):
             thread.critical_signal.connect(self.critical_signal)
         else:
             thread.critical_signal.connect(critical_signal)
+        for signal, func in thread_signals.items():
+            getattr(thread, signal).connect(func)
         thread.start()
         return thread
 
@@ -100,7 +112,10 @@ class MDGProgressWindow(QMainWindow):
 
     @only_if_window_active
     def deobf_mods(self):
-        self.start_thread(DeobfuscationMainThread, self.ui.deobf_progress_bar, self.decomp_mods)
+        self.start_thread(DeobfuscationMainThread, self.ui.deobf_progress_bar, self.decomp_mods, thread_signals={
+            'failed_mod_signal': self.failed_deobf_mod,
+            'fail_logic_signal': self.set_fail_logic
+        })
 
     @only_if_window_active
     def decomp_mods(self):
@@ -114,7 +129,10 @@ class MDGProgressWindow(QMainWindow):
     def complete(self):
         self.ui.stop_button.setText('exit')
         self.completed = True
-        pass
+        self.setEnabled(False)
+        self.hide()
+        self.result_window = MDGResultWindow(self)
+        self.result_window.show()
 
     def set_progress(self, value, text):
         self.current_progress_bar.setValue(value)
@@ -154,3 +172,9 @@ class MDGProgressWindow(QMainWindow):
         self.main_window.mb.critical_signal.connect(self.main_window.decomp_cmd_check_failed)
         self.main_window.mb.start()
         self.destroy()
+
+    def failed_deobf_mod(self, mod):
+        self.failed_deobfuscation_mods.append(mod)
+
+    def set_fail_logic(self, logic):
+        self.fail_logic = logic

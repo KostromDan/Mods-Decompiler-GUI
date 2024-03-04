@@ -9,6 +9,18 @@ from MDGLogic.MdkInitialisationThread import unzip_and_patch_mdk
 from MDGUtil.SubprocessKiller import kill_subprocess
 
 
+def remove_unsupported_symbols(mod_name):
+    new_name = []
+    for symbol in mod_name:
+        if symbol.isalpha() or symbol.isdigit() or symbol in ['-', '.']:
+            new_name.append(symbol)
+            continue
+        new_name.append('-')
+    if new_name[-1] == '-':
+        new_name.append('mod')
+    return ''.join(new_name)
+
+
 class DeobfuscationThread(threading.Thread):
 
     def __init__(self, mod_path: str, thread_number: int, serialized_widgets: dict):
@@ -28,6 +40,9 @@ class DeobfuscationThread(threading.Thread):
                             deobfed_folder_name,
                             True)
         shutil.copy(self.mod_path, os.path.join(current_mdk_path, 'libs'))
+        new_mod_name = remove_unsupported_symbols(os.path.basename(self.mod_path))
+        os.rename(os.path.join(current_mdk_path, 'libs', os.path.basename(self.mod_path)),
+                  os.path.join(current_mdk_path, 'libs', new_mod_name))
         deobfed_mods_path = os.path.join(os.path.expanduser('~'),
                                          '.gradle',
                                          'caches',

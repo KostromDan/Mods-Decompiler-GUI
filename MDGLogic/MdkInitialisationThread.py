@@ -1,6 +1,7 @@
 import logging
 import os
 import subprocess
+import sys
 import zipfile
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
@@ -79,7 +80,7 @@ class MdkInitialisationThread(AbstractMDGThread):
         self.cmd = subprocess.Popen(['gradlew.bat', 'build'], cwd=os.path.join('result', 'merged_mdk'), shell=True,
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        cmd_out_analyse_thread = SubprocessOutsAnalyseThread(self.cmd)
+        cmd_out_analyse_thread = SubprocessOutsAnalyseThread(self.cmd, stderr=sys.stdout, err_logger=logging.info)
         cmd_out_analyse_thread.start()
         cmd_out_analyse_thread.join()
 

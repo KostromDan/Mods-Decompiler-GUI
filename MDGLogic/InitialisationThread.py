@@ -1,23 +1,25 @@
 import logging
 import os
 import subprocess
-import threading
 import time
+
+from PySide6.QtCore import QThread
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGUtil import FileUtils
 from MDGUtil.FileUtils import create_folder
 from MDGUtil.SubprocessKiller import kill_subprocess
 from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
-from PySide6.QtCore import QThread
 
 
 class ExceptionThread(QThread):
-    def __init__(self,e):
+    def __init__(self, e):
         super().__init__()
-        self.e =e
+        self.e = e
+
     def run(self):
         raise self.e
+
 
 class InitialisationThread(AbstractMDGThread):
     def run(self):
