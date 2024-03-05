@@ -21,7 +21,8 @@ allows us to find conflicts/problematic mod within 5 minutes.
 If you don't know whether you need a specific option, use the builtin documentation. Every option is documented.
 If you just want the code of your modpack to see how things work, simply don't modify the settings. The program will
 already do what you need with default settings.
-Program works by this algorithm; is some option disabled, it will be skipped:
+Feel free to experiment with the settings, the GUI will not allow you to create an incorrect configuration.
+Program works by this algorithm; if some option disabled, it will be skipped:
 deobfuscate -> decompile -> merge to mdk
 
 ## Usage cases:
@@ -53,9 +54,9 @@ deobfuscate -> decompile -> merge to mdk
 ## Answers:
 
 * Fabric compatibility?
-* * Maybe(if I will see many people need it). But tool already can be used for fabric mods. Forge mdk can deobfucate fabric mods, since mappings are same. The only thing you will miss is you can't see Fabric source code in merged mdk.
+    * Maybe(if I will see many people need it). But tool already can be used for fabric mods. Forge mdk can deobfucate fabric mods, since mappings are same. The only thing you will miss is you can't see Fabric source code in merged mdk.
 * Version range?
-* * Any version where exist forge mdk and implemented fg.deobf().
+    * Any version where exist forge mdk and implemented fg.deobf().
 
 ## Screenshots:
 
