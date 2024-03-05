@@ -39,6 +39,7 @@ deobfuscate -> decompile -> merge to mdk
 * Builtin documentation. You can just press '?' and get help about any option.
 * Despite other decompiler/deobf tools this is independent from apis. It uses mdk to deobf mods. So it won't break after
   mappings api changes like most of other deobf tools.
+* Caching. If you use this tool regularly for same modpack. You don't need to wait while all mods will be decompiled and deobfuscated. Tool will decompile/deobfuscate only changed mods. Other will be taken from cache.
 
 ## Instruction:
 
@@ -51,7 +52,7 @@ deobfuscate -> decompile -> merge to mdk
 
 ## Answers:
 
-* Fabric version?
+* Fabric compatibility?
 * * Maybe(if I will see many people need it). But tool already can be used for fabric mods. Forge mdk can deobfucate fabric mods, since mappings are same. The only thing you will miss is you can't see Fabric source code in merged mdk.
 * Version range?
 * * Any version where exist forge mdk and implemented fg.deobf().
