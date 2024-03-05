@@ -3,6 +3,8 @@ import logging
 import os
 import time
 
+from PySide6.QtCore import Signal
+
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGLogic.DecompilationThread import DecompilationThread
 from MDGUtil.FileUtils import create_folder
@@ -21,6 +23,8 @@ def get_mods_iter(use_cached):
 
 
 class DecompilationMainThread(AbstractMDGThread):
+    failed_mod_signal = Signal(str)
+
     def __init__(self, widgets):
         super().__init__(widgets)
         self.decomp_threads: list[DecompilationThread] = []
@@ -68,7 +72,13 @@ class DecompilationMainThread(AbstractMDGThread):
                 else:
                     processed_mods_count += 1
                     self.progress_bar.emit((processed_mods_count / mods_to_decomp_count) * 100)
-                    logging.info(f'Finished decompilation of {os.path.basename(thread.mod_path)}')
+                    if thread.success:
+                        logging.info(f'Finished decompilation of {os.path.basename(thread.mod_path)} with success.')
+                    else:
+                        logging.warning(f'Finished decompilation of {os.path.basename(thread.mod_path)} with error.\n'
+                                        f'Out directory is empty or doesn\'t contain a single *.java file')
+                        self.failed_mod_signal.emit(os.path.basename(thread.mod_path))
+
 
             self.decomp_threads = new_threads
             time.sleep(0.1)

@@ -83,7 +83,7 @@ class DeobfuscationMainThread(AbstractMDGThread):
                     processed_mods_count += 1
                     self.progress_bar.emit((processed_mods_count / mods_to_deobf_count) * 100)
 
-                    if thread.is_success():
+                    if thread.success:
                         logging.info(f'Finished deobfuscation of {os.path.basename(thread.mod_path)} with success.')
                         os.remove(thread.mod_path)
                     else:

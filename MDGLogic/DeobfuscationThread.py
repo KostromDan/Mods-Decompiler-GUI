@@ -79,9 +79,6 @@ class DeobfuscationThread(threading.Thread):
         shutil.copy(new_jar_path, 'result/deobfuscated_mods')
         self.success = True
 
-    def is_success(self):
-        return self.success
-
     def terminate(self):
         self.kill_cmd = True
         if not self.is_cmd_started:

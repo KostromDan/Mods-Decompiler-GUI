@@ -60,7 +60,9 @@ def unzip_and_patch_mdk(mdk_path, unzip_to_path, deobf_to_folder_name, do_deobf_
 
 class MdkInitialisationThread(AbstractMDGThread):
     def run(self):
-        if not self.serialized_widgets['mdk_path_line_edit']['isEnabled']:
+        if (not self.serialized_widgets['mdk_path_line_edit']['isEnabled'] or
+                (not (self.serialized_widgets['merge_check_box']['isEnabled'] and
+                      self.serialized_widgets['merge_check_box']['isChecked']) and len(os.listdir('tmp/mods')) == 0)):
             self.progress.emit(100, 'Initialisation of mdk skipped.')
             logging.info('Initialisation of mdk skipped.')
             return

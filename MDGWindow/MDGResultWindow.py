@@ -32,16 +32,22 @@ class MDGResultWindow(QMainWindow):
         self.ui.exit_button.clicked.connect(sys.exit)
         self.ui.close_button.clicked.connect(self.close_button)
 
-        if self.progress_window.failed_deobfuscation_mods:
+        if self.progress_window.failed_deobfuscation_mods or self.progress_window.failed_decompilation_mods:
             for mod_name in self.progress_window.failed_deobfuscation_mods:
                 match self.progress_window.fail_logic:
                     case FailLogic.SKIP:
                         self.append_logger('orange',
-                                           f'Finished deobfuscation of {mod_name} with error. Mod was be skipped.')
+                                           f'Finished deobfuscation of {mod_name} with error. '
+                                           f'Mod was be skipped.')
 
                     case FailLogic.DECOMPILE:
                         self.append_logger('orange',
-                                           f'Finished deobfuscation of {mod_name} with error. Mod was decompiled without deofuscation.')
+                                           f'Finished deobfuscation of {mod_name} with error. '
+                                           f'Mod was decompiled without deofuscation.')
+            for mod_name in self.progress_window.failed_decompilation_mods:
+                self.append_logger('orange', (
+                    f'Finished decompilation of {mod_name} with error. '
+                    f'Out directory is empty or doesn\'t contain a single *.java file'))
         else:
             self.append_logger('green', 'Finished without errors.')
 
