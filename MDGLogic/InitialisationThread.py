@@ -78,7 +78,7 @@ class InitialisationThread(AbstractMDGThread):
             try:
                 decomp_cmd_formatted = decomp_cmd.format(path_to_jar='decompiler/decompiler_test_mod.jar',
                                                          out_path='tmp/decompiler_test')
-                self.cmd = subprocess.Popen(decomp_cmd_formatted.split(' '), shell=True,
+                self.cmd = subprocess.Popen(decomp_cmd_formatted, shell=True,
                                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 cmd_analyse_thread = SubprocessOutsAnalyseThread(self.cmd)
                 cmd_analyse_thread.start()

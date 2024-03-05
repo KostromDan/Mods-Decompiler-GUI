@@ -43,7 +43,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -316, 1163, 1881))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 1946))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)
@@ -112,8 +112,8 @@ class Ui_MDGHelpWindow(object):
         self.threads.setObjectName(u"threads")
         sizePolicy1.setHeightForWidth(self.threads.sizePolicy().hasHeightForWidth())
         self.threads.setSizePolicy(sizePolicy1)
-        self.threads.setMinimumSize(QSize(0, 80))
-        self.threads.setMaximumSize(QSize(16777215, 80))
+        self.threads.setMinimumSize(QSize(0, 110))
+        self.threads.setMaximumSize(QSize(16777215, 110))
         self.threads.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.threads.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
 
@@ -145,8 +145,8 @@ class Ui_MDGHelpWindow(object):
         self.decomp_cmd.setObjectName(u"decomp_cmd")
         sizePolicy1.setHeightForWidth(self.decomp_cmd.sizePolicy().hasHeightForWidth())
         self.decomp_cmd.setSizePolicy(sizePolicy1)
-        self.decomp_cmd.setMinimumSize(QSize(0, 130))
-        self.decomp_cmd.setMaximumSize(QSize(16777215, 130))
+        self.decomp_cmd.setMinimumSize(QSize(0, 165))
+        self.decomp_cmd.setMaximumSize(QSize(16777215, 165))
         self.decomp_cmd.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.decomp_cmd.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
 
@@ -280,7 +280,7 @@ class Ui_MDGHelpWindow(object):
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Deobfuscation/Decompilation Threads:</span> </p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This option allows you to configure the number of threads used in deobfuscation/decompilation. Using excessively large values may cause lag on your PC. Decreasing the value wil"
-                        "l slow down the process but reduce the load on your PC. Not recomended to use more threads than your system has. </p></body></html>", None))
+                        "l slow down the process but reduce the load on your PC. Not recomended to use more threads than your system has.<br />Deobfuscation threads is RAM intensive option. Each thread can eat up to 500 MB of RAM.<br />Decompilation is CPU intensive option. </p></body></html>", None))
         self.deobf_failed.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -318,7 +318,7 @@ class Ui_MDGHelpWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Decompilation cmd:</span><br />With this, you can configure console command with which program decompiles mod.</p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Add additional flags, change the decompiler, etc...<br />String must contain:<br />{path_to_jar} - will be replace"
                         "d with path to jar that we are going to decompile.<br />{out_path} - will be replaced with path to folder with decompiler output.</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Touch only if you are sure of what you are doing.</p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Touch only if you are sure of what you are doing.<br />If you have in JAVA_HOME java 16 or bellow, You need to replace &quot;java&quot; with path to java 17 or upper. like:<br />&quot;C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.10.7-hotspot\\bin\\java.exe&quot; -jar decompiler\\fernflower.jar -dgs=1 -din=1 {path_to_jar} {out_path}</p></body></html>", None))
         self.merge.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

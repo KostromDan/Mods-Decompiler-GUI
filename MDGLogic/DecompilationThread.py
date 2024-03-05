@@ -25,7 +25,7 @@ class DecompilationThread(threading.Thread):
         result_folder = os.path.join('result', 'decompiled_mods', os.path.basename(self.mod_path.removesuffix('.jar')))
         create_folder(result_folder)
         decomp_cmd_formatted = decomp_cmd.format(path_to_jar=self.mod_path, out_path=result_folder)
-        self.cmd = subprocess.Popen(decomp_cmd_formatted.split(' '), shell=True)
+        self.cmd = subprocess.Popen(decomp_cmd_formatted, shell=True)
         self.is_cmd_started = True
         while self.cmd.poll() is None:
             time.sleep(0.1)
