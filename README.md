@@ -22,7 +22,7 @@ If you don't know whether you need a specific option, use the builtin documentat
 If you just want the code of your modpack to see how things work, simply don't modify the settings. The program will
 already do what you need with default settings.
 Feel free to experiment with the settings, the GUI will not allow you to create an incorrect configuration.
-Program works by this algorithm; if some option disabled, it will be skipped:
+Program works by this algorithm; if some option is disabled, it will be skipped:
 deobfuscate -> decompile -> merge to mdk
 
 ## Usage cases:
