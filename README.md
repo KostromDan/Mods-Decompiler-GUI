@@ -61,12 +61,17 @@ deobfuscate -> decompile -> merge to mdk
 
 ### Main window:
 
-![image](https://github.com/KostromDan/Mods-Decompiler-GUI/assets/90044015/bc6bcc45-3652-49ec-bb00-20c6e8b66397)
+![image](https://github.com/KostromDan/Mods-Decompiler-GUI/assets/90044015/53f29014-87bb-4014-b740-09f46c4888ba)
 
 ### Help(documentation) window:
 
-![image](https://github.com/KostromDan/Mods-Decompiler-GUI/assets/90044015/b7ae85ce-0b03-45f0-a4a5-132d4f5c53d5)
+![image](https://github.com/KostromDan/Mods-Decompiler-GUI/assets/90044015/ad540ae3-d935-4c20-9704-ad836f7f7bd8)
 
 ### Progress window:
 
-![image](https://github.com/KostromDan/Mods-Decompiler-GUI/assets/90044015/c455cc6a-ce64-4f71-81fc-4b6926e8f6a2)
+![image](https://github.com/KostromDan/Mods-Decompiler-GUI/assets/90044015/7a7dcedb-2499-4896-a4d9-f5dbfbeec3b6)
+
+### Result window:
+
+![image](https://github.com/KostromDan/Mods-Decompiler-GUI/assets/90044015/fb55bcf7-8380-48b8-9e6c-682c79114a0f)
+
