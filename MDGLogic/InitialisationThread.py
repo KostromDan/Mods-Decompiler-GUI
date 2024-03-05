@@ -45,6 +45,7 @@ class InitialisationThread(AbstractMDGThread):
                     if os.path.isfile(path):
                         os.remove(path)
                     else:
+                        logging.info(f'Clearing {file}')
                         shutil.rmtree(path)
 
             cache_path = os.path.join('result', 'decompiled_mods', 'cache.json')

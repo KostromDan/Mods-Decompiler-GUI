@@ -7,6 +7,11 @@ import zipfile
 
 from MDGUtil.FileUtils import create_folder
 from MDGUtil.SubprocessKiller import kill_subprocess
+from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
+
+
+def do_nothing(s):
+    pass
 
 
 class DecompilationThread(threading.Thread):

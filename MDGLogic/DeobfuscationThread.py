@@ -56,24 +56,17 @@ class DeobfuscationThread(threading.Thread):
         self.is_cmd_started = True
         while self.cmd.poll() is None:
             time.sleep(0.1)
-            path_to_jar_list = list(Path(deobfed_mods_path).rglob('*.jar'))
-            if path_to_jar_list:
-                path_to_jar = os.path.join(path_to_jar_list[0])
-                cur_size = os.path.getsize(path_to_jar)
-                old_size = -1
-                while cur_size == 0 or cur_size > old_size:
-                    old_size = cur_size
-                    cur_size = os.path.getsize(path_to_jar)
-                    time.sleep(0.1)
-
-            if path_to_jar_list or self.kill_cmd:
-                kill_subprocess(self.cmd.pid)
 
             if self.kill_cmd:
+                kill_subprocess(self.cmd.pid)
                 return
+
+        path_to_jar_list = list(Path(deobfed_mods_path).rglob('*.jar'))
 
         if not path_to_jar_list:
             return
+
+        path_to_jar = os.path.join(path_to_jar_list[0])
 
         mod_original_name = os.path.basename(self.mod_path)
         mod_new_mapped_name = mod_original_name.removesuffix('.jar') + '_mapped_official.jar'
