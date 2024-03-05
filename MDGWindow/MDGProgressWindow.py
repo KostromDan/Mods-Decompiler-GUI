@@ -78,7 +78,9 @@ class MDGProgressWindow(QMainWindow):
                 event.accept()
             else:
                 event.ignore()
+                return
         self.stop_button()
+        event.accept()
 
     def start_thread(self, thread_class, progress_bar, on_finished, critical_signal=None, thread_signals=None):
         if not self.isEnabled():
