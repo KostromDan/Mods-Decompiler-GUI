@@ -1,9 +1,10 @@
 # This Python file uses the following encoding: utf-8
 import webbrowser
 
-from MDGui.Ui_MDGMdkWindow import Ui_MDGMdkWindow
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QMainWindow
+
+from MDGui.Ui_MDGMdkWindow import Ui_MDGMdkWindow
 
 
 class MDGMdkWindow(QMainWindow):

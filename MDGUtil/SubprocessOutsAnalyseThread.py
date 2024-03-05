@@ -26,7 +26,7 @@ class SubprocessOutAnalyseThread(threading.Thread):
                 # self.sys_out.flush()
                 self.current_line.append(symbol)
                 if symbol == '\n':
-                    line = ''.join(self.current_line).rstrip('\n').rstrip('\r')
+                    line = ''.join(self.current_line).rstrip('\n\r')
                     if line != '':
                         self.out_lines.append(line)
                         self.logger(line)

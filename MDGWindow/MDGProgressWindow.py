@@ -13,6 +13,7 @@ from MDGLogic.DeobfuscationMainThread import DeobfuscationMainThread
 from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
+from MDGUtil.FileUtils import remove_folder
 from MDGUtil.MDGLogger import MDGLogger
 from MDGWindow.MDGResultWindow import MDGResultWindow
 from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
@@ -104,7 +105,9 @@ class MDGProgressWindow(QMainWindow):
 
     @only_if_window_active
     def copy_mods(self):
-        self.start_thread(CopyThread, self.ui.copy_progress_bar, self.init_mdk)
+        self.start_thread(CopyThread, self.ui.copy_progress_bar, self.init_mdk, thread_signals={
+            'use_cached_signal': self.set_use_cached
+        })
 
     @only_if_window_active
     def init_mdk(self):
@@ -127,6 +130,7 @@ class MDGProgressWindow(QMainWindow):
 
     @only_if_window_active
     def complete(self):
+        remove_folder('tmp')
         self.ui.stop_button.setText('exit')
         self.completed = True
         self.setEnabled(False)
@@ -178,3 +182,6 @@ class MDGProgressWindow(QMainWindow):
 
     def set_fail_logic(self, logic):
         self.fail_logic = logic
+
+    def set_use_cached(self, use_cached):
+        self.main_window.serialized_widgets['use_cached'] = use_cached

@@ -1,10 +1,10 @@
 # This Python file uses the following encoding: utf-8
 import webbrowser
 
-from MDGui.Ui_MDGHelpWindow import Ui_MDGHelpWindow
 from PySide6.QtWidgets import QMainWindow
 
 from MDGWindow.MDGMdkWindow import MDGMdkWindow
+from MDGui.Ui_MDGHelpWindow import Ui_MDGHelpWindow
 
 
 class MDGHelpWindow(QMainWindow):

@@ -3,6 +3,7 @@ import os
 import shutil
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
+from MDGUtil.FileUtils import create_folder
 
 SKIP = [
     '.cache',
@@ -43,11 +44,14 @@ class MergingThread(AbstractMDGThread):
         merge_resources = self.serialized_widgets['merge_resources_check_box']['isChecked']
 
         shutil.rmtree('result/merged_mdk/src/main')
+        create_folder('result/merged_mdk/src/main')
 
         for n, decompiled_mod in enumerate(os.listdir(mods_path)):
+            path_to_mod = os.path.join(mods_path, decompiled_mod)
+            if os.path.isfile(path_to_mod):
+                continue
             self.progress.emit(int((n / mods_count) * 100), f'Started merging of {decompiled_mod}.')
             logging.info(f'Started merging of {decompiled_mod}.')
-            path_to_mod = os.path.join(mods_path, decompiled_mod)
             for file in os.listdir(path_to_mod):
                 path_to_file = os.path.join(path_to_mod, file)
                 if file in SKIP:
@@ -58,6 +62,7 @@ class MergingThread(AbstractMDGThread):
                             shutil.copytree(path_to_file, f'result/merged_mdk/src/main/resources/{file}',
                                             dirs_exist_ok=True)
                         else:
+                            create_folder('result/merged_mdk/src/main/resources')
                             shutil.copy(path_to_file, 'result/merged_mdk/src/main/resources')
                     continue
                 if file == 'resources':

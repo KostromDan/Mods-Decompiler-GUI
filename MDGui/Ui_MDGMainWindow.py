@@ -25,7 +25,7 @@ class Ui_MDGMainWindow(object):
     def setupUi(self, MDGMainWindow):
         if not MDGMainWindow.objectName():
             MDGMainWindow.setObjectName(u"MDGMainWindow")
-        MDGMainWindow.resize(677, 493)
+        MDGMainWindow.resize(677, 525)
         MDGMainWindow.setMaximumSize(QSize(16777215, 16777215))
         self.centralwidget = QWidget(MDGMainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -436,6 +436,25 @@ class Ui_MDGMainWindow(object):
 
         self.verticalLayout_3.addItem(self.verticalSpacer)
 
+        self.cache_horizontal_layout = QHBoxLayout()
+        self.cache_horizontal_layout.setObjectName(u"cache_horizontal_layout")
+        self.cache_check_box = QCheckBox(self.centralwidget)
+        self.cache_check_box.setObjectName(u"cache_check_box")
+        self.cache_check_box.setChecked(True)
+
+        self.cache_horizontal_layout.addWidget(self.cache_check_box)
+
+        self.help_cache_button = QPushButton(self.centralwidget)
+        self.help_cache_button.setObjectName(u"help_cache_button")
+        sizePolicy.setHeightForWidth(self.help_cache_button.sizePolicy().hasHeightForWidth())
+        self.help_cache_button.setSizePolicy(sizePolicy)
+        self.help_cache_button.setMaximumSize(QSize(20, 16777215))
+
+        self.cache_horizontal_layout.addWidget(self.help_cache_button)
+
+
+        self.verticalLayout_3.addLayout(self.cache_horizontal_layout)
+
         self.start_button = QPushButton(self.centralwidget)
         self.start_button.setObjectName(u"start_button")
         self.start_button.setAcceptDrops(False)
@@ -491,6 +510,8 @@ class Ui_MDGMainWindow(object):
         self.help_merge_button_2.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.download_sources_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Patch mdk with \"downloadSources = true\"", None))
         self.help_sources_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.cache_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Use cache", None))
+        self.help_cache_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.start_button.setText(QCoreApplication.translate("MDGMainWindow", u"start", None))
     # retranslateUi
 

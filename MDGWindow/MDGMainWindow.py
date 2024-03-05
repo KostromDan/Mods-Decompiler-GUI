@@ -5,30 +5,30 @@ import sys
 import zipfile
 from collections import defaultdict
 
-from MDGui.Ui_MDGMainWindow import Ui_MDGMainWindow
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QTextBrowser
 
 from MDGUtil.LocalConfig import LocalConfig, DEFAULT_DECOMPILER_CMD
 from MDGWindow.MDGHelpWindow import MDGHelpWindow
 from MDGWindow.MDGProgressWindow import MDGProgressWindow
+from MDGui.Ui_MDGMainWindow import Ui_MDGMainWindow
 
 
 class MDGMainWindow(QMainWindow):
-    was_decomp_enabled = False
-    config = LocalConfig()
-
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_MDGMainWindow()
         self.ui.setupUi(self)
 
+        self.config = LocalConfig()
+        self.was_decomp_enabled = False
+
         if self.config.is_first_launch():
             QMessageBox.information(self, 'First launch information',
                                     'Welcome to MDG (Mods Decompiler Gui)!\n'
-                                    'Please check licence of all mods, on which you going to use this tool,'
-                                    'otherwise usage of this tool can lead to license infrigment!\n'
-                                    'If you not shure how to use tool, which options do you need, click "?",\n'
-                                    'it will provide useful information and tips.',
+                                    'Please check the license of all mods that you are going to use with this tool.\n'
+                                    'Otherwise, usage of this tool can lead to license infringement.\n'
+                                    'If you are not sure how to use the tool or which options you need, click "?".\n'
+                                    'It will provide useful information and tips.',
                                     QMessageBox.StandardButton.Ok)
 
         self.ui.deobf_check_box.stateChanged.connect(self.deobf_checkbox_changed)
@@ -80,6 +80,7 @@ class MDGMainWindow(QMainWindow):
         self.ui.help_decomp_threads_button.clicked.connect(self.help_threads_button_clicked)
         self.ui.help_deobf_threads_button.clicked.connect(self.help_threads_button_clicked)
         self.ui.help_decomp_cmd_button.clicked.connect(self.help_decomp_cmd_button_clicked)
+        self.ui.help_cache_button.clicked.connect(self.help_cache_button_clicked)
 
         # self.completer = QCompleter(self) # This doesn't work... Fix later...
         # self.completer.setModel(QFileSystemModel(self.completer))
@@ -113,6 +114,9 @@ class MDGMainWindow(QMainWindow):
 
     def help_mods_button_clicked(self):
         self.start_help_window(self.help_window.ui.mods_path)
+
+    def help_cache_button_clicked(self):
+        self.start_help_window(self.help_window.ui.cache)
 
     def help_decomp_cmd_button_clicked(self):
         self.start_help_window(self.help_window.ui.decomp_cmd)

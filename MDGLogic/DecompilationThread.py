@@ -1,3 +1,4 @@
+import json
 import os.path
 import subprocess
 import threading
@@ -9,6 +10,7 @@ from MDGUtil.SubprocessKiller import kill_subprocess
 
 
 class DecompilationThread(threading.Thread):
+    cache_lock = threading.Lock()
 
     def __init__(self, mod_path: str, thread_number: int, serialized_widgets: dict):
         super().__init__()
@@ -20,7 +22,7 @@ class DecompilationThread(threading.Thread):
 
     def run(self):
         decomp_cmd = self.serialized_widgets['decomp_cmd_line_edit']['text']
-        result_folder = os.path.join('result', 'decompiled_mods', os.path.basename(self.mod_path.rstrip('.jar')))
+        result_folder = os.path.join('result', 'decompiled_mods', os.path.basename(self.mod_path.removesuffix('.jar')))
         create_folder(result_folder)
         decomp_cmd_formatted = decomp_cmd.format(path_to_jar=self.mod_path, out_path=result_folder)
         self.cmd = subprocess.Popen(decomp_cmd_formatted.split(' '), shell=True)
@@ -36,6 +38,13 @@ class DecompilationThread(threading.Thread):
             os.remove(decompiled_jar_path)
         except FileNotFoundError:
             pass
+        with self.cache_lock:
+            cache_path = os.path.join('result', 'decompiled_mods', 'cache.json')
+            with open(cache_path, 'r') as f:
+                cache = json.loads(f.read())
+            cache.append(os.path.basename(result_folder))
+            with open(cache_path, 'w') as f:
+                f.write(json.dumps(cache))
 
     def terminate(self):
         self.kill_cmd = True

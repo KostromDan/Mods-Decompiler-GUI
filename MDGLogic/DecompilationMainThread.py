@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import time
@@ -7,13 +8,14 @@ from MDGLogic.DecompilationThread import DecompilationThread
 from MDGUtil.FileUtils import create_folder
 
 
-def get_mods_iter():
+def get_mods_iter(use_cached):
     try:
         for mod in os.listdir('tmp/mods'):
             yield os.path.join('tmp', 'mods', mod)
 
         for mod in os.listdir('result/deobfuscated_mods'):
-            yield os.path.join('result', 'deobfuscated_mods', mod)
+            if mod.removesuffix('_mapped_official.jar')+'.jar' not in use_cached:
+                yield os.path.join('result', 'deobfuscated_mods', mod)
     except FileNotFoundError:
         pass
 
@@ -34,12 +36,19 @@ class DecompilationMainThread(AbstractMDGThread):
 
         allocated_threads_count = self.serialized_widgets['decomp_threads_horizontal_slider']['value']
 
-        mods_iter = get_mods_iter()
-        mods_to_decomp_count = len(list(get_mods_iter()))
+        mods_iter = get_mods_iter(self.serialized_widgets['use_cached'])
+        mods_to_decomp_count = len(list(get_mods_iter(self.serialized_widgets['use_cached'])))
         processed_mods_count = 0
         started_mods_count = 0
 
         create_folder('result/decompiled_mods')
+
+        with open(os.path.join('result', 'decompiled_mods', 'cache.json'), 'w') as f:
+            cache = []
+            for mod in os.listdir(os.path.join('result', 'decompiled_mods')):
+                if os.path.isdir(os.path.join('result', 'decompiled_mods', mod)):
+                    cache.append(mod)
+            f.write(json.dumps(cache))
 
         while processed_mods_count < mods_to_decomp_count:
             if len(self.decomp_threads) < allocated_threads_count and started_mods_count < mods_to_decomp_count:

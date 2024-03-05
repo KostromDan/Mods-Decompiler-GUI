@@ -43,7 +43,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 1745))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, -316, 1163, 1881))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)
@@ -185,6 +185,17 @@ class Ui_MDGHelpWindow(object):
 
         self.verticalLayout_2.addWidget(self.patch_mdk)
 
+        self.cache = QTextBrowser(self.scrollAreaWidgetContents)
+        self.cache.setObjectName(u"cache")
+        sizePolicy1.setHeightForWidth(self.cache.sizePolicy().hasHeightForWidth())
+        self.cache.setSizePolicy(sizePolicy1)
+        self.cache.setMinimumSize(QSize(0, 130))
+        self.cache.setMaximumSize(QSize(16777215, 130))
+        self.cache.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.cache.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+
+        self.verticalLayout_2.addWidget(self.cache)
+
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
         self.verticalLayout.addWidget(self.scrollArea)
@@ -278,12 +289,12 @@ class Ui_MDGHelpWindow(object):
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">If Deobfuscation of a Mod Fails:</span> </p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">In rare cases, deobfuscation of a mod may fail. Known mods with such issues include OptiFine, Towns and Towers.<br />Currently forge mdk uses Mojang mappings. Mojang mappings are d"
-                        "esigned specifically for deobfuscating the vanilla Minecraft codebase released by Mojang. OptiFine, however, is a third-party mod created independently from Mojang. OptiFine's codebase may have its own obfuscation and unique naming conventions that differ from those used in vanilla Minecraft. As a result, Mojang mappings may not accurately map the obfuscated names in OptiFine's code to their original, readable names. Therefore, using Mojang mappings for deobfuscating OptiFine will result in deofuscation error. </p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">In rare cases, deobfuscation of a mod may fail. Known mods with such issues include OptiFine, Towns and Towers. Modern versions of forge gradle can deobfuscate both.<br />Currently"
+                        " forge mdk uses Mojang mappings. Mojang mappings are designed specifically for deobfuscating the vanilla Minecraft codebase released by Mojang. OptiFine, however, is a third-party mod created independently from Mojang. OptiFine's codebase may have its own obfuscation and unique naming conventions that differ from those used in vanilla Minecraft. As a result, Mojang mappings may not accurately map the obfuscated names in OptiFine's code to their original, readable names. Therefore, using Mojang mappings for deobfuscating OptiFine will result in deofuscation error. </p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">In such cases, you can choose one of the following algorithms to resolve the issue: </p>\n"
 "<ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\">\n"
-"<li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">interrupt: The process will immediately terminat"
-                        "e with a critical error message. </li>\n"
+"<li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0"
+                        "px;\">interrupt: The process will immediately terminate with a critical error message. </li>\n"
 "<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">skip mod: The problematic mod will be skipped, and it will not appear in the result folder. You will be notified of skipped mods at the end. </li>\n"
 "<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">decompile without deobfuscation: The problematic mod will be decompiled without deobfuscation. You will be notified of such mods at the end. The best option if you use this app for reading your modpack codebase. </li></ul></body></html>", None))
         self.decomp_mods.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -352,6 +363,16 @@ class Ui_MDGHelpWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-ri"
                         "ght:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-style:italic;\"> }</span> </p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-style:italic;\">}</span></p></body></html>", None))
+        self.cache.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Use cache:</span><br />By default, MDG voids the tmp and result folders upon pressing the start button. So, if you regularly use this tool on the same modpack while changing/updating 2-3 mods, you still need to wait a considerable amount of time for each use of the tool.</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-r"
+                        "ight:0px; -qt-block-indent:0; text-indent:0px;\">If enabled, MDG will analyze deobfuscated mods and decompiled mods folders after pressing the start button. If a mod from selected mods folder is already processed, it won't be removed from the result and deobfuscation and/or decompilation stages of this mod will be skipped.<br />Therefore, you can save significant time in this usage case.</p></body></html>", None))
         self.close_button.setText(QCoreApplication.translate("MDGHelpWindow", u"close", None))
     # retranslateUi
 

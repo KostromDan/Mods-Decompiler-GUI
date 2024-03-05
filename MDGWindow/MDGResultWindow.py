@@ -2,14 +2,11 @@
 import os.path
 import subprocess
 import sys
-import time
 
 from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 
 from MDGLogic.DeobfuscationMainThread import FailLogic
-from MDGUtil.SubprocessKiller import kill_subprocess
-from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
 from MDGui.Ui_MDGResultWindow import Ui_MDGResultWindow
 
 

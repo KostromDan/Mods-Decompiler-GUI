@@ -1,5 +1,7 @@
+import json
 import logging
 import os
+import shutil
 import subprocess
 import time
 
@@ -7,7 +9,7 @@ from PySide6.QtCore import QThread
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGUtil import FileUtils
-from MDGUtil.FileUtils import create_folder
+from MDGUtil.FileUtils import create_folder, remove_folder
 from MDGUtil.SubprocessKiller import kill_subprocess
 from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
 
@@ -24,13 +26,45 @@ class ExceptionThread(QThread):
 class InitialisationThread(AbstractMDGThread):
     def run(self):
         decomp_cmd = self.serialized_widgets['decomp_cmd_line_edit']['text']
+        cache_enabled = self.serialized_widgets['cache_check_box']['isChecked']
 
         self.progress.emit(20, 'Clearing tmp folder')
         FileUtils.clear_tmp_folders()
         logging.info('Cleared tmp folders.')
 
         self.progress.emit(40, 'Clearing result folder')
-        FileUtils.clear_result_folders()
+        if cache_enabled:
+            create_folder('result')
+            if not self.serialized_widgets['deobf_check_box']['isChecked']:
+                remove_folder(os.path.join('result', 'deobfuscated_mods'))
+            if not self.serialized_widgets['decomp_check_box']['isChecked']:
+                remove_folder(os.path.join('result', 'decompiled_mods'))
+            for file in os.listdir('result'):  # remove all except ['deobfuscated_mods', 'decompiled_mods']
+                path = os.path.join('result', file)
+                if file not in ['deobfuscated_mods', 'decompiled_mods']:
+                    if os.path.isfile(path):
+                        os.remove(path)
+                    else:
+                        shutil.rmtree(path)
+
+            cache_path = os.path.join('result', 'decompiled_mods', 'cache.json')
+            if not os.path.exists(cache_path):
+                remove_folder(os.path.join('result', 'decompiled_mods'))
+            try:  # remove mods decompilation of which was interrupted
+                with open(cache_path, 'r') as f:
+                    cache = json.loads(f.read())
+                for mod in os.listdir(os.path.join('result', 'decompiled_mods')):
+                    mod_path = os.path.join('result', 'decompiled_mods', mod)
+                    if mod not in cache and os.path.isdir(mod_path):
+                        shutil.rmtree(mod_path)
+                        logging.info(f'Found {mod} in decompiled mods.'
+                                     f'But it\'s not in cache. Removing. '
+                                     f'Maybe decompilation of it was interrupted.')
+            except FileNotFoundError:
+                pass
+
+        else:
+            FileUtils.clear_result_folders()
         logging.info('Cleared result folders.')
 
         self.progress.emit(50, 'Creating new folders')

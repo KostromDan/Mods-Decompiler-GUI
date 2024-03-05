@@ -76,7 +76,7 @@ class DeobfuscationThread(threading.Thread):
             return
 
         mod_original_name = os.path.basename(self.mod_path)
-        mod_new_mapped_name = mod_original_name.rstrip('.jar') + '_mapped_official.jar'
+        mod_new_mapped_name = mod_original_name.removesuffix('.jar') + '_mapped_official.jar'
         new_jar_path = os.path.join(os.path.dirname(path_to_jar), mod_new_mapped_name)
         try:
             os.rename(path_to_jar,
