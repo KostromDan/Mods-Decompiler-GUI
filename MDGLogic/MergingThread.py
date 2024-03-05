@@ -38,7 +38,7 @@ class MergingThread(AbstractMDGThread):
         self.progress.emit(0, 'Merging started.')
 
         mods_path = os.path.join('result', 'decompiled_mods')
-        mods_count = len(mods_path)
+        mods_count = len(os.listdir(mods_path))
 
         merge_code = self.serialized_widgets['merge_code_check_box']['isChecked']
         merge_resources = self.serialized_widgets['merge_resources_check_box']['isChecked']
