@@ -69,24 +69,28 @@ class MDGMainWindow(QMainWindow):
         self.ui.deobf_threads_spin_box.valueChanged.connect(self.deobf_threads_spin_box_value_changed)
         self.ui.decomp_threads_spin_box.valueChanged.connect(self.decomp_threads_spin_box_value_changed)
 
-        self.ui.help_mdk_button.clicked.connect(self.help_mdk_button_clicked)
-        self.ui.help_deobf_button.clicked.connect(self.help_deobf_button_clicked)
-        self.ui.help_merge_button.clicked.connect(self.help_merge_button_clicked)
-        self.ui.help_mods_button.clicked.connect(self.help_mods_button_clicked)
-        self.ui.help_merge_button_2.clicked.connect(self.help_merge_2_button_clicked)
-        self.ui.help_decomp_button.clicked.connect(self.help_decomp_button_clicked)
-        self.ui.help_deobf_failed_button.clicked.connect(self.help_deobf_failed_button_clicked)
-        self.ui.help_sources_button.clicked.connect(self.help_sources_button_clicked)
-        self.ui.help_decomp_threads_button.clicked.connect(self.help_threads_button_clicked)
-        self.ui.help_deobf_threads_button.clicked.connect(self.help_threads_button_clicked)
-        self.ui.help_decomp_cmd_button.clicked.connect(self.help_decomp_cmd_button_clicked)
-        self.ui.help_cache_button.clicked.connect(self.help_cache_button_clicked)
+        self.help_window = MDGHelpWindow()
+
+        self.help_widget_pairs = {
+            self.ui.help_mdk_button: self.help_window.ui.mdk_path,
+            self.ui.help_deobf_button: self.help_window.ui.deobf_mods,
+            self.ui.help_merge_button: self.help_window.ui.merge,
+            self.ui.help_mods_button: self.help_window.ui.mods_path,
+            self.ui.help_merge_button_2: self.help_window.ui.merge_resources,
+            self.ui.help_decomp_button: self.help_window.ui.decomp_mods,
+            self.ui.help_deobf_failed_button: self.help_window.ui.deobf_failed,
+            self.ui.help_sources_button: self.help_window.ui.patch_mdk,
+            self.ui.help_decomp_threads_button: self.help_window.ui.threads,
+            self.ui.help_deobf_threads_button: self.help_window.ui.threads,
+            self.ui.help_decomp_cmd_button: self.help_window.ui.decomp_cmd,
+            self.ui.help_cache_button: self.help_window.ui.cache,
+        }
+        for help_button, widget in self.help_widget_pairs.items():
+            help_button.clicked.connect(self.help_button_clicked)
 
         # added to set the file system completer for mods_path_line_edit
         self.set_path_completer(self.ui.mods_path_line_edit)
         self.set_path_completer(self.ui.mdk_path_line_edit)
-
-        self.help_window = MDGHelpWindow()
 
         self.resize(self.width(), self.minimumSizeHint().height())
 
@@ -104,46 +108,8 @@ class MDGMainWindow(QMainWindow):
     def reset_decomp_cmd(self):
         self.ui.decomp_cmd_line_edit.setText(DEFAULT_DECOMPILER_CMD)
 
-    def start_help_window(self, help_about):
-        self.help_window.show()
-        browsers = self.help_window.ui.scrollAreaWidgetContents.findChildren(QTextBrowser)
-        for browser in browsers:
-            browser.setStyleSheet('')
-        help_about.setStyleSheet('border: 1px solid red')
-        self.help_window.ui.scrollArea.ensureWidgetVisible(help_about)
-
-    def help_mods_button_clicked(self):
-        self.start_help_window(self.help_window.ui.mods_path)
-
-    def help_cache_button_clicked(self):
-        self.start_help_window(self.help_window.ui.cache)
-
-    def help_decomp_cmd_button_clicked(self):
-        self.start_help_window(self.help_window.ui.decomp_cmd)
-
-    def help_mdk_button_clicked(self):
-        self.start_help_window(self.help_window.ui.mdk_path)
-
-    def help_sources_button_clicked(self):
-        self.start_help_window(self.help_window.ui.patch_mdk)
-
-    def help_deobf_button_clicked(self):
-        self.start_help_window(self.help_window.ui.deobf_mods)
-
-    def help_merge_button_clicked(self):
-        self.start_help_window(self.help_window.ui.merge)
-
-    def help_threads_button_clicked(self):
-        self.start_help_window(self.help_window.ui.threads)
-
-    def help_deobf_failed_button_clicked(self):
-        self.start_help_window(self.help_window.ui.deobf_failed)
-
-    def help_merge_2_button_clicked(self):
-        self.start_help_window(self.help_window.ui.merge_resources)
-
-    def help_decomp_button_clicked(self):
-        self.start_help_window(self.help_window.ui.decomp_mods)
+    def help_button_clicked(self):
+        self.help_window.start_help_window(self.help_widget_pairs[self.sender()])
 
     def deobf_threads_horizontal_slider_value_changed(self, value):
         self.ui.deobf_threads_spin_box.setValue(value)
