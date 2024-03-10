@@ -5,7 +5,7 @@ import sys
 import zipfile
 from collections import defaultdict
 
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QTextBrowser
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QTextBrowser, QFileSystemModel, QCompleter
 
 from MDGUtil.LocalConfig import LocalConfig, DEFAULT_DECOMPILER_CMD
 from MDGWindow.MDGHelpWindow import MDGHelpWindow
@@ -82,9 +82,9 @@ class MDGMainWindow(QMainWindow):
         self.ui.help_decomp_cmd_button.clicked.connect(self.help_decomp_cmd_button_clicked)
         self.ui.help_cache_button.clicked.connect(self.help_cache_button_clicked)
 
-        # self.completer = QCompleter(self) # This doesn't work... Fix later...
-        # self.completer.setModel(QFileSystemModel(self.completer))
-        # self.ui.mods_path_line_edit.setCompleter(self.completer)
+        # added to set the file system completer for mods_path_line_edit
+        self.set_path_completer(self.ui.mods_path_line_edit)
+        self.set_path_completer(self.ui.mdk_path_line_edit)
 
         self.help_window = MDGHelpWindow()
 
@@ -340,3 +340,9 @@ class MDGMainWindow(QMainWindow):
     def closeEvent(self, event):
         event.accept()
         sys.exit()
+
+    def set_path_completer(self, line_edit):
+        fs_model = QFileSystemModel(line_edit)
+        fs_model.setRootPath("")
+        fs_completer = QCompleter(fs_model, self)
+        line_edit.setCompleter(fs_completer)
