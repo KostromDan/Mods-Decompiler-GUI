@@ -11,10 +11,10 @@ In almost all English-speaking modding communities, the topic of decompilation i
 discuss decompilation and deobfuscation, ARR hamsters will immediately stop it. Since someone will be able to decompile
 their paid mods and disrupt their profits. Although the majority (95%) those who are interested in this really need to
 see how something works, find a bug, they are not going to decompile their paid mods in order to break the protection.
-So it is almost impossible for a novice modder, and even more so for a modpackmaker, to learn how to do what this
+So it is almost impossible for a novice modder, and even more so for a modpack maker, to learn how to do what this
 program does. I want to overcome this and make sure that mods decompilation and deobfuscation can be used by any person,
 who needs it, even those who only came to modding. A super intuitive one-click solution. You don't know how things work?
-Just one click and you got your decomplied code!
+Just one click and you got your decompiled code!
 This tool could save us hundreds of hours when developing modpacks or fixing conflicts in mods. For example, it has
 already saved me around 30 hours. Instead of binary searching in mods, which takes a couple of hours, this program
 allows us to find conflicts/problematic mod within 5 minutes.
@@ -29,8 +29,8 @@ deobfuscate -> decompile -> merge to mdk
 
 * If you need to deobfuscate and/or decompile mod(s).
 * If you want to get source code of whole your modpack with correct IDE indexing. Including source code mods, Minecraft
-  and MnecraftForge.
-    * Find which mod adds/breaks some thing/chat message.
+  and MinecraftForge.
+    * Find which mod adds/breaks something/chat message.
     * See how things are implemented, understand their logic.
 
 ## Advantages:
@@ -46,10 +46,10 @@ deobfuscate -> decompile -> merge to mdk
 
 1. Download the latest release of program from https://github.com/KostromDan/Mods-Decompiler-GUI/releases
 2. Unzip archive
-2. Run MDG.exe
-3. Select mods folder and mdk.
-4. Press start.
-5. Done!
+3. Run MDG.exe
+4. Select mods folder and mdk.
+5. Press start.
+6. Done!
 
 ## Answers:
 
