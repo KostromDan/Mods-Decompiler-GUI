@@ -35,10 +35,10 @@ class DeobfuscationThread(threading.Thread):
 
     def run(self):
         current_mdk_path = os.path.join(PathUtils.TMP_DEOBFUSCATION_MDKS_PATH, f'mdk_{self.thread_number}')
-        deobfed_folder_name = f'local_MDG_{self.thread_number}'
+        folder_name_in_gradle_cache = f'local_MDG_{self.thread_number}'
         unzip_and_patch_mdk(self.serialized_widgets['mdk_path_line_edit']['text'],
                             current_mdk_path,
-                            deobfed_folder_name,
+                            folder_name_in_gradle_cache,
                             True)
         shutil.copy(self.mod_path, os.path.join(current_mdk_path, 'libs'))
         new_mod_name = remove_unsupported_symbols(os.path.basename(self.mod_path))
@@ -48,7 +48,7 @@ class DeobfuscationThread(threading.Thread):
         except FileExistsError:
             pass
         current_mod_deobf_path = os.path.join(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER,
-                                              deobfed_folder_name)
+                                              folder_name_in_gradle_cache)
         self.cmd = subprocess.Popen(['gradlew.bat', 'compileJava'], cwd=current_mdk_path, shell=True)
         self.is_cmd_started = True
         while self.cmd.poll() is None:
