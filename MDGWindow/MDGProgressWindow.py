@@ -125,7 +125,7 @@ class MDGProgressWindow(QMainWindow):
 
     @only_if_window_active
     def decomp_mods(self):
-        self.start_thread(DecompilationMainThread, self.ui.decomp_progress_bar, self.merge_mods,thread_signals={
+        self.start_thread(DecompilationMainThread, self.ui.decomp_progress_bar, self.merge_mods, thread_signals={
             'failed_mod_signal': self.failed_decomp_mod,
         })
 
@@ -184,6 +184,7 @@ class MDGProgressWindow(QMainWindow):
 
     def failed_deobf_mod(self, mod):
         self.failed_deobfuscation_mods.append(mod)
+
     def failed_decomp_mod(self, mod):
         self.failed_decompilation_mods.append(mod)
 
