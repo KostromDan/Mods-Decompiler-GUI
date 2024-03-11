@@ -79,7 +79,7 @@ class MdkInitialisationThread(AbstractMDGThread):
         self.progress.emit(30, 'Started initialisation of mdk.')
         logging.info('Started initialisation of mdk.')
         logging.warning('If you initializing mdk of this version first time on you pc, it can take some time.')
-        self.cmd = subprocess.Popen(['gradlew.bat', 'build'], cwd=os.path.join('result', 'merged_mdk'), shell=True,
+        self.cmd = subprocess.Popen(['gradlew.bat', 'compileJava'], cwd=os.path.join('result', 'merged_mdk'), shell=True,
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         cmd_out_analyse_thread = SubprocessOutsAnalyseThread(self.cmd, stderr=sys.stdout, err_logger=logging.info)
