@@ -17,14 +17,17 @@ class FailLogic:
 
 
 def clear_gradle():
-    deobfed_mods_path = os.path.join(os.path.expanduser('~'),
-                                     '.gradle',
-                                     'caches',
-                                     'forge_gradle',
-                                     'deobf_dependencies')
-    for folder in os.listdir(deobfed_mods_path):
-        if folder.startswith('local_MDG_'):
-            shutil.rmtree(os.path.join(deobfed_mods_path, folder))
+    try:
+        deobfed_mods_path = os.path.join(os.path.expanduser('~'),
+                                         '.gradle',
+                                         'caches',
+                                         'forge_gradle',
+                                         'deobf_dependencies')
+        for folder in os.listdir(deobfed_mods_path):
+            if folder.startswith('local_MDG_'):
+                shutil.rmtree(os.path.join(deobfed_mods_path, folder))
+    except FileNotFoundError:
+        logging.warning(f'Could not find {deobfed_mods_path}. Skipping clearing gradle cache.')
 
 
 class DeobfuscationMainThread(AbstractMDGThread):
