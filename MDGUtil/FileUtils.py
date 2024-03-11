@@ -1,6 +1,8 @@
 import os
 import shutil
 
+from MDGUtil import PathUtils
+
 
 def remove_folder(path):
     try:
@@ -17,19 +19,19 @@ def create_folder(path):
 
 
 def clear_tmp_folders():
-    remove_folder('tmp')
+    remove_folder(PathUtils.TMP_FOLDER_PATH)
 
 
 def create_tmp_folders():
-    create_folder('tmp')
+    create_folder(PathUtils.TMP_FOLDER_PATH)
 
 
 def create_result_folders():
-    create_folder('result')
+    create_folder(PathUtils.RESULT_FOLDER_PATH)
 
 
 def clear_result_folders():
-    remove_folder('result')
+    remove_folder(PathUtils.RESULT_FOLDER_PATH)
 
 
 def init_folders():

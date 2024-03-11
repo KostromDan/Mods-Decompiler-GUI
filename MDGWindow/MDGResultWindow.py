@@ -7,6 +7,7 @@ from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 
 from MDGLogic.DeobfuscationMainThread import FailLogic
+from MDGUtil import PathUtils
 from MDGui.Ui_MDGResultWindow import Ui_MDGResultWindow
 
 
@@ -18,9 +19,9 @@ class MDGResultWindow(QMainWindow):
         self.ui.setupUi(self)
         self.progress_window = progress_window
 
-        self.ui.deobfuscated_mods_button.setEnabled(os.path.exists(os.path.join('result', 'deobfuscated_mods')))
-        self.ui.decompiled_mods_button.setEnabled(os.path.exists(os.path.join('result', 'decompiled_mods')))
-        if not os.path.exists(os.path.join('result', 'merged_mdk')):
+        self.ui.deobfuscated_mods_button.setEnabled(os.path.exists(PathUtils.DEOBFUSCATED_MODS_PATH))
+        self.ui.decompiled_mods_button.setEnabled(os.path.exists(PathUtils.DECOMPILED_MODS_PATH))
+        if not os.path.exists(PathUtils.MERGED_MDK_PATH):
             self.ui.merged_mdk_button.setEnabled(False)
             self.ui.intellij_idea_button.setEnabled(False)
 
@@ -55,20 +56,20 @@ class MDGResultWindow(QMainWindow):
         os.startfile(os.path.realpath(path))
 
     def deobfuscated_mods_button(self):
-        self.open_folder(os.path.join('result', 'deobfuscated_mods'))
+        self.open_folder(PathUtils.DEOBFUSCATED_MODS_PATH)
 
     def decompiled_mods_button(self):
-        self.open_folder(os.path.join('result', 'decompiled_mods'))
+        self.open_folder(PathUtils.DECOMPILED_MODS_PATH)
 
     def merged_mdk_button(self):
-        self.open_folder(os.path.join('result', 'merged_mdk'))
+        self.open_folder(PathUtils.MERGED_MDK_PATH)
 
     def intellij_idea_button(self):
         try:
-            subprocess.Popen(['idea64.exe', os.path.join('result', 'merged_mdk')])
+            subprocess.Popen(['idea64.exe', PathUtils.MERGED_MDK_PATH])
         except FileNotFoundError:
             QMessageBox.warning(self, 'IntelliJ IDEA not found',
-                                'Can\'t open "result/merged_mdk" as project in IntelliJ IDEA\n'
+                                f'Can\'t open {PathUtils.MERGED_MDK_PATH} as project in IntelliJ IDEA\n'
                                 'due to "idea64.exe" not found!',
                                 QMessageBox.StandardButton.Ok)
 

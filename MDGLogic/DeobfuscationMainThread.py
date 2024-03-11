@@ -7,6 +7,7 @@ from PySide6.QtCore import Signal
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGLogic.DeobfuscationThread import DeobfuscationThread
+from MDGUtil import PathUtils
 from MDGUtil.FileUtils import create_folder
 
 
@@ -18,16 +19,11 @@ class FailLogic:
 
 def clear_gradle():
     try:
-        deobfed_mods_path = os.path.join(os.path.expanduser('~'),
-                                         '.gradle',
-                                         'caches',
-                                         'forge_gradle',
-                                         'deobf_dependencies')
-        for folder in os.listdir(deobfed_mods_path):
+        for folder in os.listdir(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER):
             if folder.startswith('local_MDG_'):
-                shutil.rmtree(os.path.join(deobfed_mods_path, folder))
+                shutil.rmtree(os.path.join(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER, folder))
     except FileNotFoundError:
-        logging.warning(f'Could not find {deobfed_mods_path}. Skipping clearing gradle cache.')
+        logging.warning(f'Could not find {PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER}. Skipping clearing gradle cache.')
 
 
 class DeobfuscationMainThread(AbstractMDGThread):
@@ -58,21 +54,21 @@ class DeobfuscationMainThread(AbstractMDGThread):
 
         self.fail_logic_signal.emit(deofb_fail_logic)
 
-        mods_list = os.listdir('tmp/mods')
+        mods_list = os.listdir(PathUtils.TMP_MODS_PATH)
         mods_iter = iter(mods_list)
         mods_to_deobf_count = len(mods_list)
         processed_mods_count = 0
         started_mods_count = 0
 
         clear_gradle()
-        create_folder('tmp/deobfuscation_MDKs')
-        create_folder('result/deobfuscated_mods')
+        create_folder(PathUtils.TMP_DEOBFUSCATION_MDKS_PATH)
+        create_folder(PathUtils.DEOBFUSCATED_MODS_PATH)
 
         while processed_mods_count < mods_to_deobf_count:
             if len(self.deobf_threads) < allocated_threads_count and started_mods_count < mods_to_deobf_count:
                 mod_name = mods_iter.__next__()
                 logging.info(f'Started deobfuscation of {mod_name}')
-                deobf_thread = DeobfuscationThread(os.path.join('tmp', 'mods', mod_name),
+                deobf_thread = DeobfuscationThread(os.path.join(PathUtils.TMP_MODS_PATH, mod_name),
                                                    started_mods_count, self.serialized_widgets)
                 started_mods_count += 1
                 self.deobf_threads.append(deobf_thread)
@@ -114,13 +110,13 @@ class DeobfuscationMainThread(AbstractMDGThread):
 
         self.progress.emit(100, 'Deobfuscation complete.')
 
-        shutil.rmtree('tmp/deobfuscation_MDKs')
+        shutil.rmtree(PathUtils.TMP_DEOBFUSCATION_MDKS_PATH)
 
         clear_gradle()
 
         if not self.serialized_widgets['merge_check_box']['isEnabled'] or not \
                 self.serialized_widgets['merge_check_box']['isChecked']:
-            shutil.rmtree('result/merged_mdk')
+            shutil.rmtree(PathUtils.MERGED_MDK_PATH)
 
     def terminate(self):
         for thread in self.deobf_threads:

@@ -5,6 +5,7 @@ import sys
 import zipfile
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
+from MDGUtil import PathUtils
 from MDGUtil.FileUtils import create_folder
 from MDGUtil.SubprocessKiller import kill_subprocess
 from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
@@ -62,7 +63,8 @@ class MdkInitialisationThread(AbstractMDGThread):
     def run(self):
         if (not self.serialized_widgets['mdk_path_line_edit']['isEnabled'] or
                 (not (self.serialized_widgets['merge_check_box']['isEnabled'] and
-                      self.serialized_widgets['merge_check_box']['isChecked']) and len(os.listdir('tmp/mods')) == 0)):
+                      self.serialized_widgets['merge_check_box']['isChecked']) and
+                 len(os.listdir(PathUtils.TMP_MODS_PATH)) == 0)):
             self.progress.emit(100, 'Initialisation of mdk skipped.')
             logging.info('Initialisation of mdk skipped.')
             return
@@ -73,13 +75,13 @@ class MdkInitialisationThread(AbstractMDGThread):
 
         self.progress.emit(10, 'Unzipping and patching mdk.')
         logging.info('Started unzipping and patching mdk.')
-        unzip_and_patch_mdk(mdk_path, 'result/merged_mdk', 'local_MDG', False, do_path_download_sources)
+        unzip_and_patch_mdk(mdk_path, PathUtils.MERGED_MDK_PATH, 'local_MDG', False, do_path_download_sources)
         logging.info('Finished unzipping and patching mdk.')
 
         self.progress.emit(30, 'Started initialisation of mdk.')
         logging.info('Started initialisation of mdk.')
         logging.warning('If you initializing mdk of this version first time on you pc, it can take some time.')
-        self.cmd = subprocess.Popen(['gradlew.bat', 'compileJava'], cwd=os.path.join('result', 'merged_mdk'), shell=True,
+        self.cmd = subprocess.Popen(['gradlew.bat', 'compileJava'], cwd=PathUtils.MERGED_MDK_PATH, shell=True,
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         cmd_out_analyse_thread = SubprocessOutsAnalyseThread(self.cmd, stderr=sys.stdout, err_logger=logging.info)

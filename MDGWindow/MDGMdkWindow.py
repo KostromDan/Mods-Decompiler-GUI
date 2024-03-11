@@ -4,6 +4,7 @@ import webbrowser
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QMainWindow
 
+from MDGUtil import PathUtils
 from MDGui.Ui_MDGMdkWindow import Ui_MDGMdkWindow
 
 
@@ -21,4 +22,4 @@ class MDGMdkWindow(QMainWindow):
         self.setFixedSize(self.minimumSizeHint().width(), self.minimumSizeHint().height())
 
     def open_minecraft_forge(self):
-        webbrowser.open('https://files.minecraftforge.net/net/minecraftforge/forge/')
+        webbrowser.open(PathUtils.MINECRAFT_FORGE_DOWNLOADS_PAGE)

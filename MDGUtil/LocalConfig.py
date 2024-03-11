@@ -1,7 +1,9 @@
 import json
 import os
 
-DEFAULT_DECOMPILER_CMD = r'java -jar decompiler\fernflower.jar -dgs=1 -din=1 {path_to_jar} {out_path}'
+from MDGUtil import PathUtils
+
+DEFAULT_DECOMPILER_CMD = rf'java -jar {PathUtils.DECOMPILER_JAR_PATH} -dgs=1 -din=1 {{path_to_jar}} {{out_path}}'
 
 
 class LocalConfig:

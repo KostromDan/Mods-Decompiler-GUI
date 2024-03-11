@@ -7,17 +7,17 @@ from PySide6.QtCore import Signal
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGLogic.DecompilationThread import DecompilationThread
+from MDGUtil import PathUtils
 from MDGUtil.FileUtils import create_folder
 
 
 def get_mods_iter(use_cached):
     try:
-        for mod in os.listdir('tmp/mods'):
-            yield os.path.join('tmp', 'mods', mod)
-
-        for mod in os.listdir('result/deobfuscated_mods'):
+        for mod in os.listdir(PathUtils.TMP_MODS_PATH):
+            yield os.path.join(PathUtils.TMP_MODS_PATH, mod)
+        for mod in os.listdir(PathUtils.DEOBFUSCATED_MODS_PATH):
             if mod.removesuffix('_mapped_official.jar')+'.jar' not in use_cached:
-                yield os.path.join('result', 'deobfuscated_mods', mod)
+                yield os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH, mod)
     except FileNotFoundError:
         pass
 
@@ -45,12 +45,12 @@ class DecompilationMainThread(AbstractMDGThread):
         processed_mods_count = 0
         started_mods_count = 0
 
-        create_folder('result/decompiled_mods')
+        create_folder(PathUtils.DECOMPILED_MODS_PATH)
 
-        with open(os.path.join('result', 'decompiled_mods', 'cache.json'), 'w') as f:
+        with open(os.path.join(PathUtils.DECOMPILED_MODS_PATH, 'cache.json'), 'w') as f:
             cache = []
-            for mod in os.listdir(os.path.join('result', 'decompiled_mods')):
-                if os.path.isdir(os.path.join('result', 'decompiled_mods', mod)):
+            for mod in os.listdir(PathUtils.DECOMPILED_MODS_PATH):
+                if os.path.isdir(os.path.join(PathUtils.DECOMPILED_MODS_PATH, mod)):
                     cache.append(mod)
             f.write(json.dumps(cache))
 

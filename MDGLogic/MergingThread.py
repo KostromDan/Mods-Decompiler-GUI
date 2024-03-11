@@ -4,6 +4,7 @@ import shutil
 from pathlib import Path
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
+from MDGUtil import PathUtils
 from MDGUtil.FileUtils import create_folder
 
 SKIP = [
@@ -11,7 +12,6 @@ SKIP = [
     'win32-x86-64',
     'win32-x86',
     'linux-x86-64',
-
 ]
 
 
@@ -26,15 +26,15 @@ class MergingThread(AbstractMDGThread):
         logging.info('Merging started.')
         self.progress.emit(0, 'Merging started.')
 
-        mods_path = os.path.join('result', 'decompiled_mods')
+        mods_path = PathUtils.DECOMPILED_MODS_PATH
         mods_count = len(os.listdir(mods_path))
 
         merge_code = self.serialized_widgets['merge_code_check_box']['isChecked']
         merge_resources = self.serialized_widgets['merge_resources_check_box']['isChecked']
 
-        shutil.rmtree('result/merged_mdk/src/main')
-        create_folder('result/merged_mdk/src/main')
-        create_folder('result/merged_mdk/src/main/resources')
+        shutil.rmtree(PathUtils.MERGED_MDK_SRC_PATH)
+        create_folder(PathUtils.MERGED_MDK_SRC_PATH)
+        create_folder(PathUtils.MERGED_MDK_RESOURCES_PATH)
 
         for n, decompiled_mod in enumerate(os.listdir(mods_path)):
             path_to_mod = os.path.join(mods_path, decompiled_mod)
@@ -48,20 +48,23 @@ class MergingThread(AbstractMDGThread):
                     continue
                 if os.path.isfile(path_to_file):
                     if merge_resources:
-                        shutil.copy(path_to_file, 'result/merged_mdk/src/main/resources')
+                        shutil.copy(path_to_file, PathUtils.MERGED_MDK_RESOURCES_PATH)
                     continue
                 if file == 'resources':
                     if merge_resources:
-                        shutil.copytree(path_to_file, 'result/merged_mdk/src/main/resources', dirs_exist_ok=True)
+                        shutil.copytree(path_to_file, PathUtils.MERGED_MDK_RESOURCES_PATH, dirs_exist_ok=True)
                     continue
                 paths_to_java_files = list(Path(path_to_file).rglob('*.java'))
                 if paths_to_java_files:
                     if merge_code:
-                        shutil.copytree(path_to_file, f'result/merged_mdk/src/main/java/{file}', dirs_exist_ok=True)
+                        shutil.copytree(path_to_file,
+                                        os.path.join(PathUtils.MERGED_MDK_JAVA_PATH, file),
+                                        dirs_exist_ok=True)
                     continue
                 else:
                     if merge_resources:
-                        shutil.copytree(path_to_file, f'result/merged_mdk/src/main/resources/{file}',
+                        shutil.copytree(path_to_file,
+                                        os.path.join(PathUtils.MERGED_MDK_RESOURCES_PATH, file),
                                         dirs_exist_ok=True)
                     continue
 

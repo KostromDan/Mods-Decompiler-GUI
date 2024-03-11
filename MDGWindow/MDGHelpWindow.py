@@ -3,6 +3,7 @@ import webbrowser
 
 from PySide6.QtWidgets import QMainWindow, QTextBrowser, QWidget
 
+from MDGUtil import PathUtils
 from MDGWindow.MDGMdkWindow import MDGMdkWindow
 from MDGui.Ui_MDGHelpWindow import Ui_MDGHelpWindow
 
@@ -29,7 +30,7 @@ class MDGHelpWindow(QMainWindow):
         self.ui.scrollArea.ensureWidgetVisible(help_about, )
 
     def open_minecraft_forge(self):
-        webbrowser.open('https://files.minecraftforge.net/net/minecraftforge/forge/')
+        webbrowser.open(PathUtils.MINECRAFT_FORGE_DOWNLOADS_PAGE)
 
     def open_mdk_help(self):
         self.mdk_help_window = MDGMdkWindow()
