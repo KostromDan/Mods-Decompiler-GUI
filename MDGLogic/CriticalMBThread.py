@@ -4,11 +4,11 @@ from MDGLogic.AbstractMDGThread import AbstractMDGThread
 
 
 class CriticalMBThread(AbstractMDGThread):
-    def __init__(self, s1, s2):
-        self.s1 = s1
-        self.s2 = s2
+    def __init__(self, title: str, text: str) -> None:
+        self.title = title
+        self.text = text
         super().__init__(None)
 
-    def run(self):
+    def run(self) -> None:
         time.sleep(0.1)
-        self.critical_signal.emit(self.s1, self.s2)
+        self.critical_signal.emit(self.title, self.text)

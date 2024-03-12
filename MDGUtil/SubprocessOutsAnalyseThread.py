@@ -1,22 +1,28 @@
 import logging
+import subprocess
 import sys
 import threading
 import time
+from typing import Callable, TextIO, Any
 
 from MDGUtil.SubprocessKiller import kill_subprocess
 
 
 class SubprocessOutAnalyseThread(threading.Thread):
-    def __init__(self, cmd, cmd_out, sys_out, logger):
+    def __init__(self,
+                 cmd: subprocess.Popen,
+                 cmd_out: subprocess.PIPE,
+                 sys_out: TextIO,
+                 logger: Callable[[str], Any]) -> None:
         super().__init__()
         self.cmd = cmd
         self.cmd_out = cmd_out
-        self.out_lines = []
-        self.current_line = []
         self.sys_out = sys_out
         self.logger = logger
+        self.out_lines: list[str] = []
+        self.current_line: list[str] = []
 
-    def run(self):
+    def run(self) -> None:
         while True:
             symbol = self.cmd_out.read(1).decode(errors='ignore')
             if symbol == '' and self.cmd.poll() is not None:
@@ -34,8 +40,14 @@ class SubprocessOutAnalyseThread(threading.Thread):
 
 
 class SubprocessOutsAnalyseThread(threading.Thread):
-    def __init__(self, cmd, stdout=sys.stdout, stderr=sys.stderr, std_logger=logging.info, err_logger=logging.error,
-                 timeout=None, on_timeout_kill_child=True):
+    def __init__(self,
+                 cmd: subprocess.Popen,
+                 stdout: TextIO = sys.stdout,
+                 stderr: TextIO = sys.stderr,
+                 std_logger: Callable[[str], Any] = logging.info,
+                 err_logger: Callable[[str], Any] = logging.error,
+                 timeout: float = None,
+                 on_timeout_kill_child: bool = True) -> None:
         super().__init__()
         self.cmd = cmd
         self.out = None
@@ -47,7 +59,7 @@ class SubprocessOutsAnalyseThread(threading.Thread):
         self.timeout = timeout
         self.on_timeout_kill_child = on_timeout_kill_child
 
-    def run(self):
+    def run(self) -> None:
         stdout_thread = SubprocessOutAnalyseThread(self.cmd, self.cmd.stdout, self.stdout, self.std_logger)
         stderr_thread = SubprocessOutAnalyseThread(self.cmd, self.cmd.stderr, self.stderr, self.err_logger)
         stdout_thread.start()

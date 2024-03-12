@@ -2,34 +2,30 @@ import json
 import logging
 import os
 import time
+from typing import Iterator
 
-from PySide6.QtCore import Signal
-
-from MDGLogic.AbstractMDGThread import AbstractMDGThread
+from MDGLogic.AbstractDeobfDecompMainThread import AbstractDeobfDecompMainThread
 from MDGLogic.DecompilationThread import DecompilationThread
 from MDGUtil import PathUtils
 from MDGUtil.FileUtils import create_folder
 
 
-def get_mods_iter(use_cached):
+def get_mods_iter(use_cached: list) -> Iterator[os.PathLike]:
     try:
         for mod in os.listdir(PathUtils.TMP_MODS_PATH):
             yield os.path.join(PathUtils.TMP_MODS_PATH, mod)
+    except FileNotFoundError:
+        pass
+    try:
         for mod in os.listdir(PathUtils.DEOBFUSCATED_MODS_PATH):
-            if mod.removesuffix('_mapped_official.jar')+'.jar' not in use_cached:
+            if mod.removesuffix('_mapped_official.jar') + '.jar' not in use_cached:
                 yield os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH, mod)
     except FileNotFoundError:
         pass
 
 
-class DecompilationMainThread(AbstractMDGThread):
-    failed_mod_signal = Signal(str)
-
-    def __init__(self, widgets):
-        super().__init__(widgets)
-        self.decomp_threads: list[DecompilationThread] = []
-
-    def run(self):
+class DecompilationMainThread(AbstractDeobfDecompMainThread):
+    def run(self) -> None:
         if not self.serialized_widgets['decomp_check_box']['isChecked']:
             self.progress.emit(100, 'Decompilation skipped.')
             logging.info('Decompilation skipped.')
@@ -55,18 +51,18 @@ class DecompilationMainThread(AbstractMDGThread):
             f.write(json.dumps(cache))
 
         while processed_mods_count < mods_to_decomp_count:
-            if len(self.decomp_threads) < allocated_threads_count and started_mods_count < mods_to_decomp_count:
+            if len(self.threads) < allocated_threads_count and started_mods_count < mods_to_decomp_count:
                 mod_path = mods_iter.__next__()
                 mod_name = os.path.basename(mod_path)
                 logging.info(f'Started decompilation of {mod_name}')
                 decomp_thread = DecompilationThread(mod_path,
                                                     started_mods_count, self.serialized_widgets)
                 started_mods_count += 1
-                self.decomp_threads.append(decomp_thread)
+                self.threads.append(decomp_thread)
                 decomp_thread.start()
 
             new_threads = []
-            for thread in self.decomp_threads:
+            for thread in self.threads:
                 if thread.is_alive():
                     new_threads.append(thread)
                 else:
@@ -76,18 +72,12 @@ class DecompilationMainThread(AbstractMDGThread):
                         logging.info(f'Finished decompilation of {os.path.basename(thread.mod_path)} with success.')
                     else:
                         logging.warning(f'Finished decompilation of {os.path.basename(thread.mod_path)} with error.\n'
-                                        f'Out directory is empty or doesn\'t contain a single *.java file')
+                                        f"Out directory is empty or doesn't contain a single *.java file")
                         self.failed_mod_signal.emit(os.path.basename(thread.mod_path))
 
-
-            self.decomp_threads = new_threads
+            self.threads = new_threads
             time.sleep(0.1)
 
         logging.info('Decompilation complete.')
 
         self.progress.emit(100, 'Decompilation complete.')
-
-    def terminate(self):
-        for thread in self.decomp_threads:
-            thread.terminate()
-        super().terminate()

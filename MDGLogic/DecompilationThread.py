@@ -6,35 +6,22 @@ import time
 import zipfile
 from pathlib import Path
 
+from MDGLogic.AbstractDeobfDecompThread import AbstractDeobfDecompThread
 from MDGUtil import PathUtils
 from MDGUtil.FileUtils import create_folder
 from MDGUtil.SubprocessKiller import kill_subprocess
-from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
 
 
-def do_nothing(s):
-    pass
-
-
-class DecompilationThread(threading.Thread):
+class DecompilationThread(AbstractDeobfDecompThread):
     cache_lock = threading.Lock()
 
-    def __init__(self, mod_path: str, thread_number: int, serialized_widgets: dict):
-        super().__init__()
-        self.mod_path = mod_path
-        self.thread_number = thread_number
-        self.serialized_widgets = serialized_widgets
-        self.is_cmd_started = False
-        self.kill_cmd = False
-        self.success = False
-
-    def run(self):
+    def run(self) -> None:
         decomp_cmd = self.serialized_widgets['decomp_cmd_line_edit']['text']
-        result_folder = os.path.join(PathUtils.DECOMPILED_MODS_PATH, os.path.basename(self.mod_path.removesuffix('.jar')))
+        result_folder = os.path.join(PathUtils.DECOMPILED_MODS_PATH,
+                                     os.path.basename(self.mod_path.removesuffix('.jar')))
         create_folder(result_folder)
         decomp_cmd_formatted = decomp_cmd.format(path_to_jar=self.mod_path, out_path=result_folder)
         self.cmd = subprocess.Popen(decomp_cmd_formatted, shell=True)
-        self.is_cmd_started = True
         while self.cmd.poll() is None:
             time.sleep(0.1)
             if self.kill_cmd:
@@ -55,11 +42,3 @@ class DecompilationThread(threading.Thread):
                 cache.append(os.path.basename(result_folder))
                 with open(cache_path, 'w') as f:
                     f.write(json.dumps(cache))
-
-    def terminate(self):
-        self.kill_cmd = True
-        if not self.is_cmd_started:
-            try:
-                super().kill()
-            except AttributeError:
-                pass

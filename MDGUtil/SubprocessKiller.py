@@ -1,7 +1,7 @@
 import psutil
 
 
-def kill_subprocess(proc_pid, kill_child=True):
+def kill_subprocess(proc_pid: int, kill_child: bool = True) -> None:
     try:
         process = psutil.Process(proc_pid)
         if kill_child:

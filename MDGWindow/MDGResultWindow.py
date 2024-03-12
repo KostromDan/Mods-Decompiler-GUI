@@ -3,18 +3,18 @@ import os.path
 import subprocess
 import sys
 
+from MDGUi.Ui_MDGResultWindow import Ui_MDGResultWindow
 from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 
 from MDGLogic.DeobfuscationMainThread import FailLogic
 from MDGUtil import PathUtils
-from MDGui.Ui_MDGResultWindow import Ui_MDGResultWindow
 
 
 class MDGResultWindow(QMainWindow):
 
-    def __init__(self, progress_window, parent=None):
-        super().__init__(parent)
+    def __init__(self, progress_window) -> None:
+        super().__init__()
         self.ui = Ui_MDGResultWindow()
         self.ui.setupUi(self)
         self.progress_window = progress_window
@@ -48,37 +48,37 @@ class MDGResultWindow(QMainWindow):
             for mod_name in self.progress_window.failed_decompilation_mods:
                 self.append_logger('orange', (
                     f'Finished decompilation of {mod_name} with error. '
-                    f'Out directory is empty or doesn\'t contain a single *.java file'))
+                    f"Out directory is empty or doesn't contain a single *.java file"))
         else:
             self.append_logger('green', 'Finished without errors.')
 
-    def open_folder(self, path):
+    def open_folder(self, path: str | os.PathLike) -> None:
         os.startfile(os.path.realpath(path))
 
-    def deobfuscated_mods_button(self):
+    def deobfuscated_mods_button(self) -> None:
         self.open_folder(PathUtils.DEOBFUSCATED_MODS_PATH)
 
-    def decompiled_mods_button(self):
+    def decompiled_mods_button(self) -> None:
         self.open_folder(PathUtils.DECOMPILED_MODS_PATH)
 
-    def merged_mdk_button(self):
+    def merged_mdk_button(self) -> None:
         self.open_folder(PathUtils.MERGED_MDK_PATH)
 
-    def intellij_idea_button(self):
+    def intellij_idea_button(self) -> None:
         try:
             subprocess.Popen(['idea64.exe', PathUtils.MERGED_MDK_PATH])
         except FileNotFoundError:
             QMessageBox.warning(self, 'IntelliJ IDEA not found',
-                                f'Can\'t open {PathUtils.MERGED_MDK_PATH} as project in IntelliJ IDEA\n'
+                                f"Can't open {PathUtils.MERGED_MDK_PATH} as project in IntelliJ IDEA\n"
                                 'due to "idea64.exe" not found!',
                                 QMessageBox.StandardButton.Ok)
 
-    def close_button(self):
+    def close_button(self) -> None:
         self.progress_window.setEnabled(True)
         self.progress_window.show()
         self.destroy()
 
-    def append_logger(self, color, msg):
+    def append_logger(self, color: str, msg: str) -> None:
         cursor = self.ui.result_text_edit.textCursor()
         cursor.movePosition(QTextCursor.End)
         cursor.movePosition(QTextCursor.End)

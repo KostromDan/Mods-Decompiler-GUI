@@ -4,26 +4,29 @@ import os
 import sys
 import zipfile
 from collections import defaultdict
-from typing import Any, Dict, Optional
+from typing import Any, Optional, Union
 
+from MDGUi.Ui_MDGMainWindow import Ui_MDGMainWindow
 from PySide6.QtCore import QMimeData
-from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QFileSystemModel, QCompleter, QWidget, QLineEdit
+from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QFileSystemModel, QCompleter, QWidget, QLineEdit, \
+    QSlider, QSpinBox
 
 from MDGUtil.LocalConfig import LocalConfig, DEFAULT_DECOMPILER_CMD
 from MDGWindow.MDGHelpWindow import MDGHelpWindow
 from MDGWindow.MDGProgressWindow import MDGProgressWindow
-from MDGui.Ui_MDGMainWindow import Ui_MDGMainWindow
 
 
 class MDGMainWindow(QMainWindow):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self):
+        super().__init__()
         self.ui = Ui_MDGMainWindow()
         self.ui.setupUi(self)
 
         self.config = LocalConfig()
         self.was_decomp_enabled = False
+        self.serialized_widgets = None
+        self.progress_window = None
 
         if self.config.is_first_launch():
             QMessageBox.information(self, 'First launch information',
@@ -57,15 +60,15 @@ class MDGMainWindow(QMainWindow):
         if self.config.get('decomp_threads') == '':
             self.config.set('decomp_threads', multiprocessing.cpu_count())
 
-        self.ui.deobf_threads_horizontal_slider.valueChanged.connect(self.deobf_threads_horizontal_slider_value_changed)
-        self.ui.decomp_threads_horizontal_slider.valueChanged.connect(
-            self.decomp_threads_horizontal_slider_value_changed)
+        self.setup_slider_and_spinbox_pair(self.ui.deobf_threads_spin_box,
+                                           self.ui.deobf_threads_horizontal_slider,
+                                           'deobf_threads')
+        self.setup_slider_and_spinbox_pair(self.ui.decomp_threads_spin_box,
+                                           self.ui.decomp_threads_horizontal_slider,
+                                           'decomp_threads')
 
         self.ui.deobf_threads_horizontal_slider.setValue(self.config.get('deobf_threads'))
         self.ui.decomp_threads_horizontal_slider.setValue(self.config.get('decomp_threads'))
-
-        self.ui.deobf_threads_spin_box.valueChanged.connect(self.deobf_threads_spin_box_value_changed)
-        self.ui.decomp_threads_spin_box.valueChanged.connect(self.decomp_threads_spin_box_value_changed)
 
         self.help_window = MDGHelpWindow()
 
@@ -98,15 +101,26 @@ class MDGMainWindow(QMainWindow):
         self.ui.decomp_cmd_line_edit.setText(
             self.config.get('decomp_cmd') if self.config.get('decomp_cmd') != '' else DEFAULT_DECOMPILER_CMD)
 
-    def setup_drag_n_drop(self, element: QWidget, line_edit: QLineEdit):
+    def setup_slider_and_spinbox_pair(self, spin_box: QSpinBox, slider: QSlider, config_name: str) -> None:
+        slider.valueChanged.connect(lambda value: self.slider_value_changed(value, spin_box, config_name))
+        spin_box.valueChanged.connect(lambda value: self.spin_box_value_changed(value, slider))
+
+    def slider_value_changed(self, value: int, spinbox: QSpinBox, config_name: str) -> None:
+        spinbox.setValue(value)
+        self.config.set(config_name, value)
+
+    def spin_box_value_changed(self, value: int, slider: QSlider) -> None:
+        slider.setValue(value)
+
+    def setup_drag_n_drop(self, element: QWidget, line_edit: QLineEdit) -> None:
         element.dragEnterEvent = lambda event: self.drag_enter_event(event, element)
         element.dragLeaveEvent = lambda event: self.drag_leave_event(event, element)
         element.dropEvent = lambda event: self.drag_drop_event(event, element, line_edit)
 
-    def drag_leave_event(self, event: QDragLeaveEvent, element: QWidget):
+    def drag_leave_event(self, event: QDragLeaveEvent, element: QWidget) -> None:
         element.setStyleSheet('')
 
-    def drag_drop_event(self, event: QDropEvent, element: QWidget, line_edit: QLineEdit):
+    def drag_drop_event(self, event: QDropEvent, element: QWidget, line_edit: QLineEdit) -> None:
         result = self.drop_event(event)
         if result is not None:
             line_edit.setText(result)
@@ -125,40 +139,26 @@ class MDGMainWindow(QMainWindow):
         event.accept()
         return file_paths[0]
 
-    def decomp_cmd_line_edit_changed(self, value: str):
+    def decomp_cmd_line_edit_changed(self, value: str) -> None:
         self.ui.decomp_cmd_reset_button.setEnabled(value != DEFAULT_DECOMPILER_CMD)
         self.config.set('decomp_cmd', value if value != DEFAULT_DECOMPILER_CMD else '')
         self.ui.decomp_cmd_line_edit.setStyleSheet('')
 
-    def reset_decomp_cmd(self):
+    def reset_decomp_cmd(self) -> None:
         self.ui.decomp_cmd_line_edit.setText(DEFAULT_DECOMPILER_CMD)
 
-    def help_button_clicked(self):
+    def help_button_clicked(self) -> None:
         self.help_window.start_help_window(self.help_widget_pairs[self.sender()])
 
-    def deobf_threads_horizontal_slider_value_changed(self, value: int):
-        self.ui.deobf_threads_spin_box.setValue(value)
-        self.config.set('deobf_threads', value)
-
-    def deobf_threads_spin_box_value_changed(self, value: int):
-        self.ui.deobf_threads_horizontal_slider.setValue(value)
-
-    def decomp_threads_horizontal_slider_value_changed(self, value: int):
-        self.ui.decomp_threads_spin_box.setValue(value)
-        self.config.set('decomp_threads', value)
-
-    def decomp_threads_spin_box_value_changed(self, value: int):
-        self.ui.decomp_threads_horizontal_slider.setValue(value)
-
-    def mods_line_edit_changed(self, text: str):
+    def mods_line_edit_changed(self, text: str) -> None:
         self.config.set('mods_line_edit', text)
         self.ui.mods_path_line_edit.setStyleSheet('')
 
-    def mdk_line_edit_changed(self, text: str):
+    def mdk_line_edit_changed(self, text: str) -> None:
         self.config.set('mdk_line_edit', text)
         self.ui.mdk_path_line_edit.setStyleSheet('')
 
-    def start_button(self):
+    def start_button(self) -> None:
         mods_folder_path = self.ui.mods_path_line_edit.text()
         if not os.path.exists(mods_folder_path):
             self.ui.mods_path_line_edit.setStyleSheet('border: 1px solid red')
@@ -216,7 +216,7 @@ class MDGMainWindow(QMainWindow):
         self.hide()
         self.progress_window.start()
 
-    def serialize_to_dict(self) -> Dict[str, Dict[str, Any]]:
+    def serialize_to_dict(self) -> dict[str, Union[dict[str, Any], list[str]]]:
         out = defaultdict(dict)
         members = [attr for attr in dir(self.ui) if not callable(getattr(self.ui, attr)) and not attr.startswith('__')]
         for member_name in members:
@@ -228,16 +228,16 @@ class MDGMainWindow(QMainWindow):
                     out[member_name][field] = getattr(member_object, field)()
         return out
 
-    def decomp_cmd_check_failed(self, title: str, text: str):
+    def decomp_cmd_check_failed(self, title: str, text: str) -> None:
         self.ui.decomp_cmd_line_edit.setStyleSheet('border: 1px solid red')
         self.critical_from_progress_window(title, text)
 
-    def critical_from_progress_window(self, title: str, text: str):
+    def critical_from_progress_window(self, title: str, text: str) -> None:
         self.setEnabled(True)
         self.show()
         QMessageBox.critical(self, title, text, QMessageBox.StandardButton.Ok)
 
-    def drag_enter_event(self, event: QDragEnterEvent, element: QWidget):
+    def drag_enter_event(self, event: QDragEnterEvent, element: QWidget) -> None:
         if event.mimeData().hasUrls():
             event.accept()
             element.setObjectName('vertical_group_box')
@@ -245,14 +245,14 @@ class MDGMainWindow(QMainWindow):
         else:
             event.ignore()
 
-    def select_mods_button(self):
+    def select_mods_button(self) -> None:
         selected_dir = QFileDialog.getExistingDirectory(self, self.tr('Select mods folder'), '',
                                                         QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir == '':
             return
         self.ui.mods_path_line_edit.setText(selected_dir)
 
-    def select_mdk_button(self):
+    def select_mdk_button(self) -> None:
         selected_file = QFileDialog.getOpenFileName(self,
                                                     self.tr('Select mdk archive'), '',
                                                     self.tr('Archive files (*.zip)'))[0]
@@ -260,12 +260,12 @@ class MDGMainWindow(QMainWindow):
             return
         self.ui.mdk_path_line_edit.setText(selected_file)
 
-    def deobf_checkbox_changed(self, state: int):
+    def deobf_checkbox_changed(self, state: int) -> None:
         self.ui.deobf_failed_group_box.setEnabled(state == 2)
         self.ui.deobf_threads_group_box.setEnabled(state == 2)
         self.check_mdk_needed()
 
-    def decomp_checkbox_changed(self, state: int):
+    def decomp_checkbox_changed(self, state: int) -> None:
         if state != 2:
             self.was_decomp_enabled = self.ui.deobf_failed_radio_decompile.isChecked()
             if self.was_decomp_enabled:
@@ -282,21 +282,21 @@ class MDGMainWindow(QMainWindow):
         self.ui.decomp_threads_group_box.setEnabled(state == 2)
         self.ui.decomp_cmd_groupbox.setEnabled(state == 2)
 
-    def merge_checkbox_changed(self, state: int):
+    def merge_checkbox_changed(self, state: int) -> None:
         self.ui.merge_group_box.setEnabled(state == 2)
         self.ui.patch_mdk_group_box.setEnabled(state == 2)
         self.check_mdk_needed()
 
-    def check_mdk_needed(self):
+    def check_mdk_needed(self) -> None:
         self.ui.mdk_path_vertical_group_box.setEnabled(
             self.ui.deobf_check_box.isChecked() or self.ui.merge_check_box.isChecked())
 
-    def closeEvent(self, event: QDragEnterEvent):
+    def closeEvent(self, event: QCloseEvent) -> None:
         event.accept()
         sys.exit()
 
-    def set_path_completer(self, line_edit: QLineEdit):
+    def set_path_completer(self, line_edit: QLineEdit) -> None:
         fs_model = QFileSystemModel(line_edit)
-        fs_model.setRootPath("")
+        fs_model.setRootPath('')
         fs_completer = QCompleter(fs_model, self)
         line_edit.setCompleter(fs_completer)

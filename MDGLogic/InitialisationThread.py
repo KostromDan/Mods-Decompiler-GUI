@@ -15,16 +15,16 @@ from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
 
 
 class ExceptionThread(QThread):
-    def __init__(self, e):
+    def __init__(self, e: Exception):
         super().__init__()
         self.e = e
 
-    def run(self):
+    def run(self) -> None:
         raise self.e
 
 
 class InitialisationThread(AbstractMDGThread):
-    def run(self):
+    def run(self) -> None:
         decomp_cmd = self.serialized_widgets['decomp_cmd_line_edit']['text']
         cache_enabled = self.serialized_widgets['cache_check_box']['isChecked']
 
@@ -60,7 +60,7 @@ class InitialisationThread(AbstractMDGThread):
                     if mod not in cache and os.path.isdir(mod_path):
                         shutil.rmtree(mod_path)
                         logging.info(f'Found {mod} in decompiled mods.'
-                                     f'But it\'s not in cache. Removing. '
+                                     f"But it's not in cache. Removing. "
                                      f'Maybe decompilation of it was interrupted.')
             except FileNotFoundError:
                 pass
@@ -101,7 +101,7 @@ class InitialisationThread(AbstractMDGThread):
         self.progress.emit(100, 'Initialisation complete')
         logging.info('Initialisation completed.')
 
-    def terminate(self):
+    def terminate(self) -> None:
         try:
             kill_subprocess(self.cmd.pid)
         except AttributeError:

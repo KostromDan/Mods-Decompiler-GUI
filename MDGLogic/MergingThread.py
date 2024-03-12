@@ -16,7 +16,7 @@ SKIP = [
 
 
 class MergingThread(AbstractMDGThread):
-    def run(self):
+    def run(self) -> None:
         if not self.serialized_widgets['merge_check_box']['isChecked'] or not \
                 self.serialized_widgets['merge_check_box']['isEnabled']:
             self.progress.emit(100, 'Merging skipped.')

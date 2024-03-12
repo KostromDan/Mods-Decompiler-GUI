@@ -39,19 +39,24 @@ eclipse {
 """
 
 
-def patch_mdk_download_sources(mdk_path):
+def patch_mdk_download_sources(mdk_path: str | os.PathLike) -> None:
     with open(os.path.join(mdk_path, 'build.gradle'), 'a') as file:
         file.write(MDK_PATCH_STRING_DOWNLOAD_SOURCES)
     create_folder(os.path.join(mdk_path, 'libs'))
 
 
-def patch_mdk_deobf(mdk_path, deobf_to_folder_name):
+def patch_mdk_deobf(mdk_path: str | os.PathLike,
+                    deobf_to_folder_name: str) -> None:
     with open(os.path.join(mdk_path, 'build.gradle'), 'a') as file:
         file.write(MDK_PATCH_STRING_DEOBF.replace('local_MDG', deobf_to_folder_name))
     create_folder(os.path.join(mdk_path, 'libs'))
 
 
-def unzip_and_patch_mdk(mdk_path, unzip_to_path, deobf_to_folder_name, do_deobf_patch, do_download_sources_patch=False):
+def unzip_and_patch_mdk(mdk_path: str | os.PathLike,
+                        unzip_to_path: str | os.PathLike,
+                        deobf_to_folder_name: str,
+                        do_deobf_patch: bool,
+                        do_download_sources_patch: bool = False) -> None:
     zipfile.ZipFile(mdk_path).extractall(path=unzip_to_path)
     if do_deobf_patch:
         patch_mdk_deobf(unzip_to_path, deobf_to_folder_name)
@@ -60,7 +65,7 @@ def unzip_and_patch_mdk(mdk_path, unzip_to_path, deobf_to_folder_name, do_deobf_
 
 
 class MdkInitialisationThread(AbstractMDGThread):
-    def run(self):
+    def run(self) -> None:
         if (not self.serialized_widgets['mdk_path_line_edit']['isEnabled'] or
                 (not (self.serialized_widgets['merge_check_box']['isEnabled'] and
                       self.serialized_widgets['merge_check_box']['isChecked']) and
@@ -101,7 +106,7 @@ class MdkInitialisationThread(AbstractMDGThread):
 
         self.progress.emit(100, 'Initialisation of mdk complete.')
 
-    def terminate(self):
+    def terminate(self) -> None:
         try:
             kill_subprocess(self.cmd.pid)
         except AttributeError:

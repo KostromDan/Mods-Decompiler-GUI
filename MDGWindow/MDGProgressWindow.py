@@ -2,21 +2,23 @@
 import copy
 import logging
 import sys
+from typing import Callable, Optional
 
-from PySide6.QtGui import QTextCursor, QColor
-from PySide6.QtWidgets import QMainWindow, QMessageBox
+from MDGUi.Ui_MDGProgressWindow import Ui_MDGProgressWindow
+from PySide6.QtCore import QThread, Signal
+from PySide6.QtGui import QTextCursor, QColor, QCloseEvent
+from PySide6.QtWidgets import QMainWindow, QMessageBox, QProgressBar
 
 from MDGLogic.CopyThread import CopyThread
 from MDGLogic.CriticalMBThread import CriticalMBThread
 from MDGLogic.DecompilationMainThread import DecompilationMainThread
-from MDGLogic.DeobfuscationMainThread import DeobfuscationMainThread
+from MDGLogic.DeobfuscationMainThread import DeobfuscationMainThread, FailLogic
 from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
 from MDGUtil.FileUtils import remove_folder
 from MDGUtil.MDGLogger import MDGLogger
 from MDGWindow.MDGResultWindow import MDGResultWindow
-from MDGui.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 
 
 def only_if_window_active(func):
@@ -28,8 +30,8 @@ def only_if_window_active(func):
 
 
 class MDGProgressWindow(QMainWindow):
-    def __init__(self, main_window, parent=None):
-        super().__init__(parent)
+    def __init__(self, main_window) -> None:
+        super().__init__()
         self.ui = Ui_MDGProgressWindow()
         self.ui.setupUi(self)
 
@@ -52,7 +54,7 @@ class MDGProgressWindow(QMainWindow):
 
         logging.info('Progress window started.')
 
-    def destroy(self):
+    def destroy(self, *args, **kwargs) -> None:
         self.setEnabled(False)
         if len(self.thread_list) >= 1:
             logging.info('Killing threads.')
@@ -61,16 +63,16 @@ class MDGProgressWindow(QMainWindow):
             self.thread_list.clear()
             logging.info('Killed threads.')
         logging.info('MDGProgressWindow finished.')
-        super().destroy()
+        super().destroy(*args, **kwargs)
 
-    def stop_button(self):
+    def stop_button(self) -> None:
         self.main_window.setEnabled(True)
         self.main_window.show()
         if self.completed:
             sys.exit()
         self.destroy()
 
-    def closeEvent(self, event):
+    def closeEvent(self, event: QCloseEvent) -> None:
         if not self.completed:
             reply = QMessageBox.question(self, 'Confirmation', 'Are you sure you want to quit?',
                                          QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -83,7 +85,12 @@ class MDGProgressWindow(QMainWindow):
         self.stop_button()
         event.accept()
 
-    def start_thread(self, thread_class, progress_bar, on_finished, critical_signal=None, thread_signals=None):
+    def start_thread(self,
+                     thread_class: QThread.__class__,
+                     progress_bar: QProgressBar,
+                     on_finished: Callable,
+                     critical_signal: Signal = None,
+                     thread_signals: dict[str: Callable] = None) -> Optional[QThread]:
         if not self.isEnabled():
             return
         if thread_signals is None:
@@ -103,38 +110,38 @@ class MDGProgressWindow(QMainWindow):
         thread.start()
         return thread
 
-    def start(self):
+    def start(self) -> None:
         self.start_thread(InitialisationThread, self.ui.init_progress_bar, self.copy_mods, self.decomp_cmd_check_failed)
 
     @only_if_window_active
-    def copy_mods(self):
+    def copy_mods(self) -> None:
         self.start_thread(CopyThread, self.ui.copy_progress_bar, self.init_mdk, thread_signals={
             'use_cached_signal': self.set_use_cached
         })
 
     @only_if_window_active
-    def init_mdk(self):
+    def init_mdk(self) -> None:
         self.start_thread(MdkInitialisationThread, self.ui.mdk_init_progress_bar, self.deobf_mods)
 
     @only_if_window_active
-    def deobf_mods(self):
+    def deobf_mods(self) -> None:
         self.start_thread(DeobfuscationMainThread, self.ui.deobf_progress_bar, self.decomp_mods, thread_signals={
             'failed_mod_signal': self.failed_deobf_mod,
             'fail_logic_signal': self.set_fail_logic
         })
 
     @only_if_window_active
-    def decomp_mods(self):
+    def decomp_mods(self) -> None:
         self.start_thread(DecompilationMainThread, self.ui.decomp_progress_bar, self.merge_mods, thread_signals={
             'failed_mod_signal': self.failed_decomp_mod,
         })
 
     @only_if_window_active
-    def merge_mods(self):
+    def merge_mods(self) -> None:
         self.start_thread(MergingThread, self.ui.merge_progress_bar, self.complete)
 
     @only_if_window_active
-    def complete(self):
+    def complete(self) -> None:
         remove_folder('tmp')
         self.ui.stop_button.setText('exit')
         self.completed = True
@@ -143,11 +150,11 @@ class MDGProgressWindow(QMainWindow):
         self.result_window = MDGResultWindow(self)
         self.result_window.show()
 
-    def set_progress(self, value, text):
+    def set_progress(self, value: int, text: str) -> None:
         self.current_progress_bar.setValue(value)
         self.ui.currently_label.setText(text)
 
-    def append_logger(self, color, msg):
+    def append_logger(self, color: str, msg: str) -> None:
         is_down = False
         scrollbar = self.ui.logger_text_edit.verticalScrollBar()
         if scrollbar.value() == scrollbar.maximum():
@@ -167,29 +174,28 @@ class MDGProgressWindow(QMainWindow):
         if is_down:
             scrollbar.setValue(scrollbar.maximum())
 
-    def update_progress_bar(self, i):
-        self.current_progress_bar.setValue(i)
+    def update_progress_bar(self, value: int) -> None:
+        self.current_progress_bar.setValue(value)
 
-    def critical_signal(self, s1, s2):
-        self.main_window.mb = CriticalMBThread(s1, s2)
-        self.main_window.mb.critical_signal.connect(self.main_window.critical_from_progress_window)
+    def critical_signal(self, title: str, text: str, main_window_func: Callable = None) -> None:
+        if main_window_func is None:
+            main_window_func = self.main_window.critical_from_progress_window
+        self.main_window.mb = CriticalMBThread(title, text)
+        self.main_window.mb.critical_signal.connect(main_window_func)
         self.main_window.mb.start()
         self.destroy()
 
-    def decomp_cmd_check_failed(self, s1, s2):
-        self.main_window.mb = CriticalMBThread(s1, s2)
-        self.main_window.mb.critical_signal.connect(self.main_window.decomp_cmd_check_failed)
-        self.main_window.mb.start()
-        self.destroy()
+    def decomp_cmd_check_failed(self, title: str, text: str) -> None:
+        self.critical_signal(title, text, self.main_window.decomp_cmd_check_failed)
 
-    def failed_deobf_mod(self, mod):
+    def failed_deobf_mod(self, mod: str) -> None:
         self.failed_deobfuscation_mods.append(mod)
 
-    def failed_decomp_mod(self, mod):
+    def failed_decomp_mod(self, mod: str) -> None:
         self.failed_decompilation_mods.append(mod)
 
-    def set_fail_logic(self, logic):
+    def set_fail_logic(self, logic: FailLogic) -> None:
         self.fail_logic = logic
 
-    def set_use_cached(self, use_cached):
+    def set_use_cached(self, use_cached: list[str]) -> None:
         self.main_window.serialized_widgets['use_cached'] = use_cached

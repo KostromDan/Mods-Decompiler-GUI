@@ -1,16 +1,16 @@
 import os.path
 import shutil
 import subprocess
-import threading
 import time
 from pathlib import Path
 
+from MDGLogic.AbstractDeobfDecompThread import AbstractDeobfDecompThread
 from MDGLogic.MdkInitialisationThread import unzip_and_patch_mdk
 from MDGUtil import PathUtils
 from MDGUtil.SubprocessKiller import kill_subprocess
 
 
-def remove_unsupported_symbols(mod_name):
+def remove_unsupported_symbols(mod_name: str) -> str:
     new_name = []
     for symbol in mod_name:
         if symbol.isalpha() or symbol.isdigit() or symbol in ['-', '.']:
@@ -22,18 +22,8 @@ def remove_unsupported_symbols(mod_name):
     return ''.join(new_name)
 
 
-class DeobfuscationThread(threading.Thread):
-
-    def __init__(self, mod_path: str, thread_number: int, serialized_widgets: dict):
-        super().__init__()
-        self.mod_path = mod_path
-        self.thread_number = thread_number
-        self.serialized_widgets = serialized_widgets
-        self.is_cmd_started = False
-        self.kill_cmd = False
-        self.success = False
-
-    def run(self):
+class DeobfuscationThread(AbstractDeobfDecompThread):
+    def run(self) -> None:
         current_mdk_path = os.path.join(PathUtils.TMP_DEOBFUSCATION_MDKS_PATH, f'mdk_{self.thread_number}')
         folder_name_in_gradle_cache = f'local_MDG_{self.thread_number}'
         unzip_and_patch_mdk(self.serialized_widgets['mdk_path_line_edit']['text'],
@@ -50,7 +40,6 @@ class DeobfuscationThread(threading.Thread):
         current_mod_deobf_path = os.path.join(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER,
                                               folder_name_in_gradle_cache)
         self.cmd = subprocess.Popen(['gradlew.bat', 'compileJava'], cwd=current_mdk_path, shell=True)
-        self.is_cmd_started = True
         while self.cmd.poll() is None:
             time.sleep(0.1)
 
@@ -75,11 +64,3 @@ class DeobfuscationThread(threading.Thread):
             pass
         shutil.copy(new_jar_path, PathUtils.DEOBFUSCATED_MODS_PATH)
         self.success = True
-
-    def terminate(self):
-        self.kill_cmd = True
-        if not self.is_cmd_started:
-            try:
-                super().kill()
-            except AttributeError:
-                pass

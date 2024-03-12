@@ -12,7 +12,7 @@ from MDGUtil.FileUtils import create_folder
 class CopyThread(AbstractMDGThread):
     use_cached_signal = Signal(object)
 
-    def run(self):
+    def run(self) -> None:
         mods_path = self.serialized_widgets['mods_path_line_edit']['text']
         cache_enabled = self.serialized_widgets['cache_check_box']['isChecked']
         self.progress.emit(0, 'Starting copying mods')
@@ -40,7 +40,7 @@ class CopyThread(AbstractMDGThread):
                     else:
                         shutil.rmtree(path_to_mod)
                         logging.info(f'Found {mod_name} in decompiled_mods.'
-                                     f'Current mod list doesn\'t include it. Removing.')
+                                     f"Current mod list doesn't include it. Removing.")
             except FileNotFoundError:
                 pass
             # try:  # remove mods from deobfuscated_mods which in decompiled_mods
@@ -61,7 +61,7 @@ class CopyThread(AbstractMDGThread):
                     else:
                         os.remove(os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH, mod))
                         logging.info(f'Found {mod_name} in deobfuscated mods.'
-                                     f'Current mod list doesn\'t include it. Removing.')
+                                     f"Current mod list doesn't include it. Removing.")
             except FileNotFoundError:
                 pass
         self.use_cached_signal.emit(use_cached_decomp)
@@ -74,6 +74,7 @@ class CopyThread(AbstractMDGThread):
             logging.info(f'Starting copying {mod}')
             shutil.copy(mod_path, copy_to)
             if ' ' in mod:
-                os.rename(os.path.join(PathUtils.TMP_MODS_PATH, mod), os.path.join(PathUtils.TMP_MODS_PATH, mod.replace(' ', '_')))
+                os.rename(os.path.join(PathUtils.TMP_MODS_PATH, mod),
+                          os.path.join(PathUtils.TMP_MODS_PATH, mod.replace(' ', '_')))
             logging.info(f'Finished copying {mod}')
         self.progress.emit(100, 'Finished copying mods.')

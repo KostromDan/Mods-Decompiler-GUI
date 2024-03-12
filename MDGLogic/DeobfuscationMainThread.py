@@ -5,7 +5,7 @@ import time
 
 from PySide6.QtCore import Signal
 
-from MDGLogic.AbstractMDGThread import AbstractMDGThread
+from MDGLogic.AbstractDeobfDecompMainThread import AbstractDeobfDecompMainThread
 from MDGLogic.DeobfuscationThread import DeobfuscationThread
 from MDGUtil import PathUtils
 from MDGUtil.FileUtils import create_folder
@@ -26,15 +26,10 @@ def clear_gradle():
         logging.warning(f'Could not find {PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER}. Skipping clearing gradle cache.')
 
 
-class DeobfuscationMainThread(AbstractMDGThread):
-    failed_mod_signal = Signal(str)
+class DeobfuscationMainThread(AbstractDeobfDecompMainThread):
     fail_logic_signal = Signal(object)
 
-    def __init__(self, widgets):
-        super().__init__(widgets)
-        self.deobf_threads: list[DeobfuscationThread] = []
-
-    def run(self):
+    def run(self) -> None:
         if not self.serialized_widgets['deobf_check_box']['isChecked']:
             self.progress.emit(100, 'Deobfuscation skipped.')
             logging.info('Deobfuscation skipped.')
@@ -65,17 +60,17 @@ class DeobfuscationMainThread(AbstractMDGThread):
         create_folder(PathUtils.DEOBFUSCATED_MODS_PATH)
 
         while processed_mods_count < mods_to_deobf_count:
-            if len(self.deobf_threads) < allocated_threads_count and started_mods_count < mods_to_deobf_count:
+            if len(self.threads) < allocated_threads_count and started_mods_count < mods_to_deobf_count:
                 mod_name = mods_iter.__next__()
                 logging.info(f'Started deobfuscation of {mod_name}')
                 deobf_thread = DeobfuscationThread(os.path.join(PathUtils.TMP_MODS_PATH, mod_name),
                                                    started_mods_count, self.serialized_widgets)
                 started_mods_count += 1
-                self.deobf_threads.append(deobf_thread)
+                self.threads.append(deobf_thread)
                 deobf_thread.start()
 
             new_threads = []
-            for thread in self.deobf_threads:
+            for thread in self.threads:
                 if thread.is_alive():
                     new_threads.append(thread)
                 else:
@@ -103,7 +98,7 @@ class DeobfuscationMainThread(AbstractMDGThread):
                                                           f'Deobfuscation of {os.path.basename(thread.mod_path)} failed!')
                         self.failed_mod_signal.emit(os.path.basename(thread.mod_path))
 
-            self.deobf_threads = new_threads
+            self.threads = new_threads
             time.sleep(0.1)
 
         logging.info('Deobfuscation complete.')
@@ -117,8 +112,3 @@ class DeobfuscationMainThread(AbstractMDGThread):
         if not self.serialized_widgets['merge_check_box']['isEnabled'] or not \
                 self.serialized_widgets['merge_check_box']['isChecked']:
             shutil.rmtree(PathUtils.MERGED_MDK_PATH)
-
-    def terminate(self):
-        for thread in self.deobf_threads:
-            thread.terminate()
-        super().terminate()

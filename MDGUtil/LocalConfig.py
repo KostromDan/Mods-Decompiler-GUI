@@ -1,5 +1,6 @@
 import json
 import os
+from typing import Any
 
 from MDGUtil import PathUtils
 
@@ -10,17 +11,17 @@ class LocalConfig:
     config = dict()
     config_path = os.path.join('local', 'config.json')
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.load()
 
-    def load(self):
+    def load(self) -> None:
         try:
             with open(self.config_path, 'r') as file:
                 self.config = json.loads(file.read())
         except FileNotFoundError:
             self.save()
 
-    def save(self):
+    def save(self) -> None:
         try:
             os.mkdir('local')
         except FileExistsError:
@@ -28,16 +29,16 @@ class LocalConfig:
         with open(self.config_path, 'w') as file:
             file.write(json.dumps(self.config))
 
-    def is_first_launch(self):
+    def is_first_launch(self) -> bool:
         if 'launched' not in self.config:
             self.config['launched'] = True
             self.save()
             return True
         return False
 
-    def get(self, arg):
+    def get(self, arg: str) -> Any:
         return self.config.get(arg, '')
 
-    def set(self, arg, value):
+    def set(self, arg: str, value: Any) -> None:
         self.config[arg] = value
         self.save()
