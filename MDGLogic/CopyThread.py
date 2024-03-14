@@ -5,8 +5,8 @@ import shutil
 from PySide6.QtCore import Signal
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
-from MDGUtil import PathUtils
 from MDGUtil import FileUtils
+from MDGUtil import PathUtils
 
 
 class CopyThread(AbstractMDGThread):

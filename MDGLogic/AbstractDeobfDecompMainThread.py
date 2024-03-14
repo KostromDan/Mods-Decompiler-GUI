@@ -1,4 +1,4 @@
-from typing import Optional, Union, Any
+from typing import Optional, Any
 
 from PySide6.QtCore import Signal
 
@@ -10,7 +10,7 @@ from MDGLogic.DeobfuscationThread import DeobfuscationThread
 class AbstractDeobfDecompMainThread(AbstractMDGThread):
     failed_mod_signal = Signal(str)
 
-    def __init__(self, widgets: dict[str, Union[dict[str, Any], list[str]]]) -> None:
+    def __init__(self, widgets: dict[str, dict[str, Any] | list[str]]) -> None:
         super().__init__(widgets)
         self.threads: list[Optional[DecompilationThread, DeobfuscationThread]] = []
 

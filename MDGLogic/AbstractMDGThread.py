@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Union
+from typing import Any
 
 from PySide6.QtCore import QThread, Signal
 
@@ -9,7 +9,7 @@ class AbstractMDGThread(QThread):
     critical_signal = Signal(str, str)
     progress_bar = Signal(int)
 
-    def __init__(self, serialized_widgets: dict[str, Union[dict[str, Any], list[str]]]) -> None:
+    def __init__(self, serialized_widgets: dict[str, dict[str, Any] | list[str]]) -> None:
         super().__init__()
         self.serialized_widgets = serialized_widgets
         self.setTerminationEnabled(True)

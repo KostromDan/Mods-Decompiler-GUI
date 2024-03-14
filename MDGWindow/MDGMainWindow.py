@@ -4,10 +4,9 @@ import os
 import sys
 import zipfile
 from collections import defaultdict
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 import psutil
-
 from MDGUi.Ui_MDGMainWindow import Ui_MDGMainWindow
 from PySide6.QtCore import QMimeData
 from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent
@@ -225,7 +224,7 @@ class MDGMainWindow(QMainWindow):
         self.hide()
         self.progress_window.start()
 
-    def serialize_to_dict(self) -> dict[str, Union[dict[str, Any], list[str]]]:
+    def serialize_to_dict(self) -> dict[str, dict[str, Any] | list[str]]:
         out = defaultdict(dict)
         members = [attr for attr in dir(self.ui) if not callable(getattr(self.ui, attr)) and not attr.startswith('__')]
         for member_name in members:

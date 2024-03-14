@@ -1,7 +1,6 @@
 import logging
 import os
 import shutil
-from pathlib import Path
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGUtil import PathUtils

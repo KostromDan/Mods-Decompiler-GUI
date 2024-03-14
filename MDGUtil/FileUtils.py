@@ -26,7 +26,7 @@ def extract_jars_from_jar(jar_path: str | os.PathLike,
                 old_jar_path = os.path.join(extract_to, file)
                 while True:
                     suffix = (f'_{iter_count}' if iter_count > 0 else '') + '.jar'
-                    new_file_name = os.path.basename(file).replace(' ','_').removesuffix('.jar')
+                    new_file_name = os.path.basename(file).replace(' ', '_').removesuffix('.jar')
                     new_jar_path = os.path.join(extract_to, new_file_name) + suffix
                     try:
                         os.rename(old_jar_path, new_jar_path)

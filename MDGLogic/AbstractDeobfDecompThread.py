@@ -1,6 +1,6 @@
 import subprocess
 import threading
-from typing import Optional, Union, Any
+from typing import Optional, Any
 
 
 def do_nothing(s):
@@ -11,7 +11,7 @@ class AbstractDeobfDecompThread(threading.Thread):
     def __init__(self,
                  mod_path: str,
                  thread_number: int,
-                 serialized_widgets: dict[str, Union[dict[str, Any], list[str]]]) -> None:
+                 serialized_widgets: dict[str, dict[str, Any] | list[str]]) -> None:
         super().__init__()
         self.mod_path = mod_path
         self.thread_number = thread_number
