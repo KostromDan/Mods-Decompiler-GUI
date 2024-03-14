@@ -23,7 +23,7 @@ class Ui_MDGHelpWindow(object):
     def setupUi(self, MDGHelpWindow):
         if not MDGHelpWindow.objectName():
             MDGHelpWindow.setObjectName(u"MDGHelpWindow")
-        MDGHelpWindow.resize(1200, 1161)
+        MDGHelpWindow.resize(1200, 900)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
