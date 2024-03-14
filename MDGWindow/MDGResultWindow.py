@@ -26,9 +26,9 @@ class MDGResultWindow(QMainWindow):
             self.ui.intellij_idea_button.setEnabled(False)
 
         self.ui.close_button.clicked.connect(self.hide)
-        self.ui.deobfuscated_mods_button.clicked.connect(self.deobfuscated_mods_button)
-        self.ui.decompiled_mods_button.clicked.connect(self.decompiled_mods_button)
-        self.ui.merged_mdk_button.clicked.connect(self.merged_mdk_button)
+        self.ui.deobfuscated_mods_button.clicked.connect(lambda e: self.open_folder(PathUtils.DEOBFUSCATED_MODS_PATH))
+        self.ui.decompiled_mods_button.clicked.connect(lambda e: self.open_folder(PathUtils.DECOMPILED_MODS_PATH))
+        self.ui.merged_mdk_button.clicked.connect(lambda e: self.open_folder(PathUtils.MERGED_MDK_PATH))
         self.ui.intellij_idea_button.clicked.connect(self.intellij_idea_button)
         self.ui.exit_button.clicked.connect(sys.exit)
         self.ui.close_button.clicked.connect(self.close_button)
@@ -54,15 +54,6 @@ class MDGResultWindow(QMainWindow):
 
     def open_folder(self, path: str | os.PathLike) -> None:
         os.startfile(os.path.realpath(path))
-
-    def deobfuscated_mods_button(self) -> None:
-        self.open_folder(PathUtils.DEOBFUSCATED_MODS_PATH)
-
-    def decompiled_mods_button(self) -> None:
-        self.open_folder(PathUtils.DECOMPILED_MODS_PATH)
-
-    def merged_mdk_button(self) -> None:
-        self.open_folder(PathUtils.MERGED_MDK_PATH)
 
     def intellij_idea_button(self) -> None:
         try:

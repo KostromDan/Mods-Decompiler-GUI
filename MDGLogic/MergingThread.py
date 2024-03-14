@@ -15,6 +15,14 @@ SKIP = [
 ]
 
 
+def contains_java_file(path: str | os.PathLike) -> bool:
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            if file.endswith('.java'):
+                return True
+    return False
+
+
 class MergingThread(AbstractMDGThread):
     def run(self) -> None:
         if not self.serialized_widgets['merge_check_box']['isChecked'] or not \
@@ -54,8 +62,7 @@ class MergingThread(AbstractMDGThread):
                     if merge_resources:
                         shutil.copytree(path_to_file, PathUtils.MERGED_MDK_RESOURCES_PATH, dirs_exist_ok=True)
                     continue
-                paths_to_java_files = list(Path(path_to_file).rglob('*.java'))
-                if paths_to_java_files:
+                if contains_java_file(path_to_file):
                     if merge_code:
                         shutil.copytree(path_to_file,
                                         os.path.join(PathUtils.MERGED_MDK_JAVA_PATH, file),
