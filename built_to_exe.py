@@ -4,7 +4,7 @@ import shutil
 from MDGUtil import PathUtils
 from MDGUtil.FileUtils import remove_folder
 
-VERSION = '2.1.1'
+VERSION = '2.2.0'
 
 
 def main():
