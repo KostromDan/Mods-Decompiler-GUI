@@ -6,6 +6,8 @@ import zipfile
 from collections import defaultdict
 from typing import Any, Optional, Union
 
+import psutil
+
 from MDGUi.Ui_MDGMainWindow import Ui_MDGMainWindow
 from PySide6.QtCore import QMimeData
 from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent
@@ -55,10 +57,16 @@ class MDGMainWindow(QMainWindow):
         self.ui.mdk_path_line_edit.setText(self.config.get('mdk_line_edit'))
         self.ui.mdk_path_line_edit.textChanged.connect(self.mdk_line_edit_changed)
 
+        free_memory_in_gb = psutil.virtual_memory().available / (1024.0 ** 3)
+        recommended_threads_ram = int((free_memory_in_gb - 1) / 0.5)  # deobfuscation thread eat 0.5 gb in middle case
+        recommended_threads_cpu = multiprocessing.cpu_count()
+
+        recommended_threads = max(1, min(recommended_threads_ram, recommended_threads_cpu))
+
         if self.config.get('deobf_threads') == '':
-            self.config.set('deobf_threads', multiprocessing.cpu_count())
+            self.config.set('deobf_threads', recommended_threads)
         if self.config.get('decomp_threads') == '':
-            self.config.set('decomp_threads', multiprocessing.cpu_count())
+            self.config.set('decomp_threads', recommended_threads)
 
         self.setup_slider_and_spinbox_pair(self.ui.deobf_threads_spin_box,
                                            self.ui.deobf_threads_horizontal_slider,
