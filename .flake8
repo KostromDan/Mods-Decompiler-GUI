@@ -1,0 +1,8 @@
+[flake8]
+exclude =
+    MDGUi,
+    .venv,
+    result
+ignore =
+    E501
+    W504
