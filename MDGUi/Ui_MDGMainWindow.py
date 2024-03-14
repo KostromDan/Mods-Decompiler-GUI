@@ -25,16 +25,14 @@ class Ui_MDGMainWindow(object):
     def setupUi(self, MDGMainWindow):
         if not MDGMainWindow.objectName():
             MDGMainWindow.setObjectName(u"MDGMainWindow")
-        MDGMainWindow.resize(677, 525)
+        MDGMainWindow.resize(852, 579)
         MDGMainWindow.setMaximumSize(QSize(16777215, 16777215))
         self.centralwidget = QWidget(MDGMainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setEnabled(True)
         self.centralwidget.setAutoFillBackground(False)
-        self.verticalLayout_3 = QVBoxLayout(self.centralwidget)
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout_7 = QVBoxLayout(self.centralwidget)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.mods_path_vertical_group_box = QGroupBox(self.centralwidget)
         self.mods_path_vertical_group_box.setObjectName(u"mods_path_vertical_group_box")
         self.mods_path_vertical_group_box.setEnabled(True)
@@ -92,7 +90,7 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout_2.addLayout(self.horizontalLayout_8)
 
 
-        self.verticalLayout.addWidget(self.mods_path_vertical_group_box)
+        self.verticalLayout_7.addWidget(self.mods_path_vertical_group_box)
 
         self.mdk_path_vertical_group_box = QGroupBox(self.centralwidget)
         self.mdk_path_vertical_group_box.setObjectName(u"mdk_path_vertical_group_box")
@@ -145,9 +143,14 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout_4.addLayout(self.horizontalLayout_11)
 
 
-        self.verticalLayout.addWidget(self.mdk_path_vertical_group_box)
+        self.verticalLayout_7.addWidget(self.mdk_path_vertical_group_box)
 
-        self.deobf_group_box = QGroupBox(self.centralwidget)
+        self.deobf_main_group_box = QGroupBox(self.centralwidget)
+        self.deobf_main_group_box.setObjectName(u"deobf_main_group_box")
+        self.verticalLayout = QVBoxLayout(self.deobf_main_group_box)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(0, 2, 0, 2)
+        self.deobf_group_box = QGroupBox(self.deobf_main_group_box)
         self.deobf_group_box.setObjectName(u"deobf_group_box")
         self.horizontalLayout_4 = QHBoxLayout(self.deobf_group_box)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
@@ -169,7 +172,7 @@ class Ui_MDGMainWindow(object):
 
         self.verticalLayout.addWidget(self.deobf_group_box)
 
-        self.deobf_threads_group_box = QGroupBox(self.centralwidget)
+        self.deobf_threads_group_box = QGroupBox(self.deobf_main_group_box)
         self.deobf_threads_group_box.setObjectName(u"deobf_threads_group_box")
         self.horizontalLayout_12 = QHBoxLayout(self.deobf_threads_group_box)
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
@@ -211,7 +214,7 @@ class Ui_MDGMainWindow(object):
 
         self.verticalLayout.addWidget(self.deobf_threads_group_box)
 
-        self.deobf_failed_group_box = QGroupBox(self.centralwidget)
+        self.deobf_failed_group_box = QGroupBox(self.deobf_main_group_box)
         self.deobf_failed_group_box.setObjectName(u"deobf_failed_group_box")
         self.horizontalLayout_3 = QHBoxLayout(self.deobf_failed_group_box)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
@@ -252,7 +255,15 @@ class Ui_MDGMainWindow(object):
 
         self.verticalLayout.addWidget(self.deobf_failed_group_box)
 
-        self.decomp_group_box = QGroupBox(self.centralwidget)
+
+        self.verticalLayout_7.addWidget(self.deobf_main_group_box)
+
+        self.decomp_main_group_box = QGroupBox(self.centralwidget)
+        self.decomp_main_group_box.setObjectName(u"decomp_main_group_box")
+        self.verticalLayout_3 = QVBoxLayout(self.decomp_main_group_box)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalLayout_3.setContentsMargins(0, 2, 0, 2)
+        self.decomp_group_box = QGroupBox(self.decomp_main_group_box)
         self.decomp_group_box.setObjectName(u"decomp_group_box")
         self.horizontalLayout_6 = QHBoxLayout(self.decomp_group_box)
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
@@ -272,9 +283,9 @@ class Ui_MDGMainWindow(object):
         self.horizontalLayout_6.addWidget(self.help_decomp_button)
 
 
-        self.verticalLayout.addWidget(self.decomp_group_box)
+        self.verticalLayout_3.addWidget(self.decomp_group_box)
 
-        self.decomp_threads_group_box = QGroupBox(self.centralwidget)
+        self.decomp_threads_group_box = QGroupBox(self.decomp_main_group_box)
         self.decomp_threads_group_box.setObjectName(u"decomp_threads_group_box")
         self.horizontalLayout_13 = QHBoxLayout(self.decomp_threads_group_box)
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
@@ -314,9 +325,9 @@ class Ui_MDGMainWindow(object):
         self.horizontalLayout_13.addWidget(self.help_decomp_threads_button)
 
 
-        self.verticalLayout.addWidget(self.decomp_threads_group_box)
+        self.verticalLayout_3.addWidget(self.decomp_threads_group_box)
 
-        self.decomp_cmd_groupbox = QGroupBox(self.centralwidget)
+        self.decomp_cmd_groupbox = QGroupBox(self.decomp_main_group_box)
         self.decomp_cmd_groupbox.setObjectName(u"decomp_cmd_groupbox")
         self.decomp_cmd_horizontal_layout = QHBoxLayout(self.decomp_cmd_groupbox)
         self.decomp_cmd_horizontal_layout.setObjectName(u"decomp_cmd_horizontal_layout")
@@ -349,17 +360,28 @@ class Ui_MDGMainWindow(object):
         self.decomp_cmd_horizontal_layout.addWidget(self.help_decomp_cmd_button)
 
 
-        self.verticalLayout.addWidget(self.decomp_cmd_groupbox)
+        self.verticalLayout_3.addWidget(self.decomp_cmd_groupbox)
 
-        self.merge_horizontal_layout = QHBoxLayout()
+
+        self.verticalLayout_7.addWidget(self.decomp_main_group_box)
+
+        self.merge_main_group_box = QGroupBox(self.centralwidget)
+        self.merge_main_group_box.setObjectName(u"merge_main_group_box")
+        self.verticalLayout_5 = QVBoxLayout(self.merge_main_group_box)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.verticalLayout_5.setContentsMargins(0, 2, 0, 2)
+        self.groupBox = QGroupBox(self.merge_main_group_box)
+        self.groupBox.setObjectName(u"groupBox")
+        self.merge_horizontal_layout = QHBoxLayout(self.groupBox)
         self.merge_horizontal_layout.setObjectName(u"merge_horizontal_layout")
-        self.merge_check_box = QCheckBox(self.centralwidget)
+        self.merge_horizontal_layout.setContentsMargins(0, 0, 0, 0)
+        self.merge_check_box = QCheckBox(self.groupBox)
         self.merge_check_box.setObjectName(u"merge_check_box")
         self.merge_check_box.setChecked(True)
 
         self.merge_horizontal_layout.addWidget(self.merge_check_box)
 
-        self.help_merge_button = QPushButton(self.centralwidget)
+        self.help_merge_button = QPushButton(self.groupBox)
         self.help_merge_button.setObjectName(u"help_merge_button")
         sizePolicy.setHeightForWidth(self.help_merge_button.sizePolicy().hasHeightForWidth())
         self.help_merge_button.setSizePolicy(sizePolicy)
@@ -368,9 +390,9 @@ class Ui_MDGMainWindow(object):
         self.merge_horizontal_layout.addWidget(self.help_merge_button)
 
 
-        self.verticalLayout.addLayout(self.merge_horizontal_layout)
+        self.verticalLayout_5.addWidget(self.groupBox)
 
-        self.merge_group_box = QGroupBox(self.centralwidget)
+        self.merge_group_box = QGroupBox(self.merge_main_group_box)
         self.merge_group_box.setObjectName(u"merge_group_box")
         self.horizontalLayout_5 = QHBoxLayout(self.merge_group_box)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
@@ -405,9 +427,9 @@ class Ui_MDGMainWindow(object):
         self.horizontalLayout_5.addWidget(self.help_merge_button_2)
 
 
-        self.verticalLayout.addWidget(self.merge_group_box)
+        self.verticalLayout_5.addWidget(self.merge_group_box)
 
-        self.patch_mdk_group_box = QGroupBox(self.centralwidget)
+        self.patch_mdk_group_box = QGroupBox(self.merge_main_group_box)
         self.patch_mdk_group_box.setObjectName(u"patch_mdk_group_box")
         self.horizontalLayout_7 = QHBoxLayout(self.patch_mdk_group_box)
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
@@ -427,24 +449,54 @@ class Ui_MDGMainWindow(object):
         self.horizontalLayout_7.addWidget(self.help_sources_button)
 
 
-        self.verticalLayout.addWidget(self.patch_mdk_group_box)
+        self.verticalLayout_5.addWidget(self.patch_mdk_group_box)
 
 
-        self.verticalLayout_3.addLayout(self.verticalLayout)
+        self.verticalLayout_7.addWidget(self.merge_main_group_box)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.verticalLayout_3.addItem(self.verticalSpacer)
+        self.verticalLayout_7.addItem(self.verticalSpacer)
 
-        self.cache_horizontal_layout = QHBoxLayout()
+        self.additional_options_group_box = QGroupBox(self.centralwidget)
+        self.additional_options_group_box.setObjectName(u"additional_options_group_box")
+        self.verticalLayout_6 = QVBoxLayout(self.additional_options_group_box)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalLayout_6.setContentsMargins(0, 2, 0, 2)
+        self.jar_in_jar_group_box = QGroupBox(self.additional_options_group_box)
+        self.jar_in_jar_group_box.setObjectName(u"jar_in_jar_group_box")
+        self.jar_in_jar_horizontal_layout = QHBoxLayout(self.jar_in_jar_group_box)
+        self.jar_in_jar_horizontal_layout.setObjectName(u"jar_in_jar_horizontal_layout")
+        self.jar_in_jar_horizontal_layout.setContentsMargins(0, 0, 0, 0)
+        self.jar_in_jar_check_box = QCheckBox(self.jar_in_jar_group_box)
+        self.jar_in_jar_check_box.setObjectName(u"jar_in_jar_check_box")
+        self.jar_in_jar_check_box.setChecked(True)
+
+        self.jar_in_jar_horizontal_layout.addWidget(self.jar_in_jar_check_box)
+
+        self.jar_in_jar_help_button = QPushButton(self.jar_in_jar_group_box)
+        self.jar_in_jar_help_button.setObjectName(u"jar_in_jar_help_button")
+        sizePolicy.setHeightForWidth(self.jar_in_jar_help_button.sizePolicy().hasHeightForWidth())
+        self.jar_in_jar_help_button.setSizePolicy(sizePolicy)
+        self.jar_in_jar_help_button.setMaximumSize(QSize(20, 16777215))
+
+        self.jar_in_jar_horizontal_layout.addWidget(self.jar_in_jar_help_button)
+
+
+        self.verticalLayout_6.addWidget(self.jar_in_jar_group_box)
+
+        self.use_cache_group_box = QGroupBox(self.additional_options_group_box)
+        self.use_cache_group_box.setObjectName(u"use_cache_group_box")
+        self.cache_horizontal_layout = QHBoxLayout(self.use_cache_group_box)
         self.cache_horizontal_layout.setObjectName(u"cache_horizontal_layout")
-        self.cache_check_box = QCheckBox(self.centralwidget)
+        self.cache_horizontal_layout.setContentsMargins(0, 0, 0, 0)
+        self.cache_check_box = QCheckBox(self.use_cache_group_box)
         self.cache_check_box.setObjectName(u"cache_check_box")
         self.cache_check_box.setChecked(True)
 
         self.cache_horizontal_layout.addWidget(self.cache_check_box)
 
-        self.help_cache_button = QPushButton(self.centralwidget)
+        self.help_cache_button = QPushButton(self.use_cache_group_box)
         self.help_cache_button.setObjectName(u"help_cache_button")
         sizePolicy.setHeightForWidth(self.help_cache_button.sizePolicy().hasHeightForWidth())
         self.help_cache_button.setSizePolicy(sizePolicy)
@@ -453,18 +505,21 @@ class Ui_MDGMainWindow(object):
         self.cache_horizontal_layout.addWidget(self.help_cache_button)
 
 
-        self.verticalLayout_3.addLayout(self.cache_horizontal_layout)
+        self.verticalLayout_6.addWidget(self.use_cache_group_box)
+
+
+        self.verticalLayout_7.addWidget(self.additional_options_group_box)
 
         self.start_button = QPushButton(self.centralwidget)
         self.start_button.setObjectName(u"start_button")
         self.start_button.setAcceptDrops(False)
 
-        self.verticalLayout_3.addWidget(self.start_button)
+        self.verticalLayout_7.addWidget(self.start_button)
 
         MDGMainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGMainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 677, 22))
+        self.menubar.setGeometry(QRect(0, 0, 852, 22))
         MDGMainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MDGMainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -510,6 +565,8 @@ class Ui_MDGMainWindow(object):
         self.help_merge_button_2.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.download_sources_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Patch mdk with \"downloadSources = true\"", None))
         self.help_sources_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.jar_in_jar_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Include jar in jar", None))
+        self.jar_in_jar_help_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.cache_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Use cache", None))
         self.help_cache_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.start_button.setText(QCoreApplication.translate("MDGMainWindow", u"start", None))

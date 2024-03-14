@@ -85,6 +85,7 @@ class MDGMainWindow(QMainWindow):
             self.ui.help_deobf_threads_button: self.help_window.ui.threads,
             self.ui.help_decomp_cmd_button: self.help_window.ui.decomp_cmd,
             self.ui.help_cache_button: self.help_window.ui.cache,
+            self.ui.jar_in_jar_help_button: self.help_window.ui.jar_in_jar,
         }
         for help_button, widget in self.help_widget_pairs.items():
             help_button.clicked.connect(self.help_button_clicked)

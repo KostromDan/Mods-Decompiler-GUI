@@ -74,6 +74,7 @@ class MergingThread(AbstractMDGThread):
                                         os.path.join(PathUtils.MERGED_MDK_RESOURCES_PATH, file),
                                         dirs_exist_ok=True)
                     continue
+            logging.info(f'Finished merging of {decompiled_mod}.')
 
         logging.info('Merging complete.')
         self.progress.emit(100, 'Merging complete.')

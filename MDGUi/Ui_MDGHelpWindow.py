@@ -23,7 +23,7 @@ class Ui_MDGHelpWindow(object):
     def setupUi(self, MDGHelpWindow):
         if not MDGHelpWindow.objectName():
             MDGHelpWindow.setObjectName(u"MDGHelpWindow")
-        MDGHelpWindow.resize(1200, 953)
+        MDGHelpWindow.resize(1200, 1161)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -43,7 +43,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 1946))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 2082))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)
@@ -184,6 +184,17 @@ class Ui_MDGHelpWindow(object):
         self.patch_mdk.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
 
         self.verticalLayout_2.addWidget(self.patch_mdk)
+
+        self.jar_in_jar = QTextBrowser(self.scrollAreaWidgetContents)
+        self.jar_in_jar.setObjectName(u"jar_in_jar")
+        sizePolicy1.setHeightForWidth(self.jar_in_jar.sizePolicy().hasHeightForWidth())
+        self.jar_in_jar.setSizePolicy(sizePolicy1)
+        self.jar_in_jar.setMinimumSize(QSize(0, 130))
+        self.jar_in_jar.setMaximumSize(QSize(16777215, 130))
+        self.jar_in_jar.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.jar_in_jar.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+
+        self.verticalLayout_2.addWidget(self.jar_in_jar)
 
         self.cache = QTextBrowser(self.scrollAreaWidgetContents)
         self.cache.setObjectName(u"cache")
@@ -363,6 +374,18 @@ class Ui_MDGHelpWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-ri"
                         "ght:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-style:italic;\"> }</span> </p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-style:italic;\">}</span></p></body></html>", None))
+        self.jar_in_jar.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Include jar in jar:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Many Minecraft mods include their dependencies not in a separate library mod, but within their own jar file. This is called 'jar-in-jar'. The most popular example is Create and FlyWheel. In modern v"
+                        "ersions of Create, FlyWheel is included within Create.</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">If enabled, MDG will analyze every mod for 'jar-in-jar'. If found, jar inside mod jar, it will be extracted from the mod and processed along with other mods. This process will also be applied recursively to all jar in jars.<br /><br /><span style=\" font-weight:700;\">This algorithm is implemented very efficiently. It has almost no effect on time.</span></p></body></html>", None))
         self.cache.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
