@@ -10,7 +10,7 @@ FORGE_GRADLE_DEOBF_CACHE_FOLDER = os.path.join(os.path.expanduser('~'),
 
 DECOMPILER_FOLDER_PATH = os.path.join('decompiler')
 TEST_MOD_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'decompiler_test_mod.jar')
-DECOMPILER_JAR_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'fernflower.jar')
+DECOMPILER_JAR_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'vineflower-1.10.0+local.jar')
 
 TMP_FOLDER_PATH = os.path.join('tmp')
 TMP_MODS_PATH = os.path.join(TMP_FOLDER_PATH, 'mods')
