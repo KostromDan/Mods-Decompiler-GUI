@@ -4,11 +4,12 @@ import shutil
 from MDGUtil import PathUtils
 from MDGUtil.FileUtils import remove_folder
 
-VERSION = '2.2.1'
+VERSION = '2.2.2'
 
 
 def main():
     remove_folder('build')
+    remove_folder('local')
     remove_folder('dist')
     remove_folder(PathUtils.RESULT_FOLDER_PATH)
     remove_folder(PathUtils.TMP_FOLDER_PATH)

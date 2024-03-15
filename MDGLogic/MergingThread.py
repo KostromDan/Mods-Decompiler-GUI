@@ -52,9 +52,8 @@ class MergingThread(AbstractMDGThread):
             logging.info(f'Started merging of {decompiled_mod}.')
             for file in os.listdir(path_to_mod):
                 path_to_file = os.path.join(path_to_mod, file)
-                for skip_file in SKIP:
-                    if file.startswith(skip_file):
-                        continue
+                if len(list(filter(lambda skip_str: file.startswith(skip_str), SKIP))) > 0:
+                    continue
                 if os.path.isfile(path_to_file):
                     if merge_resources:
                         shutil.copy(path_to_file, PathUtils.MERGED_MDK_RESOURCES_PATH)
