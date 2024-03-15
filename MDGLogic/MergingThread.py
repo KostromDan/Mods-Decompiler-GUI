@@ -11,6 +11,7 @@ SKIP = [
     'win32-x86-64',
     'win32-x86',
     'linux-x86-64',
+    'architectury_inject_',
 ]
 
 
@@ -51,8 +52,9 @@ class MergingThread(AbstractMDGThread):
             logging.info(f'Started merging of {decompiled_mod}.')
             for file in os.listdir(path_to_mod):
                 path_to_file = os.path.join(path_to_mod, file)
-                if file in SKIP:
-                    continue
+                for skip_file in SKIP:
+                    if file.startswith(skip_file):
+                        continue
                 if os.path.isfile(path_to_file):
                     if merge_resources:
                         shutil.copy(path_to_file, PathUtils.MERGED_MDK_RESOURCES_PATH)
