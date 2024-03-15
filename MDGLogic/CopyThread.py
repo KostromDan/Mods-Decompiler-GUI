@@ -21,6 +21,8 @@ class CopyThread(AbstractMDGThread):
         if self.serialized_widgets['jar_in_jar_check_box']['isChecked']:
             logging.info('Started analysing mods for jar in jar.')
             for mod in os.listdir(mods_path):
+                if not mod.endswith('.jar'):
+                    continue
                 FileUtils.extract_jars_from_jar(os.path.join(mods_path, mod), PathUtils.TMP_MODS_PATH)
             jar_in_jar_mods_list += os.listdir(PathUtils.TMP_MODS_PATH)
             logging.info('Finished analysing mods for jar in jar.'
