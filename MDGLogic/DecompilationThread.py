@@ -7,8 +7,7 @@ import zipfile
 from pathlib import Path
 
 from MDGLogic.AbstractDeobfDecompThread import AbstractDeobfDecompThread
-from MDGUtil import PathUtils
-from MDGUtil.FileUtils import create_folder
+from MDGUtil import PathUtils, FileUtils
 from MDGUtil.SubprocessKiller import kill_subprocess
 
 
@@ -19,7 +18,7 @@ class DecompilationThread(AbstractDeobfDecompThread):
         decomp_cmd = self.serialized_widgets['decomp_cmd_line_edit']['text']
         result_folder = os.path.join(PathUtils.DECOMPILED_MODS_PATH,
                                      os.path.basename(self.mod_path.removesuffix('.jar')))
-        create_folder(result_folder)
+        FileUtils.create_folder(result_folder)
         decomp_cmd_formatted = decomp_cmd.format(path_to_jar=self.mod_path, out_path=result_folder)
         self.cmd = subprocess.Popen(decomp_cmd_formatted, shell=True)
         while self.cmd.poll() is None:

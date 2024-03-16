@@ -4,7 +4,6 @@ import logging
 import sys
 from typing import Callable, Optional
 
-from MDGUi.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 from PySide6.QtCore import QThread, Signal
 from PySide6.QtGui import QTextCursor, QColor, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QMessageBox, QProgressBar
@@ -16,7 +15,7 @@ from MDGLogic.DeobfuscationMainThread import DeobfuscationMainThread, FailLogic
 from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
-from MDGUtil.FileUtils import remove_folder
+from MDGUi.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 from MDGUtil.MDGLogger import MDGLogger
 from MDGWindow.MDGResultWindow import MDGResultWindow
 
@@ -142,7 +141,7 @@ class MDGProgressWindow(QMainWindow):
 
     @only_if_window_active
     def complete(self) -> None:
-        remove_folder('tmp')
+        FileUtils.remove_folder('tmp')
         self.ui.stop_button.setText('exit')
         self.completed = True
         self.setEnabled(False)

@@ -3,8 +3,7 @@ import os
 import shutil
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
-from MDGUtil import PathUtils
-from MDGUtil.FileUtils import create_folder
+from MDGUtil import PathUtils, FileUtils
 
 SKIP = [
     '.cache',
@@ -41,8 +40,8 @@ class MergingThread(AbstractMDGThread):
         merge_resources = self.serialized_widgets['merge_resources_check_box']['isChecked']
 
         shutil.rmtree(PathUtils.MERGED_MDK_SRC_PATH)
-        create_folder(PathUtils.MERGED_MDK_SRC_PATH)
-        create_folder(PathUtils.MERGED_MDK_RESOURCES_PATH)
+        FileUtils.create_folder(PathUtils.MERGED_MDK_SRC_PATH)
+        FileUtils.create_folder(PathUtils.MERGED_MDK_RESOURCES_PATH)
 
         for n, decompiled_mod in enumerate(os.listdir(mods_path)):
             path_to_mod = os.path.join(mods_path, decompiled_mod)

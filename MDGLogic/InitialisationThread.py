@@ -9,7 +9,6 @@ from PySide6.QtCore import QThread
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGUtil import FileUtils, PathUtils
-from MDGUtil.FileUtils import create_folder, remove_folder
 from MDGUtil.SubprocessKiller import kill_subprocess
 from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
 
@@ -34,11 +33,11 @@ class InitialisationThread(AbstractMDGThread):
 
         self.progress.emit(40, 'Clearing result folder')
         if cache_enabled:
-            create_folder(PathUtils.RESULT_FOLDER_PATH)
+            FileUtils.create_folder(PathUtils.RESULT_FOLDER_PATH)
             if not self.serialized_widgets['deobf_check_box']['isChecked']:
-                remove_folder(PathUtils.DEOBFUSCATED_MODS_PATH)
+                FileUtils.remove_folder(PathUtils.DEOBFUSCATED_MODS_PATH)
             if not self.serialized_widgets['decomp_check_box']['isChecked']:
-                remove_folder(PathUtils.DECOMPILED_MODS_PATH)
+                FileUtils.remove_folder(PathUtils.DECOMPILED_MODS_PATH)
             for file in os.listdir(PathUtils.RESULT_FOLDER_PATH):
                 # remove all except ['deobfuscated_mods', 'decompiled_mods']
                 path = os.path.join(PathUtils.RESULT_FOLDER_PATH, file)
@@ -51,7 +50,7 @@ class InitialisationThread(AbstractMDGThread):
 
             cache_path = os.path.join(PathUtils.DECOMPILED_MODS_PATH, 'cache.json')
             if not os.path.exists(cache_path):
-                remove_folder(PathUtils.DECOMPILED_MODS_PATH)
+                FileUtils.remove_folder(PathUtils.DECOMPILED_MODS_PATH)
             try:  # remove mods decompilation of which was interrupted
                 with open(cache_path, 'r') as f:
                     cache = json.loads(f.read())
@@ -76,7 +75,7 @@ class InitialisationThread(AbstractMDGThread):
         if self.serialized_widgets['decomp_cmd_groupbox']['isEnabled']:
             self.progress.emit(80, 'Checking decompiler/decompiler cmd are correct')
             logging.info('Checking decompiler/decompiler cmd are correct')
-            create_folder(PathUtils.TMP_DECOMPILER_TEST_PATH)
+            FileUtils.create_folder(PathUtils.TMP_DECOMPILER_TEST_PATH)
             try:
                 decomp_cmd_formatted = decomp_cmd.format(path_to_jar=PathUtils.TEST_MOD_PATH,
                                                          out_path=PathUtils.TMP_DECOMPILER_TEST_PATH)

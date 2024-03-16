@@ -6,8 +6,7 @@ from typing import Iterator
 
 from MDGLogic.AbstractDeobfDecompMainThread import AbstractDeobfDecompMainThread
 from MDGLogic.DecompilationThread import DecompilationThread
-from MDGUtil import PathUtils
-from MDGUtil.FileUtils import create_folder
+from MDGUtil import PathUtils, FileUtils
 
 
 def get_mods_iter(use_cached: list) -> Iterator[os.PathLike]:
@@ -41,7 +40,7 @@ class DecompilationMainThread(AbstractDeobfDecompMainThread):
         processed_mods_count = 0
         started_mods_count = 0
 
-        create_folder(PathUtils.DECOMPILED_MODS_PATH)
+        FileUtils.create_folder(PathUtils.DECOMPILED_MODS_PATH)
 
         with open(os.path.join(PathUtils.DECOMPILED_MODS_PATH, 'cache.json'), 'w') as f:
             cache = []

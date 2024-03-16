@@ -5,8 +5,7 @@ import sys
 import zipfile
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
-from MDGUtil import PathUtils
-from MDGUtil.FileUtils import create_folder
+from MDGUtil import PathUtils, FileUtils
 from MDGUtil.SubprocessKiller import kill_subprocess
 from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
 
@@ -42,14 +41,14 @@ eclipse {
 def patch_mdk_download_sources(mdk_path: str | os.PathLike) -> None:
     with open(os.path.join(mdk_path, 'build.gradle'), 'a') as file:
         file.write(MDK_PATCH_STRING_DOWNLOAD_SOURCES)
-    create_folder(os.path.join(mdk_path, 'libs'))
+    FileUtils.create_folder(os.path.join(mdk_path, 'libs'))
 
 
 def patch_mdk_deobf(mdk_path: str | os.PathLike,
                     deobf_to_folder_name: str) -> None:
     with open(os.path.join(mdk_path, 'build.gradle'), 'a') as file:
         file.write(MDK_PATCH_STRING_DEOBF.replace('local_MDG', deobf_to_folder_name))
-    create_folder(os.path.join(mdk_path, 'libs'))
+    FileUtils.create_folder(os.path.join(mdk_path, 'libs'))
 
 
 def unzip_and_patch_mdk(mdk_path: str | os.PathLike,

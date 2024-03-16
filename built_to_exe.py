@@ -1,18 +1,17 @@
 import os
 import shutil
 
-from MDGUtil import PathUtils
-from MDGUtil.FileUtils import remove_folder
+from MDGUtil import PathUtils, FileUtils
 
 VERSION = '2.2.2'
 
 
 def main():
-    remove_folder('build')
-    remove_folder('local')
-    remove_folder('dist')
-    remove_folder(PathUtils.RESULT_FOLDER_PATH)
-    remove_folder(PathUtils.TMP_FOLDER_PATH)
+    FileUtils.remove_folder('build')
+    FileUtils.remove_folder('local')
+    FileUtils.remove_folder('dist')
+    FileUtils.remove_folder(PathUtils.RESULT_FOLDER_PATH)
+    FileUtils.remove_folder(PathUtils.TMP_FOLDER_PATH)
     file_name = f'MDG_{VERSION}'
     file_name_with_extension = file_name + '.exe'
     os.system(f'.venv\\Scripts\\activate && pyinstaller.exe MDG.py --onefile --name {file_name}')

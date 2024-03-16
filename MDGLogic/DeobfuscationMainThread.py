@@ -7,8 +7,7 @@ from PySide6.QtCore import Signal
 
 from MDGLogic.AbstractDeobfDecompMainThread import AbstractDeobfDecompMainThread
 from MDGLogic.DeobfuscationThread import DeobfuscationThread
-from MDGUtil import PathUtils
-from MDGUtil.FileUtils import create_folder
+from MDGUtil import PathUtils, FileUtils
 
 
 class FailLogic:
@@ -56,8 +55,8 @@ class DeobfuscationMainThread(AbstractDeobfDecompMainThread):
         started_mods_count = 0
 
         clear_gradle()
-        create_folder(PathUtils.TMP_DEOBFUSCATION_MDKS_PATH)
-        create_folder(PathUtils.DEOBFUSCATED_MODS_PATH)
+        FileUtils.create_folder(PathUtils.TMP_DEOBFUSCATION_MDKS_PATH)
+        FileUtils.create_folder(PathUtils.DEOBFUSCATED_MODS_PATH)
 
         while processed_mods_count < mods_to_deobf_count:
             if len(self.threads) < allocated_threads_count and started_mods_count < mods_to_deobf_count:
