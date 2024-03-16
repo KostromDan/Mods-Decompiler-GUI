@@ -1,4 +1,5 @@
 import os
+import sys
 
 MINECRAFT_FORGE_DOWNLOADS_PAGE = 'https://files.minecraftforge.net/net/minecraftforge/forge/'
 
@@ -25,3 +26,7 @@ MERGED_MDK_PATH = os.path.join(RESULT_FOLDER_PATH, 'merged_mdk')
 MERGED_MDK_SRC_PATH = os.path.join(MERGED_MDK_PATH, 'src', 'main')
 MERGED_MDK_RESOURCES_PATH = os.path.join(MERGED_MDK_SRC_PATH, 'resources')
 MERGED_MDK_JAVA_PATH = os.path.join(MERGED_MDK_SRC_PATH, 'java')
+
+
+def check_pyinstaller_env() -> bool:
+    return getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')

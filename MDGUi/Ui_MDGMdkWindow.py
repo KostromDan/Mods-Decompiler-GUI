@@ -18,6 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QHBoxLayout, QLabel,
     QMainWindow, QMenuBar, QPushButton, QSizePolicy,
     QStatusBar, QTextBrowser, QVBoxLayout, QWidget)
+from . import resources_rc
 
 class Ui_MDGMdkWindow(object):
     def setupUi(self, MDGMdkWindow):
@@ -60,7 +61,7 @@ class Ui_MDGMdkWindow(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
         self.label.setSizePolicy(sizePolicy2)
-        self.label.setPixmap(QPixmap(u"../images/mdk_instruction.png"))
+        self.label.setPixmap(QPixmap(u":/images/mdk_instruction.png"))
 
         self.horizontalLayout_2.addWidget(self.label)
 

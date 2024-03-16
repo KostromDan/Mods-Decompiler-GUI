@@ -8,7 +8,7 @@ from typing import Type
 
 from PySide6.QtCore import QObject, Signal
 
-from MDGUtil import FileUtils
+from MDGUtil import FileUtils, PathUtils
 
 LOGGER_FORMAT = '[%(asctime)s] [%(levelname)s]: %(message)s'
 LOGGER_WIDGET_COLORS = {
@@ -61,7 +61,7 @@ class MDGLogger:
         else:
             return
 
-        if getattr(sys, 'frozen', True) and not hasattr(sys, '_MEIPASS'):  # not inside pyinstaller
+        if not PathUtils.check_pyinstaller_env():
             FileUtils.remove_folder('logs')
 
         self.logger_signal = LoggerSignal()

@@ -95,7 +95,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap>../images/mdk_instruction.png</pixmap>
+         <pixmap resource="resources.qrc">:/images/mdk_instruction.png</pixmap>
         </property>
        </widget>
       </item>
@@ -133,6 +133,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
