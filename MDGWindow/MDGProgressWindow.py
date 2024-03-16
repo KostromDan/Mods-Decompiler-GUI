@@ -16,6 +16,7 @@ from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
 from MDGUi.Ui_MDGProgressWindow import Ui_MDGProgressWindow
+from MDGUtil import FileUtils
 from MDGUtil.MDGLogger import MDGLogger
 from MDGWindow.MDGResultWindow import MDGResultWindow
 
