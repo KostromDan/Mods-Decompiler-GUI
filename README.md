@@ -57,7 +57,7 @@ deobfuscate -> decompile -> merge to mdk
 * Fabric compatibility?
     * Maybe(if I will see many people need it). But tool already can be used for fabric mods. Forge mdk can deobfucate fabric mods, since mappings are same. The only thing you will miss is you can't see Fabric source code in merged mdk.
 * Version range?
-    * Decompilation: any version.
+    * Decompilation: Any version.
     * Deobfuscation: Any version where exist forge mdk and implemented fg.deobf(). (1.12.2+)
 
       Maybe later will be added option for using bon2 for legacy versions.
