@@ -63,7 +63,7 @@ deobfuscate -> decompile -> merge to mdk
 
 ### Main window:
 
-![image](https://github.com/KostromDan/Mods-Decompiler-GUI/assets/90044015/a5666ba0-d27c-465e-938c-f8ae61467fd4)
+![image](https://github.com/KostromDan/Mods-Decompiler-GUI/assets/90044015/1e0d98e0-d730-4e21-95b4-cc46f3a861ee)
 
 ### Help(documentation) window:
 
