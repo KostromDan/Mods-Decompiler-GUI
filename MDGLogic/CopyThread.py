@@ -25,7 +25,7 @@ class CopyThread(AbstractMDGThread):
                     continue
                 FileUtils.extract_jars_from_jar(os.path.join(mods_path, mod), PathUtils.TMP_MODS_PATH)
             jar_in_jar_mods_list += os.listdir(PathUtils.TMP_MODS_PATH)
-            logging.info('Finished analysing mods for jar in jar.'
+            logging.info('Finished analysing mods for jar in jar. '
                          f'Found and extracted: {len(jar_in_jar_mods_list)}.')
 
         mods_list = list(filter(lambda x: x.endswith('.jar'), os.listdir(mods_path)))

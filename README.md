@@ -41,6 +41,7 @@ deobfuscate -> decompile -> merge to mdk
 * Despite other decompiler/deobf tools this is independent from apis. It uses mdk to deobf mods. So it won't break after
   mappings api changes like most of other deobf tools.
 * Caching. If you use this tool regularly for same modpack. You don't need to wait while all mods will be decompiled and deobfuscated. Tool will decompile/deobfuscate only changed mods. Other will be taken from cache.
+* Jar in jar support. MDG will analyse mods for jar in jar with super effective algorithm and process them with other mods. So you will be able to see jar in jar code too. (configure)
 
 ## Instruction:
 

@@ -8,16 +8,14 @@ from MDGUtil import PathUtils
 from MDGUtil.MDGLogger import MDGLogger
 
 if __name__ == '__main__':
+    faulthandler.enable()
+
     if not PathUtils.check_pyinstaller_env():
-        faulthandler.enable()
-
         generate_ui()
-
     """generate_ui() can change ui so,we need to import MDGMainWindow only after that line"""
     from MDGWindow.MDGMainWindow import MDGMainWindow
 
     MDGLogger()
-
     app = QApplication(sys.argv)
     widget = MDGMainWindow()
     widget.show()
