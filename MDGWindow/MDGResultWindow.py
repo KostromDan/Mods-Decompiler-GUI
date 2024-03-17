@@ -3,7 +3,7 @@ import os.path
 import subprocess
 import sys
 
-from MDGUi.Ui_MDGResultWindow import Ui_MDGResultWindow
+from MDGUi.generated.Ui_MDGResultWindow import Ui_MDGResultWindow
 from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 

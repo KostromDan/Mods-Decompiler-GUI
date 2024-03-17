@@ -8,7 +8,6 @@ VERSION = '2.2.2'
 
 def main():
     FileUtils.remove_folder('build')
-    FileUtils.remove_folder('local')
     FileUtils.remove_folder('dist')
     FileUtils.remove_folder(PathUtils.RESULT_FOLDER_PATH)
     FileUtils.remove_folder(PathUtils.TMP_FOLDER_PATH)

@@ -3,15 +3,20 @@ import sys
 
 from PySide6.QtWidgets import QApplication
 
+from MDGUi.generate_ui import generate_ui
 from MDGUtil import PathUtils
 from MDGUtil.MDGLogger import MDGLogger
-from MDGWindow.MDGMainWindow import MDGMainWindow
 
 if __name__ == '__main__':
-    MDGLogger()
-
     if not PathUtils.check_pyinstaller_env():
         faulthandler.enable()
+
+        generate_ui()
+
+    """generate_ui() can change ui so,we need to import MDGMainWindow only after that line"""
+    from MDGWindow.MDGMainWindow import MDGMainWindow
+
+    MDGLogger()
 
     app = QApplication(sys.argv)
     widget = MDGMainWindow()

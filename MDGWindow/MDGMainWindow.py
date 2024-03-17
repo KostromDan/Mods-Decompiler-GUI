@@ -7,7 +7,7 @@ from collections import defaultdict
 from typing import Any, Optional
 
 import psutil
-from MDGUi.Ui_MDGMainWindow import Ui_MDGMainWindow
+from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from PySide6.QtCore import QMimeData
 from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QFileSystemModel, QCompleter, QWidget, QLineEdit, \

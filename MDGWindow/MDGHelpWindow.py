@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import webbrowser
 
-from MDGUi.Ui_MDGHelpWindow import Ui_MDGHelpWindow
+from MDGUi.generated.Ui_MDGHelpWindow import Ui_MDGHelpWindow
 from PySide6.QtWidgets import QMainWindow, QTextBrowser, QWidget
 
 from MDGUtil import PathUtils

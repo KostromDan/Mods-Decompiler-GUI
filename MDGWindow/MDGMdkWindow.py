@@ -3,7 +3,7 @@ import webbrowser
 
 from PySide6.QtWidgets import QMainWindow
 
-from MDGUi.Ui_MDGMdkWindow import Ui_MDGMdkWindow
+from MDGUi.generated.Ui_MDGMdkWindow import Ui_MDGMdkWindow
 from MDGUtil import PathUtils
 
 
