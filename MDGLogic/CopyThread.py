@@ -17,6 +17,8 @@ class CopyThread(AbstractMDGThread):
         cache_enabled = self.serialized_widgets['cache_check_box']['isChecked']
         self.progress.emit(0, 'Starting copying mods')
 
+        FileUtils.create_folder(PathUtils.TMP_MODS_PATH)
+
         jar_in_jar_mods_list = []
         if self.serialized_widgets['jar_in_jar_check_box']['isChecked']:
             logging.info('Started analysing mods for jar in jar.')
