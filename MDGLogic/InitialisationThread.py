@@ -18,6 +18,7 @@ class ExceptionThread(QThread):
     Class created to raise exception without interrupting process.
     For logging.
     """
+
     def __init__(self, e: Exception):
         super().__init__()
         self.e = e
@@ -80,6 +81,7 @@ class InitialisationThread(AbstractMDGThread):
             self.progress.emit(80, 'Checking decompiler/decompiler cmd are correct')
             logging.info('Checking decompiler/decompiler cmd are correct')
             FileUtils.create_folder(PathUtils.TMP_DECOMPILER_TEST_PATH)
+            cmd_analyse_thread = None
             try:
                 decomp_cmd_formatted = decomp_cmd.format(path_to_jar=PathUtils.TEST_MOD_PATH,
                                                          out_path=PathUtils.TMP_DECOMPILER_TEST_PATH)
@@ -93,6 +95,13 @@ class InitialisationThread(AbstractMDGThread):
                 thread = ExceptionThread(e)
                 thread.start()
                 time.sleep(0.1)
+                if cmd_analyse_thread is not None and 'has been compiled by a more recent version of the Java' in cmd_analyse_thread.err:
+                    self.critical_signal.emit('Incorrect java version for decompiler',
+                                              'This message indicates that decompiler was '
+                                              'compiled with more recent version of java '
+                                              'than in your JAVA_HOME. Default decompiler uses 17\'th version of java. '
+                                              'Try to specify path to recent version of java in decompiler cmd.')
+                    return
                 self.critical_signal.emit('Incorrect decompiler cmd',
                                           "With this decompiler/decompiler cmd program won't work.\n"
                                           'This message indicates that {path_to_jar} is not decompiled to {out_path}.\n'
