@@ -7,12 +7,12 @@ from collections import defaultdict
 from typing import Any, Optional
 
 import psutil
-from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from PySide6.QtCore import QMimeData
 from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QFileSystemModel, QCompleter, QWidget, QLineEdit, \
     QSlider, QSpinBox
 
+from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from MDGUtil.LocalConfig import LocalConfig, DEFAULT_DECOMPILER_CMD
 from MDGWindow.MDGHelpWindow import MDGHelpWindow
 from MDGWindow.MDGProgressWindow import MDGProgressWindow
@@ -42,8 +42,16 @@ class MDGMainWindow(QMainWindow):
         self.ui.merge_check_box.stateChanged.connect(self.merge_checkbox_changed)
         self.ui.decomp_check_box.stateChanged.connect(self.decomp_checkbox_changed)
 
-        self.ui.select_mods_button.clicked.connect(self.select_mods_button)
-        self.ui.select_mdk_button.clicked.connect(self.select_mdk_button)
+        self.ui.select_mods_button.clicked.connect(
+            lambda e: self.select_button(self.ui.mods_path_line_edit,
+                                         'Select mods folder',
+                                         QFileDialog.getExistingDirectory,
+                                         QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks))
+        self.ui.select_mdk_button.clicked.connect(
+            lambda e: self.select_button(self.ui.mdk_path_line_edit,
+                                         'Select mdk archive',
+                                         QFileDialog.getOpenFileName,
+                                         self.tr('Archive files (*.zip)')))
 
         self.setup_drag_n_drop(self.ui.mods_path_vertical_group_box, self.ui.mods_path_line_edit)
         self.setup_drag_n_drop(self.ui.mdk_path_vertical_group_box, self.ui.mdk_path_line_edit)
@@ -55,6 +63,10 @@ class MDGMainWindow(QMainWindow):
 
         self.ui.mdk_path_line_edit.setText(self.config.get('mdk_line_edit'))
         self.ui.mdk_path_line_edit.textChanged.connect(self.mdk_line_edit_changed)
+
+        # added to set the file system completer for mods_path_line_edit
+        self.set_path_completer(self.ui.mods_path_line_edit)
+        self.set_path_completer(self.ui.mdk_path_line_edit)
 
         free_memory_in_gb = psutil.virtual_memory().available / (1024.0 ** 3)
         recommended_threads_ram = int((free_memory_in_gb - 1) / 0.5)  # deobfuscation thread eat 0.5 gb in middle case
@@ -97,10 +109,6 @@ class MDGMainWindow(QMainWindow):
         for help_button, widget in self.help_widget_pairs.items():
             help_button.clicked.connect(self.help_button_clicked)
 
-        # added to set the file system completer for mods_path_line_edit
-        self.set_path_completer(self.ui.mods_path_line_edit)
-        self.set_path_completer(self.ui.mdk_path_line_edit)
-
         self.resize(self.width(), self.minimumSizeHint().height())
 
         self.ui.decomp_cmd_reset_button.clicked.connect(self.reset_decomp_cmd)
@@ -108,6 +116,18 @@ class MDGMainWindow(QMainWindow):
 
         self.ui.decomp_cmd_line_edit.setText(
             self.config.get('decomp_cmd') if self.config.get('decomp_cmd') != '' else DEFAULT_DECOMPILER_CMD)
+
+    def select_button(self, line_edit: QLineEdit, msg: str, get_from: callable, options: Any) -> None:
+        line_edit_path = line_edit.text()
+        if not os.path.exists(line_edit_path):
+            line_edit_path = ''
+        selected = get_from(self, self.tr(msg), line_edit_path, options)
+        if type(selected) is tuple:
+            selected = selected[0]
+        if selected == '':
+            return
+        line_edit.setText(selected)
+        self.set_path_completer(line_edit)
 
     def setup_slider_and_spinbox_pair(self, spin_box: QSpinBox, slider: QSlider, config_name: str) -> None:
         slider.valueChanged.connect(lambda value: self.slider_value_changed(value, spin_box, config_name))
@@ -253,21 +273,6 @@ class MDGMainWindow(QMainWindow):
         else:
             event.ignore()
 
-    def select_mods_button(self) -> None:
-        selected_dir = QFileDialog.getExistingDirectory(self, self.tr('Select mods folder'), '',
-                                                        QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
-        if selected_dir == '':
-            return
-        self.ui.mods_path_line_edit.setText(selected_dir)
-
-    def select_mdk_button(self) -> None:
-        selected_file = QFileDialog.getOpenFileName(self,
-                                                    self.tr('Select mdk archive'), '',
-                                                    self.tr('Archive files (*.zip)'))[0]
-        if selected_file == '':
-            return
-        self.ui.mdk_path_line_edit.setText(selected_file)
-
     def deobf_checkbox_changed(self, state: int) -> None:
         self.ui.deobf_failed_group_box.setEnabled(state == 2)
         self.ui.deobf_threads_group_box.setEnabled(state == 2)
@@ -304,7 +309,8 @@ class MDGMainWindow(QMainWindow):
         sys.exit()
 
     def set_path_completer(self, line_edit: QLineEdit) -> None:
+        initial_path = line_edit.text()
         fs_model = QFileSystemModel(line_edit)
-        fs_model.setRootPath('')
-        fs_completer = QCompleter(fs_model, self)
+        fs_model.setRootPath(initial_path)
+        fs_completer = QCompleter(fs_model, line_edit)
         line_edit.setCompleter(fs_completer)
