@@ -14,6 +14,10 @@ from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
 
 
 class ExceptionThread(QThread):
+    """
+    Class created to raise exception without interrupting process.
+    For logging.
+    """
     def __init__(self, e: Exception):
         super().__init__()
         self.e = e
