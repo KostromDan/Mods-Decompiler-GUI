@@ -11,7 +11,7 @@ from PySide6.QtWidgets import QMainWindow, QMessageBox, QProgressBar
 from MDGLogic.CopyThread import CopyThread
 from MDGLogic.CriticalMBThread import CriticalMBThread
 from MDGLogic.DecompilationMainThread import DecompilationMainThread
-from MDGLogic.DeobfuscationMainThread import DeobfuscationMainThread, FailLogic
+from MDGLogic.DeobfuscationThread import DeobfuscationThread, FailLogic
 from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
@@ -125,7 +125,7 @@ class MDGProgressWindow(QMainWindow):
 
     @only_if_window_active
     def deobf_mods(self) -> None:
-        self.start_thread(DeobfuscationMainThread, self.ui.deobf_progress_bar, self.decomp_mods, thread_signals={
+        self.start_thread(DeobfuscationThread, self.ui.deobf_progress_bar, self.decomp_mods, thread_signals={
             'failed_mod_signal': self.failed_deobf_mod,
             'fail_logic_signal': self.set_fail_logic
         })

@@ -7,7 +7,7 @@ from MDGUi.generated.Ui_MDGResultWindow import Ui_MDGResultWindow
 from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 
-from MDGLogic.DeobfuscationMainThread import FailLogic
+from MDGLogic.DeobfuscationThread import FailLogic
 from MDGUtil import PathUtils
 
 
@@ -39,7 +39,7 @@ class MDGResultWindow(QMainWindow):
                     case FailLogic.SKIP:
                         self.append_logger('orange',
                                            f'Finished deobfuscation of {mod_name} with error. '
-                                           f'Mod was be skipped.')
+                                           f'Mod was skipped.')
 
                     case FailLogic.DECOMPILE:
                         self.append_logger('orange',

@@ -4,7 +4,6 @@ from PySide6.QtCore import Signal
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGLogic.DecompilationThread import DecompilationThread
-from MDGLogic.DeobfuscationThread import DeobfuscationThread
 
 
 class AbstractDeobfDecompMainThread(AbstractMDGThread):
@@ -12,7 +11,7 @@ class AbstractDeobfDecompMainThread(AbstractMDGThread):
 
     def __init__(self, widgets: dict[str, dict[str, Any] | list[str]]) -> None:
         super().__init__(widgets)
-        self.threads: list[Optional[DecompilationThread, DeobfuscationThread]] = []
+        self.threads: list[Optional[DecompilationThread]] = []
 
     def terminate(self) -> None:
         for thread in self.threads:
