@@ -44,18 +44,6 @@ def clear_forge_gradle():
         logging.warning(f'Could not find {PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER}. Skipping clearing gradle cache.')
 
 
-def remove_unsupported_symbols(mod_name: str) -> str:
-    new_name = []
-    for symbol in mod_name:
-        if symbol.isalpha() or symbol.isdigit() or symbol in ['-', '.']:
-            new_name.append(symbol)
-            continue
-        new_name.append('-')
-    if new_name[-1] == '-':
-        new_name.append('mod')
-    return ''.join(new_name)
-
-
 def deobfuscate(mod_path: str | os.PathLike,
                 mdk_path: str | os.PathLike,
                 out_path: str | os.PathLike,
@@ -73,12 +61,6 @@ def deobfuscate(mod_path: str | os.PathLike,
                         folder_name_in_gradle_cache,
                         True)
     shutil.copy(mod_path, os.path.join(current_mdk_path, 'libs'))
-    new_mod_name = remove_unsupported_symbols(mod_original_name)
-    try:
-        os.rename(os.path.join(current_mdk_path, 'libs', mod_original_name),
-                  os.path.join(current_mdk_path, 'libs', new_mod_name))
-    except FileExistsError:
-        pass
     current_mod_deobf_path = os.path.join(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER,
                                           folder_name_in_gradle_cache)
     with lock:
