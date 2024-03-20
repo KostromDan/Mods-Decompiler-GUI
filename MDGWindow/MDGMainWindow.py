@@ -58,10 +58,8 @@ class MDGMainWindow(QMainWindow):
 
         self.ui.start_button.clicked.connect(self.start_button)
 
-        self.ui.mods_path_line_edit.setText(self.config.get('mods_line_edit'))
         self.ui.mods_path_line_edit.textChanged.connect(self.mods_line_edit_changed)
 
-        self.ui.mdk_path_line_edit.setText(self.config.get('mdk_line_edit'))
         self.ui.mdk_path_line_edit.textChanged.connect(self.mdk_line_edit_changed)
 
         # added to set the file system completer for mods_path_line_edit
@@ -74,20 +72,13 @@ class MDGMainWindow(QMainWindow):
 
         recommended_threads = max(1, min(recommended_threads_ram, recommended_threads_cpu))
 
-        if self.config.get('deobf_threads') == '':
-            self.config.set('deobf_threads', recommended_threads)
-        if self.config.get('decomp_threads') == '':
-            self.config.set('decomp_threads', recommended_threads)
-
         self.setup_slider_and_spinbox_pair(self.ui.deobf_threads_spin_box,
-                                           self.ui.deobf_threads_horizontal_slider,
-                                           'deobf_threads')
+                                           self.ui.deobf_threads_horizontal_slider)
         self.setup_slider_and_spinbox_pair(self.ui.decomp_threads_spin_box,
-                                           self.ui.decomp_threads_horizontal_slider,
-                                           'decomp_threads')
+                                           self.ui.decomp_threads_horizontal_slider)
 
-        self.ui.deobf_threads_horizontal_slider.setValue(self.config.get('deobf_threads'))
-        self.ui.decomp_threads_horizontal_slider.setValue(self.config.get('decomp_threads'))
+        self.ui.deobf_threads_horizontal_slider.setValue(recommended_threads)
+        self.ui.decomp_threads_horizontal_slider.setValue(recommended_threads)
 
         self.help_window = MDGHelpWindow()
 
@@ -114,8 +105,20 @@ class MDGMainWindow(QMainWindow):
         self.ui.decomp_cmd_reset_button.clicked.connect(self.reset_decomp_cmd)
         self.ui.decomp_cmd_line_edit.textChanged.connect(self.decomp_cmd_line_edit_changed)
 
-        self.ui.decomp_cmd_line_edit.setText(
-            self.config.get('decomp_cmd') if self.config.get('decomp_cmd') != '' else DEFAULT_DECOMPILER_CMD)
+        self.ui.decomp_cmd_line_edit.setText(DEFAULT_DECOMPILER_CMD)
+
+        self.ui.action_reset.triggered.connect(self.action_reset)
+        self.ui.action_save.triggered.connect(self.save_ui_to_config)
+
+        self.load_ui_from_config()
+
+    def action_reset(self) -> None:
+        self.setEnabled(False)
+        self.config.reset()
+        self.config.is_first_launch()
+        widget = MDGMainWindow()
+        widget.show()
+        self.destroy()
 
     def select_button(self, line_edit: QLineEdit, msg: str, get_from: callable, options: Any) -> None:
         line_edit_path = line_edit.text()
@@ -129,13 +132,12 @@ class MDGMainWindow(QMainWindow):
         line_edit.setText(selected)
         self.set_path_completer(line_edit)
 
-    def setup_slider_and_spinbox_pair(self, spin_box: QSpinBox, slider: QSlider, config_name: str) -> None:
-        slider.valueChanged.connect(lambda value: self.slider_value_changed(value, spin_box, config_name))
+    def setup_slider_and_spinbox_pair(self, spin_box: QSpinBox, slider: QSlider) -> None:
+        slider.valueChanged.connect(lambda value: self.slider_value_changed(value, spin_box))
         spin_box.valueChanged.connect(lambda value: self.spin_box_value_changed(value, slider))
 
-    def slider_value_changed(self, value: int, spinbox: QSpinBox, config_name: str) -> None:
+    def slider_value_changed(self, value: int, spinbox: QSpinBox) -> None:
         spinbox.setValue(value)
-        self.config.set(config_name, value)
 
     def spin_box_value_changed(self, value: int, slider: QSlider) -> None:
         slider.setValue(value)
@@ -169,7 +171,7 @@ class MDGMainWindow(QMainWindow):
 
     def decomp_cmd_line_edit_changed(self, value: str) -> None:
         self.ui.decomp_cmd_reset_button.setEnabled(value != DEFAULT_DECOMPILER_CMD)
-        self.config.set('decomp_cmd', value if value != DEFAULT_DECOMPILER_CMD else '')
+        self.config.set('using_default_cmd', value == DEFAULT_DECOMPILER_CMD)
         self.ui.decomp_cmd_line_edit.setStyleSheet('')
 
     def reset_decomp_cmd(self) -> None:
@@ -179,14 +181,13 @@ class MDGMainWindow(QMainWindow):
         self.help_window.start_help_window(self.help_widget_pairs[self.sender()])
 
     def mods_line_edit_changed(self, text: str) -> None:
-        self.config.set('mods_line_edit', text)
         self.ui.mods_path_line_edit.setStyleSheet('')
 
     def mdk_line_edit_changed(self, text: str) -> None:
-        self.config.set('mdk_line_edit', text)
         self.ui.mdk_path_line_edit.setStyleSheet('')
 
     def start_button(self) -> None:
+        self.save_ui_to_config()
         mods_folder_path = self.ui.mods_path_line_edit.text()
         if not os.path.exists(mods_folder_path):
             self.ui.mods_path_line_edit.setStyleSheet('border: 1px solid red')
@@ -244,7 +245,7 @@ class MDGMainWindow(QMainWindow):
         self.hide()
         self.progress_window.start()
 
-    def serialize_to_dict(self) -> dict[str, dict[str, Any] | list[str]]:
+    def serialize_to_dict(self) -> dict[str, dict[str, Any]]:
         out = defaultdict(dict)
         members = [attr for attr in dir(self.ui) if not callable(getattr(self.ui, attr)) and not attr.startswith('__')]
         for member_name in members:
@@ -255,6 +256,35 @@ class MDGMainWindow(QMainWindow):
                 if field in member_attrs:
                     out[member_name][field] = getattr(member_object, field)()
         return out
+
+    def save_ui_to_config(self) -> None:
+        serialized_widgets = self.serialize_to_dict()
+        if self.config.get('using_default_cmd') is True:
+            serialized_widgets.pop('decomp_cmd_line_edit')
+        self.config.set('serialized_widgets', serialized_widgets)
+
+    def load_ui_from_config(self) -> None:
+        serialized_widgets = self.config.get('serialized_widgets')
+        if serialized_widgets != '':
+            self.deserialize_ui_from_dict(serialized_widgets)
+
+    def deserialize_ui_from_dict(self, serialized_dict: dict[str, dict[str]]) -> None:
+        get_set_pairs = {
+            'text': 'setText',
+            'value': 'setValue',
+            'isChecked': 'setChecked',
+            'isEnabled': 'setEnabled'
+        }
+        for member_name, member_fields_dict in serialized_dict.items():
+            try:
+                member_object = getattr(self.ui, member_name)
+            except AttributeError:
+                continue
+            for field_name, field_value in member_fields_dict.items():
+                try:
+                    getattr(member_object, get_set_pairs[field_name])(field_value)
+                except AttributeError:
+                    continue
 
     def decomp_cmd_check_failed(self, title: str, text: str) -> None:
         self.ui.decomp_cmd_line_edit.setStyleSheet('border: 1px solid red')
@@ -305,6 +335,7 @@ class MDGMainWindow(QMainWindow):
             self.ui.deobf_check_box.isChecked() or self.ui.merge_check_box.isChecked())
 
     def closeEvent(self, event: QCloseEvent) -> None:
+        self.save_ui_to_config()
         event.accept()
         sys.exit()
 

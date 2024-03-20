@@ -42,3 +42,7 @@ class LocalConfig:
     def set(self, arg: str, value: Any) -> None:
         self.config[arg] = value
         self.save()
+
+    def reset(self):
+        self.config = dict()
+        self.save()

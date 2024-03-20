@@ -11,53 +11,61 @@
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
+    QCursor, QFont, QFontDatabase, QGradient,
+    QIcon, QImage, QKeySequence, QLinearGradient,
+    QPainter, QPalette, QPixmap, QRadialGradient,
+    QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QGroupBox, QHBoxLayout,
-    QLabel, QLineEdit, QMainWindow, QMenuBar,
-    QPushButton, QRadioButton, QSizePolicy, QSlider,
-    QSpacerItem, QSpinBox, QStatusBar, QVBoxLayout,
-    QWidget)
+    QLabel, QLineEdit, QMainWindow, QMenu,
+    QMenuBar, QPushButton, QRadioButton, QSizePolicy,
+    QSlider, QSpacerItem, QSpinBox, QStatusBar,
+    QVBoxLayout, QWidget)
 
 class Ui_MDGMainWindow(object):
     def setupUi(self, MDGMainWindow):
         if not MDGMainWindow.objectName():
             MDGMainWindow.setObjectName(u"MDGMainWindow")
-        MDGMainWindow.resize(852, 579)
+        MDGMainWindow.resize(1072, 819)
         MDGMainWindow.setMaximumSize(QSize(16777215, 16777215))
+        self.action_reset = QAction(MDGMainWindow)
+        self.action_reset.setObjectName(u"action_reset")
+        self.action_save = QAction(MDGMainWindow)
+        self.action_save.setObjectName(u"action_save")
         self.centralwidget = QWidget(MDGMainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setEnabled(True)
         self.centralwidget.setAutoFillBackground(False)
-        self.verticalLayout_7 = QVBoxLayout(self.centralwidget)
-        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.verticalLayout_8 = QVBoxLayout(self.centralwidget)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.mods_path_vertical_group_box = QGroupBox(self.centralwidget)
         self.mods_path_vertical_group_box.setObjectName(u"mods_path_vertical_group_box")
         self.mods_path_vertical_group_box.setEnabled(True)
-        self.mods_path_vertical_group_box.setMinimumSize(QSize(0, 50))
+        self.mods_path_vertical_group_box.setMinimumSize(QSize(0, 58))
         self.mods_path_vertical_group_box.setAcceptDrops(True)
         self.mods_path_vertical_group_box.setAlignment(Qt.AlignBottom|Qt.AlignLeading|Qt.AlignLeft)
         self.mods_path_vertical_group_box.setFlat(False)
         self.verticalLayout_2 = QVBoxLayout(self.mods_path_vertical_group_box)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_2.setContentsMargins(9, 0, 9, 2)
         self.mods_path_horizontal_layout = QHBoxLayout()
         self.mods_path_horizontal_layout.setObjectName(u"mods_path_horizontal_layout")
         self.mods_path_label = QLabel(self.mods_path_vertical_group_box)
         self.mods_path_label.setObjectName(u"mods_path_label")
+        self.mods_path_label.setMinimumSize(QSize(0, 24))
 
         self.mods_path_horizontal_layout.addWidget(self.mods_path_label)
 
         self.mods_path_line_edit = QLineEdit(self.mods_path_vertical_group_box)
         self.mods_path_line_edit.setObjectName(u"mods_path_line_edit")
+        self.mods_path_line_edit.setMinimumSize(QSize(0, 24))
         self.mods_path_line_edit.setClearButtonEnabled(True)
 
         self.mods_path_horizontal_layout.addWidget(self.mods_path_line_edit)
 
         self.select_mods_button = QPushButton(self.mods_path_vertical_group_box)
         self.select_mods_button.setObjectName(u"select_mods_button")
+        self.select_mods_button.setMinimumSize(QSize(0, 24))
 
         self.mods_path_horizontal_layout.addWidget(self.select_mods_button)
 
@@ -90,30 +98,33 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout_2.addLayout(self.horizontalLayout_8)
 
 
-        self.verticalLayout_7.addWidget(self.mods_path_vertical_group_box)
+        self.verticalLayout_8.addWidget(self.mods_path_vertical_group_box)
 
         self.mdk_path_vertical_group_box = QGroupBox(self.centralwidget)
         self.mdk_path_vertical_group_box.setObjectName(u"mdk_path_vertical_group_box")
-        self.mdk_path_vertical_group_box.setMinimumSize(QSize(0, 50))
+        self.mdk_path_vertical_group_box.setMinimumSize(QSize(0, 64))
         self.mdk_path_vertical_group_box.setAcceptDrops(True)
         self.verticalLayout_4 = QVBoxLayout(self.mdk_path_vertical_group_box)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_4.setContentsMargins(9, 2, 9, 6)
         self.mdk_path_horizontal_layout = QHBoxLayout()
         self.mdk_path_horizontal_layout.setObjectName(u"mdk_path_horizontal_layout")
         self.mdk_path_label = QLabel(self.mdk_path_vertical_group_box)
         self.mdk_path_label.setObjectName(u"mdk_path_label")
+        self.mdk_path_label.setMinimumSize(QSize(0, 24))
 
         self.mdk_path_horizontal_layout.addWidget(self.mdk_path_label)
 
         self.mdk_path_line_edit = QLineEdit(self.mdk_path_vertical_group_box)
         self.mdk_path_line_edit.setObjectName(u"mdk_path_line_edit")
+        self.mdk_path_line_edit.setMinimumSize(QSize(0, 24))
         self.mdk_path_line_edit.setClearButtonEnabled(True)
 
         self.mdk_path_horizontal_layout.addWidget(self.mdk_path_line_edit)
 
         self.select_mdk_button = QPushButton(self.mdk_path_vertical_group_box)
         self.select_mdk_button.setObjectName(u"select_mdk_button")
+        self.select_mdk_button.setMinimumSize(QSize(0, 24))
 
         self.mdk_path_horizontal_layout.addWidget(self.select_mdk_button)
 
@@ -143,13 +154,13 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout_4.addLayout(self.horizontalLayout_11)
 
 
-        self.verticalLayout_7.addWidget(self.mdk_path_vertical_group_box)
+        self.verticalLayout_8.addWidget(self.mdk_path_vertical_group_box)
 
         self.deobf_main_group_box = QGroupBox(self.centralwidget)
         self.deobf_main_group_box.setObjectName(u"deobf_main_group_box")
         self.verticalLayout = QVBoxLayout(self.deobf_main_group_box)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(0, 2, 0, 2)
+        self.verticalLayout.setContentsMargins(9, 6, 9, 6)
         self.deobf_group_box = QGroupBox(self.deobf_main_group_box)
         self.deobf_group_box.setObjectName(u"deobf_group_box")
         self.horizontalLayout_4 = QHBoxLayout(self.deobf_group_box)
@@ -256,13 +267,13 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout.addWidget(self.deobf_failed_group_box)
 
 
-        self.verticalLayout_7.addWidget(self.deobf_main_group_box)
+        self.verticalLayout_8.addWidget(self.deobf_main_group_box)
 
         self.decomp_main_group_box = QGroupBox(self.centralwidget)
         self.decomp_main_group_box.setObjectName(u"decomp_main_group_box")
         self.verticalLayout_3 = QVBoxLayout(self.decomp_main_group_box)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout_3.setContentsMargins(0, 2, 0, 2)
+        self.verticalLayout_3.setContentsMargins(9, 6, 9, 6)
         self.decomp_group_box = QGroupBox(self.decomp_main_group_box)
         self.decomp_group_box.setObjectName(u"decomp_group_box")
         self.horizontalLayout_6 = QHBoxLayout(self.decomp_group_box)
@@ -363,13 +374,13 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout_3.addWidget(self.decomp_cmd_groupbox)
 
 
-        self.verticalLayout_7.addWidget(self.decomp_main_group_box)
+        self.verticalLayout_8.addWidget(self.decomp_main_group_box)
 
         self.merge_main_group_box = QGroupBox(self.centralwidget)
         self.merge_main_group_box.setObjectName(u"merge_main_group_box")
         self.verticalLayout_5 = QVBoxLayout(self.merge_main_group_box)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-        self.verticalLayout_5.setContentsMargins(0, 2, 0, 2)
+        self.verticalLayout_5.setContentsMargins(9, 6, 9, 6)
         self.groupBox = QGroupBox(self.merge_main_group_box)
         self.groupBox.setObjectName(u"groupBox")
         self.merge_horizontal_layout = QHBoxLayout(self.groupBox)
@@ -452,17 +463,107 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout_5.addWidget(self.patch_mdk_group_box)
 
 
-        self.verticalLayout_7.addWidget(self.merge_main_group_box)
+        self.verticalLayout_8.addWidget(self.merge_main_group_box)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.verticalLayout_7.addItem(self.verticalSpacer)
+        self.verticalLayout_8.addItem(self.verticalSpacer)
+
+        self.java_home_main_group_box = QGroupBox(self.centralwidget)
+        self.java_home_main_group_box.setObjectName(u"java_home_main_group_box")
+        self.verticalLayout_7 = QVBoxLayout(self.java_home_main_group_box)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.verticalLayout_7.setContentsMargins(9, 6, 9, 6)
+        self.mdk_java_home_group_box = QGroupBox(self.java_home_main_group_box)
+        self.mdk_java_home_group_box.setObjectName(u"mdk_java_home_group_box")
+        self.horizontalLayout_9 = QHBoxLayout(self.mdk_java_home_group_box)
+        self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
+        self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
+        self.mdk_java_home_check_box = QCheckBox(self.mdk_java_home_group_box)
+        self.mdk_java_home_check_box.setObjectName(u"mdk_java_home_check_box")
+        self.mdk_java_home_check_box.setChecked(True)
+
+        self.horizontalLayout_9.addWidget(self.mdk_java_home_check_box)
+
+        self.mdk_java_home_line_edit = QLineEdit(self.mdk_java_home_group_box)
+        self.mdk_java_home_line_edit.setObjectName(u"mdk_java_home_line_edit")
+        self.mdk_java_home_line_edit.setClearButtonEnabled(False)
+
+        self.horizontalLayout_9.addWidget(self.mdk_java_home_line_edit)
+
+        self.mdk_java_home_select_button = QPushButton(self.mdk_java_home_group_box)
+        self.mdk_java_home_select_button.setObjectName(u"mdk_java_home_select_button")
+
+        self.horizontalLayout_9.addWidget(self.mdk_java_home_select_button)
+
+        self.mdk_java_home_reset_button = QPushButton(self.mdk_java_home_group_box)
+        self.mdk_java_home_reset_button.setObjectName(u"mdk_java_home_reset_button")
+        sizePolicy.setHeightForWidth(self.mdk_java_home_reset_button.sizePolicy().hasHeightForWidth())
+        self.mdk_java_home_reset_button.setSizePolicy(sizePolicy)
+        self.mdk_java_home_reset_button.setMaximumSize(QSize(40, 16777215))
+
+        self.horizontalLayout_9.addWidget(self.mdk_java_home_reset_button)
+
+        self.help_mdk_java_home_button = QPushButton(self.mdk_java_home_group_box)
+        self.help_mdk_java_home_button.setObjectName(u"help_mdk_java_home_button")
+        sizePolicy.setHeightForWidth(self.help_mdk_java_home_button.sizePolicy().hasHeightForWidth())
+        self.help_mdk_java_home_button.setSizePolicy(sizePolicy)
+        self.help_mdk_java_home_button.setMaximumSize(QSize(20, 16777215))
+
+        self.horizontalLayout_9.addWidget(self.help_mdk_java_home_button)
+
+
+        self.verticalLayout_7.addWidget(self.mdk_java_home_group_box)
+
+        self.decompiler_java_home_group_box = QGroupBox(self.java_home_main_group_box)
+        self.decompiler_java_home_group_box.setObjectName(u"decompiler_java_home_group_box")
+        self.horizontalLayout_14 = QHBoxLayout(self.decompiler_java_home_group_box)
+        self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
+        self.horizontalLayout_14.setContentsMargins(0, 0, 0, 0)
+        self.decompiler_java_home_check_box = QCheckBox(self.decompiler_java_home_group_box)
+        self.decompiler_java_home_check_box.setObjectName(u"decompiler_java_home_check_box")
+        self.decompiler_java_home_check_box.setChecked(True)
+
+        self.horizontalLayout_14.addWidget(self.decompiler_java_home_check_box)
+
+        self.decompiler_java_home_line_edit = QLineEdit(self.decompiler_java_home_group_box)
+        self.decompiler_java_home_line_edit.setObjectName(u"decompiler_java_home_line_edit")
+        self.decompiler_java_home_line_edit.setClearButtonEnabled(False)
+
+        self.horizontalLayout_14.addWidget(self.decompiler_java_home_line_edit)
+
+        self.decompiler_java_home_select_button = QPushButton(self.decompiler_java_home_group_box)
+        self.decompiler_java_home_select_button.setObjectName(u"decompiler_java_home_select_button")
+
+        self.horizontalLayout_14.addWidget(self.decompiler_java_home_select_button)
+
+        self.decompiler_java_home_reset_button = QPushButton(self.decompiler_java_home_group_box)
+        self.decompiler_java_home_reset_button.setObjectName(u"decompiler_java_home_reset_button")
+        sizePolicy.setHeightForWidth(self.decompiler_java_home_reset_button.sizePolicy().hasHeightForWidth())
+        self.decompiler_java_home_reset_button.setSizePolicy(sizePolicy)
+        self.decompiler_java_home_reset_button.setMaximumSize(QSize(40, 16777215))
+
+        self.horizontalLayout_14.addWidget(self.decompiler_java_home_reset_button)
+
+        self.help_decompiler_java_home_button = QPushButton(self.decompiler_java_home_group_box)
+        self.help_decompiler_java_home_button.setObjectName(u"help_decompiler_java_home_button")
+        sizePolicy.setHeightForWidth(self.help_decompiler_java_home_button.sizePolicy().hasHeightForWidth())
+        self.help_decompiler_java_home_button.setSizePolicy(sizePolicy)
+        self.help_decompiler_java_home_button.setMaximumSize(QSize(20, 16777215))
+
+        self.horizontalLayout_14.addWidget(self.help_decompiler_java_home_button)
+
+
+        self.verticalLayout_7.addWidget(self.decompiler_java_home_group_box)
+
+
+        self.verticalLayout_8.addWidget(self.java_home_main_group_box)
 
         self.additional_options_group_box = QGroupBox(self.centralwidget)
         self.additional_options_group_box.setObjectName(u"additional_options_group_box")
         self.verticalLayout_6 = QVBoxLayout(self.additional_options_group_box)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.verticalLayout_6.setContentsMargins(0, 2, 0, 2)
+        self.verticalLayout_6.setContentsMargins(9, 6, 9, 2)
         self.jar_in_jar_group_box = QGroupBox(self.additional_options_group_box)
         self.jar_in_jar_group_box.setObjectName(u"jar_in_jar_group_box")
         self.jar_in_jar_horizontal_layout = QHBoxLayout(self.jar_in_jar_group_box)
@@ -507,23 +608,51 @@ class Ui_MDGMainWindow(object):
 
         self.verticalLayout_6.addWidget(self.use_cache_group_box)
 
+        self.use_cache_group_box_2 = QGroupBox(self.additional_options_group_box)
+        self.use_cache_group_box_2.setObjectName(u"use_cache_group_box_2")
+        self.cache_horizontal_layout_2 = QHBoxLayout(self.use_cache_group_box_2)
+        self.cache_horizontal_layout_2.setObjectName(u"cache_horizontal_layout_2")
+        self.cache_horizontal_layout_2.setContentsMargins(0, 0, 0, 0)
+        self.commit_after_finish_check_box = QCheckBox(self.use_cache_group_box_2)
+        self.commit_after_finish_check_box.setObjectName(u"commit_after_finish_check_box")
+        self.commit_after_finish_check_box.setChecked(True)
 
-        self.verticalLayout_7.addWidget(self.additional_options_group_box)
+        self.cache_horizontal_layout_2.addWidget(self.commit_after_finish_check_box)
+
+        self.help_cache_button_2 = QPushButton(self.use_cache_group_box_2)
+        self.help_cache_button_2.setObjectName(u"help_cache_button_2")
+        sizePolicy.setHeightForWidth(self.help_cache_button_2.sizePolicy().hasHeightForWidth())
+        self.help_cache_button_2.setSizePolicy(sizePolicy)
+        self.help_cache_button_2.setMaximumSize(QSize(20, 16777215))
+
+        self.cache_horizontal_layout_2.addWidget(self.help_cache_button_2)
+
+
+        self.verticalLayout_6.addWidget(self.use_cache_group_box_2)
+
+
+        self.verticalLayout_8.addWidget(self.additional_options_group_box)
 
         self.start_button = QPushButton(self.centralwidget)
         self.start_button.setObjectName(u"start_button")
         self.start_button.setAcceptDrops(False)
 
-        self.verticalLayout_7.addWidget(self.start_button)
+        self.verticalLayout_8.addWidget(self.start_button)
 
         MDGMainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGMainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 852, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1072, 22))
+        self.menuFile = QMenu(self.menubar)
+        self.menuFile.setObjectName(u"menuFile")
         MDGMainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MDGMainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MDGMainWindow.setStatusBar(self.statusbar)
+
+        self.menubar.addAction(self.menuFile.menuAction())
+        self.menuFile.addAction(self.action_save)
+        self.menuFile.addAction(self.action_reset)
 
         self.retranslateUi(MDGMainWindow)
 
@@ -532,6 +661,8 @@ class Ui_MDGMainWindow(object):
 
     def retranslateUi(self, MDGMainWindow):
         MDGMainWindow.setWindowTitle(QCoreApplication.translate("MDGMainWindow", u"MDG (Mods Decompiler Gui)", None))
+        self.action_reset.setText(QCoreApplication.translate("MDGMainWindow", u"reset", None))
+        self.action_save.setText(QCoreApplication.translate("MDGMainWindow", u"save", None))
         self.mods_path_label.setText(QCoreApplication.translate("MDGMainWindow", u"Mods folder path:", None))
         self.select_mods_button.setText(QCoreApplication.translate("MDGMainWindow", u"select", None))
         self.help_mods_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
@@ -540,6 +671,7 @@ class Ui_MDGMainWindow(object):
         self.select_mdk_button.setText(QCoreApplication.translate("MDGMainWindow", u"select", None))
         self.help_mdk_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.label_8.setText(QCoreApplication.translate("MDGMainWindow", u"accepts drag&drop", None))
+        self.deobf_main_group_box.setTitle(QCoreApplication.translate("MDGMainWindow", u"Deobfuscation settings:", None))
         self.deobf_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Deobfuscate mods", None))
         self.help_deobf_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.deobf_threads_label.setText(QCoreApplication.translate("MDGMainWindow", u"Deobfuscation threads:", None))
@@ -549,6 +681,7 @@ class Ui_MDGMainWindow(object):
         self.deobf_failed_radio_skip.setText(QCoreApplication.translate("MDGMainWindow", u"skip mod", None))
         self.deobf_failed_radio_decompile.setText(QCoreApplication.translate("MDGMainWindow", u"decompile without deobfuscation", None))
         self.help_deobf_failed_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.decomp_main_group_box.setTitle(QCoreApplication.translate("MDGMainWindow", u"Decompilation settings:", None))
         self.decomp_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Decompile mods", None))
         self.help_decomp_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.decomp_threads_label.setText(QCoreApplication.translate("MDGMainWindow", u"Decompilation threads:", None))
@@ -557,6 +690,7 @@ class Ui_MDGMainWindow(object):
         self.decomp_cmd_line_edit.setText("")
         self.decomp_cmd_reset_button.setText(QCoreApplication.translate("MDGMainWindow", u"reset", None))
         self.help_decomp_cmd_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.merge_main_group_box.setTitle(QCoreApplication.translate("MDGMainWindow", u"Merging settings:", None))
         self.merge_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Merge result into mdk", None))
         self.help_merge_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.merge_label.setText(QCoreApplication.translate("MDGMainWindow", u"Merge:", None))
@@ -565,10 +699,37 @@ class Ui_MDGMainWindow(object):
         self.help_merge_button_2.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.download_sources_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Patch mdk with \"downloadSources = true\"", None))
         self.help_sources_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+#if QT_CONFIG(tooltip)
+        self.java_home_main_group_box.setToolTip("")
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(statustip)
+        self.java_home_main_group_box.setStatusTip("")
+#endif // QT_CONFIG(statustip)
+#if QT_CONFIG(whatsthis)
+        self.java_home_main_group_box.setWhatsThis("")
+#endif // QT_CONFIG(whatsthis)
+#if QT_CONFIG(accessibility)
+        self.java_home_main_group_box.setAccessibleName("")
+#endif // QT_CONFIG(accessibility)
+        self.java_home_main_group_box.setTitle(QCoreApplication.translate("MDGMainWindow", u"Specify JAVA_HOME:", None))
+        self.mdk_java_home_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"mdk            ", None))
+        self.mdk_java_home_line_edit.setText("")
+        self.mdk_java_home_select_button.setText(QCoreApplication.translate("MDGMainWindow", u"select", None))
+        self.mdk_java_home_reset_button.setText(QCoreApplication.translate("MDGMainWindow", u"reset", None))
+        self.help_mdk_java_home_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.decompiler_java_home_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"decompiler", None))
+        self.decompiler_java_home_line_edit.setText("")
+        self.decompiler_java_home_select_button.setText(QCoreApplication.translate("MDGMainWindow", u"select", None))
+        self.decompiler_java_home_reset_button.setText(QCoreApplication.translate("MDGMainWindow", u"reset", None))
+        self.help_decompiler_java_home_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.additional_options_group_box.setTitle(QCoreApplication.translate("MDGMainWindow", u"Another options:", None))
         self.jar_in_jar_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Include jar in jar", None))
         self.jar_in_jar_help_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.cache_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Use cache", None))
         self.help_cache_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.commit_after_finish_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Make commit after finish", None))
+        self.help_cache_button_2.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.start_button.setText(QCoreApplication.translate("MDGMainWindow", u"start", None))
+        self.menuFile.setTitle(QCoreApplication.translate("MDGMainWindow", u"File", None))
     # retranslateUi
 

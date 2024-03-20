@@ -8,6 +8,18 @@ from typing import Iterator
 from MDGUtil import PathUtils
 
 
+def remove_unsupported_symbols(mod_name: str) -> str:
+    new_name = []
+    for symbol in mod_name:
+        if symbol.isalpha() or symbol.isdigit() or symbol in ['-', '.']:
+            new_name.append(symbol)
+            continue
+        new_name.append('-')
+    if new_name[-1] == '-':
+        new_name.append('mod')
+    return ''.join(new_name)
+
+
 def walk_in_zipfile(zip_ref: zipfile.ZipFile) -> Iterator[str]:
     info_list = zip_ref.infolist()
     for file_info in info_list:
@@ -26,7 +38,7 @@ def extract_jars_from_jar(jar_path: str | os.PathLike,
                 old_jar_path = os.path.join(extract_to, file)
                 while True:
                     suffix = (f'_{iter_count}' if iter_count > 0 else '') + '.jar'
-                    new_file_name = os.path.basename(file).replace(' ', '_').removesuffix('.jar')
+                    new_file_name = remove_unsupported_symbols(os.path.basename(file)).removesuffix('.jar')
                     new_jar_path = os.path.join(extract_to, new_file_name) + suffix
                     try:
                         os.rename(old_jar_path, new_jar_path)
