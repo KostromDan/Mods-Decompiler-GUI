@@ -2,7 +2,8 @@
 exclude =
     MDGUi,
     .venv,
-    result
+    result,
+    tmp
 ignore =
     E501
     W504

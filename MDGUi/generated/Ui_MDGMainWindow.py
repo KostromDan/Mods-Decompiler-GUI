@@ -16,17 +16,17 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QGroupBox, QHBoxLayout,
-    QLabel, QLineEdit, QMainWindow, QMenu,
-    QMenuBar, QPushButton, QRadioButton, QSizePolicy,
-    QSlider, QSpacerItem, QSpinBox, QStatusBar,
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QGroupBox,
+    QHBoxLayout, QLabel, QLineEdit, QMainWindow,
+    QMenu, QMenuBar, QPushButton, QRadioButton,
+    QSizePolicy, QSlider, QSpacerItem, QSpinBox,
     QVBoxLayout, QWidget)
 
 class Ui_MDGMainWindow(object):
     def setupUi(self, MDGMainWindow):
         if not MDGMainWindow.objectName():
             MDGMainWindow.setObjectName(u"MDGMainWindow")
-        MDGMainWindow.resize(1072, 819)
+        MDGMainWindow.resize(1336, 888)
         MDGMainWindow.setMaximumSize(QSize(16777215, 16777215))
         self.action_reset = QAction(MDGMainWindow)
         self.action_reset.setObjectName(u"action_reset")
@@ -102,11 +102,11 @@ class Ui_MDGMainWindow(object):
 
         self.mdk_path_vertical_group_box = QGroupBox(self.centralwidget)
         self.mdk_path_vertical_group_box.setObjectName(u"mdk_path_vertical_group_box")
-        self.mdk_path_vertical_group_box.setMinimumSize(QSize(0, 64))
+        self.mdk_path_vertical_group_box.setMinimumSize(QSize(0, 58))
         self.mdk_path_vertical_group_box.setAcceptDrops(True)
         self.verticalLayout_4 = QVBoxLayout(self.mdk_path_vertical_group_box)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.verticalLayout_4.setContentsMargins(9, 2, 9, 6)
+        self.verticalLayout_4.setContentsMargins(9, 0, 9, 2)
         self.mdk_path_horizontal_layout = QHBoxLayout()
         self.mdk_path_horizontal_layout.setObjectName(u"mdk_path_horizontal_layout")
         self.mdk_path_label = QLabel(self.mdk_path_vertical_group_box)
@@ -182,6 +182,93 @@ class Ui_MDGMainWindow(object):
 
 
         self.verticalLayout.addWidget(self.deobf_group_box)
+
+        self.deobf_algo_group_box = QGroupBox(self.deobf_main_group_box)
+        self.deobf_algo_group_box.setObjectName(u"deobf_algo_group_box")
+        self.horizontalLayout_10 = QHBoxLayout(self.deobf_algo_group_box)
+        self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
+        self.horizontalLayout_10.setContentsMargins(0, 0, 0, 0)
+        self.deobf_algo_label = QLabel(self.deobf_algo_group_box)
+        self.deobf_algo_label.setObjectName(u"deobf_algo_label")
+
+        self.horizontalLayout_10.addWidget(self.deobf_algo_label)
+
+        self.deobf_algo_radio_safe_mdk = QRadioButton(self.deobf_algo_group_box)
+        self.deobf_algo_radio_safe_mdk.setObjectName(u"deobf_algo_radio_safe_mdk")
+        self.deobf_algo_radio_safe_mdk.setChecked(True)
+
+        self.horizontalLayout_10.addWidget(self.deobf_algo_radio_safe_mdk)
+
+        self.deobf_algo_radio_fast_mdk = QRadioButton(self.deobf_algo_group_box)
+        self.deobf_algo_radio_fast_mdk.setObjectName(u"deobf_algo_radio_fast_mdk")
+
+        self.horizontalLayout_10.addWidget(self.deobf_algo_radio_fast_mdk)
+
+        self.deobf_algo_radio_bon2 = QRadioButton(self.deobf_algo_group_box)
+        self.deobf_algo_radio_bon2.setObjectName(u"deobf_algo_radio_bon2")
+        self.deobf_algo_radio_bon2.setChecked(False)
+
+        self.horizontalLayout_10.addWidget(self.deobf_algo_radio_bon2)
+
+        self.bon2_version_combo_box = QComboBox(self.deobf_algo_group_box)
+        self.bon2_version_combo_box.setObjectName(u"bon2_version_combo_box")
+
+        self.horizontalLayout_10.addWidget(self.bon2_version_combo_box)
+
+        self.bon2_mappings_combo_box = QComboBox(self.deobf_algo_group_box)
+        self.bon2_mappings_combo_box.setObjectName(u"bon2_mappings_combo_box")
+
+        self.horizontalLayout_10.addWidget(self.bon2_mappings_combo_box)
+
+        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_10.addItem(self.horizontalSpacer_7)
+
+        self.help_deobf_algo_button = QPushButton(self.deobf_algo_group_box)
+        self.help_deobf_algo_button.setObjectName(u"help_deobf_algo_button")
+        sizePolicy.setHeightForWidth(self.help_deobf_algo_button.sizePolicy().hasHeightForWidth())
+        self.help_deobf_algo_button.setSizePolicy(sizePolicy)
+        self.help_deobf_algo_button.setMaximumSize(QSize(20, 16777215))
+
+        self.horizontalLayout_10.addWidget(self.help_deobf_algo_button)
+
+
+        self.verticalLayout.addWidget(self.deobf_algo_group_box)
+
+        self.bon2_cmd_groupbox = QGroupBox(self.deobf_main_group_box)
+        self.bon2_cmd_groupbox.setObjectName(u"bon2_cmd_groupbox")
+        self.decomp_cmd_horizontal_layout_2 = QHBoxLayout(self.bon2_cmd_groupbox)
+        self.decomp_cmd_horizontal_layout_2.setObjectName(u"decomp_cmd_horizontal_layout_2")
+        self.decomp_cmd_horizontal_layout_2.setContentsMargins(0, 0, 0, 0)
+        self.bon2_cmd_label = QLabel(self.bon2_cmd_groupbox)
+        self.bon2_cmd_label.setObjectName(u"bon2_cmd_label")
+
+        self.decomp_cmd_horizontal_layout_2.addWidget(self.bon2_cmd_label)
+
+        self.bon2_cmd_line_edit = QLineEdit(self.bon2_cmd_groupbox)
+        self.bon2_cmd_line_edit.setObjectName(u"bon2_cmd_line_edit")
+        self.bon2_cmd_line_edit.setClearButtonEnabled(False)
+
+        self.decomp_cmd_horizontal_layout_2.addWidget(self.bon2_cmd_line_edit)
+
+        self.bon2_cmd_reset_button = QPushButton(self.bon2_cmd_groupbox)
+        self.bon2_cmd_reset_button.setObjectName(u"bon2_cmd_reset_button")
+        sizePolicy.setHeightForWidth(self.bon2_cmd_reset_button.sizePolicy().hasHeightForWidth())
+        self.bon2_cmd_reset_button.setSizePolicy(sizePolicy)
+        self.bon2_cmd_reset_button.setMaximumSize(QSize(40, 16777215))
+
+        self.decomp_cmd_horizontal_layout_2.addWidget(self.bon2_cmd_reset_button)
+
+        self.help_bon2_cmd_button = QPushButton(self.bon2_cmd_groupbox)
+        self.help_bon2_cmd_button.setObjectName(u"help_bon2_cmd_button")
+        sizePolicy.setHeightForWidth(self.help_bon2_cmd_button.sizePolicy().hasHeightForWidth())
+        self.help_bon2_cmd_button.setSizePolicy(sizePolicy)
+        self.help_bon2_cmd_button.setMaximumSize(QSize(20, 16777215))
+
+        self.decomp_cmd_horizontal_layout_2.addWidget(self.help_bon2_cmd_button)
+
+
+        self.verticalLayout.addWidget(self.bon2_cmd_groupbox)
 
         self.deobf_threads_group_box = QGroupBox(self.deobf_main_group_box)
         self.deobf_threads_group_box.setObjectName(u"deobf_threads_group_box")
@@ -474,6 +561,47 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout_7 = QVBoxLayout(self.java_home_main_group_box)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.verticalLayout_7.setContentsMargins(9, 6, 9, 6)
+        self.bon2_java_home_group_box = QGroupBox(self.java_home_main_group_box)
+        self.bon2_java_home_group_box.setObjectName(u"bon2_java_home_group_box")
+        self.horizontalLayout_15 = QHBoxLayout(self.bon2_java_home_group_box)
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
+        self.horizontalLayout_15.setContentsMargins(0, 0, 0, 0)
+        self.bon2_java_home_check_box = QCheckBox(self.bon2_java_home_group_box)
+        self.bon2_java_home_check_box.setObjectName(u"bon2_java_home_check_box")
+        self.bon2_java_home_check_box.setChecked(False)
+
+        self.horizontalLayout_15.addWidget(self.bon2_java_home_check_box)
+
+        self.bon2_java_home_line_edit = QLineEdit(self.bon2_java_home_group_box)
+        self.bon2_java_home_line_edit.setObjectName(u"bon2_java_home_line_edit")
+        self.bon2_java_home_line_edit.setClearButtonEnabled(False)
+
+        self.horizontalLayout_15.addWidget(self.bon2_java_home_line_edit)
+
+        self.bon2_java_home_select_button = QPushButton(self.bon2_java_home_group_box)
+        self.bon2_java_home_select_button.setObjectName(u"bon2_java_home_select_button")
+
+        self.horizontalLayout_15.addWidget(self.bon2_java_home_select_button)
+
+        self.bon2_java_home_reset_button = QPushButton(self.bon2_java_home_group_box)
+        self.bon2_java_home_reset_button.setObjectName(u"bon2_java_home_reset_button")
+        sizePolicy.setHeightForWidth(self.bon2_java_home_reset_button.sizePolicy().hasHeightForWidth())
+        self.bon2_java_home_reset_button.setSizePolicy(sizePolicy)
+        self.bon2_java_home_reset_button.setMaximumSize(QSize(40, 16777215))
+
+        self.horizontalLayout_15.addWidget(self.bon2_java_home_reset_button)
+
+        self.bon2_decompiler_java_home_button = QPushButton(self.bon2_java_home_group_box)
+        self.bon2_decompiler_java_home_button.setObjectName(u"bon2_decompiler_java_home_button")
+        sizePolicy.setHeightForWidth(self.bon2_decompiler_java_home_button.sizePolicy().hasHeightForWidth())
+        self.bon2_decompiler_java_home_button.setSizePolicy(sizePolicy)
+        self.bon2_decompiler_java_home_button.setMaximumSize(QSize(20, 16777215))
+
+        self.horizontalLayout_15.addWidget(self.bon2_decompiler_java_home_button)
+
+
+        self.verticalLayout_7.addWidget(self.bon2_java_home_group_box)
+
         self.mdk_java_home_group_box = QGroupBox(self.java_home_main_group_box)
         self.mdk_java_home_group_box.setObjectName(u"mdk_java_home_group_box")
         self.horizontalLayout_9 = QHBoxLayout(self.mdk_java_home_group_box)
@@ -481,7 +609,7 @@ class Ui_MDGMainWindow(object):
         self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
         self.mdk_java_home_check_box = QCheckBox(self.mdk_java_home_group_box)
         self.mdk_java_home_check_box.setObjectName(u"mdk_java_home_check_box")
-        self.mdk_java_home_check_box.setChecked(True)
+        self.mdk_java_home_check_box.setChecked(False)
 
         self.horizontalLayout_9.addWidget(self.mdk_java_home_check_box)
 
@@ -522,7 +650,7 @@ class Ui_MDGMainWindow(object):
         self.horizontalLayout_14.setContentsMargins(0, 0, 0, 0)
         self.decompiler_java_home_check_box = QCheckBox(self.decompiler_java_home_group_box)
         self.decompiler_java_home_check_box.setObjectName(u"decompiler_java_home_check_box")
-        self.decompiler_java_home_check_box.setChecked(True)
+        self.decompiler_java_home_check_box.setChecked(False)
 
         self.horizontalLayout_14.addWidget(self.decompiler_java_home_check_box)
 
@@ -608,27 +736,27 @@ class Ui_MDGMainWindow(object):
 
         self.verticalLayout_6.addWidget(self.use_cache_group_box)
 
-        self.use_cache_group_box_2 = QGroupBox(self.additional_options_group_box)
-        self.use_cache_group_box_2.setObjectName(u"use_cache_group_box_2")
-        self.cache_horizontal_layout_2 = QHBoxLayout(self.use_cache_group_box_2)
+        self.commit_after_finish_group_box = QGroupBox(self.additional_options_group_box)
+        self.commit_after_finish_group_box.setObjectName(u"commit_after_finish_group_box")
+        self.cache_horizontal_layout_2 = QHBoxLayout(self.commit_after_finish_group_box)
         self.cache_horizontal_layout_2.setObjectName(u"cache_horizontal_layout_2")
         self.cache_horizontal_layout_2.setContentsMargins(0, 0, 0, 0)
-        self.commit_after_finish_check_box = QCheckBox(self.use_cache_group_box_2)
+        self.commit_after_finish_check_box = QCheckBox(self.commit_after_finish_group_box)
         self.commit_after_finish_check_box.setObjectName(u"commit_after_finish_check_box")
         self.commit_after_finish_check_box.setChecked(True)
 
         self.cache_horizontal_layout_2.addWidget(self.commit_after_finish_check_box)
 
-        self.help_cache_button_2 = QPushButton(self.use_cache_group_box_2)
-        self.help_cache_button_2.setObjectName(u"help_cache_button_2")
-        sizePolicy.setHeightForWidth(self.help_cache_button_2.sizePolicy().hasHeightForWidth())
-        self.help_cache_button_2.setSizePolicy(sizePolicy)
-        self.help_cache_button_2.setMaximumSize(QSize(20, 16777215))
+        self.help_commit_after_finish_button = QPushButton(self.commit_after_finish_group_box)
+        self.help_commit_after_finish_button.setObjectName(u"help_commit_after_finish_button")
+        sizePolicy.setHeightForWidth(self.help_commit_after_finish_button.sizePolicy().hasHeightForWidth())
+        self.help_commit_after_finish_button.setSizePolicy(sizePolicy)
+        self.help_commit_after_finish_button.setMaximumSize(QSize(20, 16777215))
 
-        self.cache_horizontal_layout_2.addWidget(self.help_cache_button_2)
+        self.cache_horizontal_layout_2.addWidget(self.help_commit_after_finish_button)
 
 
-        self.verticalLayout_6.addWidget(self.use_cache_group_box_2)
+        self.verticalLayout_6.addWidget(self.commit_after_finish_group_box)
 
 
         self.verticalLayout_8.addWidget(self.additional_options_group_box)
@@ -642,13 +770,10 @@ class Ui_MDGMainWindow(object):
         MDGMainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGMainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1072, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1336, 22))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         MDGMainWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(MDGMainWindow)
-        self.statusbar.setObjectName(u"statusbar")
-        MDGMainWindow.setStatusBar(self.statusbar)
 
         self.menubar.addAction(self.menuFile.menuAction())
         self.menuFile.addAction(self.action_save)
@@ -674,6 +799,15 @@ class Ui_MDGMainWindow(object):
         self.deobf_main_group_box.setTitle(QCoreApplication.translate("MDGMainWindow", u"Deobfuscation settings:", None))
         self.deobf_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Deobfuscate mods", None))
         self.help_deobf_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.deobf_algo_label.setText(QCoreApplication.translate("MDGMainWindow", u"Deobfuscation algoritm:", None))
+        self.deobf_algo_radio_safe_mdk.setText(QCoreApplication.translate("MDGMainWindow", u"safe (using mdk)", None))
+        self.deobf_algo_radio_fast_mdk.setText(QCoreApplication.translate("MDGMainWindow", u"fast (using mdk)", None))
+        self.deobf_algo_radio_bon2.setText(QCoreApplication.translate("MDGMainWindow", u"BON2", None))
+        self.help_deobf_algo_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.bon2_cmd_label.setText(QCoreApplication.translate("MDGMainWindow", u"BON2 cmd:", None))
+        self.bon2_cmd_line_edit.setText("")
+        self.bon2_cmd_reset_button.setText(QCoreApplication.translate("MDGMainWindow", u"reset", None))
+        self.help_bon2_cmd_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.deobf_threads_label.setText(QCoreApplication.translate("MDGMainWindow", u"Deobfuscation threads:", None))
         self.help_deobf_threads_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.deobf_failed_label.setText(QCoreApplication.translate("MDGMainWindow", u"If deobfuscation of mod failed:", None))
@@ -712,6 +846,11 @@ class Ui_MDGMainWindow(object):
         self.java_home_main_group_box.setAccessibleName("")
 #endif // QT_CONFIG(accessibility)
         self.java_home_main_group_box.setTitle(QCoreApplication.translate("MDGMainWindow", u"Specify JAVA_HOME:", None))
+        self.bon2_java_home_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"BON2          ", None))
+        self.bon2_java_home_line_edit.setText("")
+        self.bon2_java_home_select_button.setText(QCoreApplication.translate("MDGMainWindow", u"select", None))
+        self.bon2_java_home_reset_button.setText(QCoreApplication.translate("MDGMainWindow", u"reset", None))
+        self.bon2_decompiler_java_home_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.mdk_java_home_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"mdk            ", None))
         self.mdk_java_home_line_edit.setText("")
         self.mdk_java_home_select_button.setText(QCoreApplication.translate("MDGMainWindow", u"select", None))
@@ -728,7 +867,7 @@ class Ui_MDGMainWindow(object):
         self.cache_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Use cache", None))
         self.help_cache_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.commit_after_finish_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Make commit after finish", None))
-        self.help_cache_button_2.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.help_commit_after_finish_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.start_button.setText(QCoreApplication.translate("MDGMainWindow", u"start", None))
         self.menuFile.setTitle(QCoreApplication.translate("MDGMainWindow", u"File", None))
     # retranslateUi

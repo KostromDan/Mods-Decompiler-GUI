@@ -7,13 +7,14 @@ from collections import defaultdict
 from typing import Any, Optional
 
 import psutil
-from PySide6.QtCore import QMimeData
+from PySide6.QtCore import QMimeData, QCoreApplication, QTimer
 from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QFileSystemModel, QCompleter, QWidget, QLineEdit, \
-    QSlider, QSpinBox
+    QSlider, QSpinBox, QPushButton
 
 from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
-from MDGUtil.LocalConfig import LocalConfig, DEFAULT_DECOMPILER_CMD
+from MDGUtil import UiUtils, PathUtils
+from MDGUtil.LocalConfig import LocalConfig
 from MDGWindow.MDGHelpWindow import MDGHelpWindow
 from MDGWindow.MDGProgressWindow import MDGProgressWindow
 
@@ -42,16 +43,20 @@ class MDGMainWindow(QMainWindow):
         self.ui.merge_check_box.stateChanged.connect(self.merge_checkbox_changed)
         self.ui.decomp_check_box.stateChanged.connect(self.decomp_checkbox_changed)
 
-        self.ui.select_mods_button.clicked.connect(
-            lambda e: self.select_button(self.ui.mods_path_line_edit,
-                                         'Select mods folder',
-                                         QFileDialog.getExistingDirectory,
-                                         QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks))
-        self.ui.select_mdk_button.clicked.connect(
-            lambda e: self.select_button(self.ui.mdk_path_line_edit,
-                                         'Select mdk archive',
-                                         QFileDialog.getOpenFileName,
-                                         self.tr('Archive files (*.zip)')))
+        self.ui.deobf_algo_radio_safe_mdk.toggled.connect(self.check_widgets_visibility)
+        self.ui.deobf_algo_radio_fast_mdk.toggled.connect(self.check_widgets_visibility)
+        self.ui.deobf_algo_radio_bon2.toggled.connect(self.check_widgets_visibility)
+
+        self.setup_select_button(self.ui.select_mods_button,
+                                 self.ui.mods_path_line_edit,
+                                 'Select mods folder',
+                                 QFileDialog.getExistingDirectory,
+                                 QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+        self.setup_select_button(self.ui.select_mdk_button,
+                                 self.ui.mdk_path_line_edit,
+                                 'Select mdk archive',
+                                 QFileDialog.getOpenFileName,
+                                 self.tr('Archive files (*.zip)'))
 
         self.setup_drag_n_drop(self.ui.mods_path_vertical_group_box, self.ui.mods_path_line_edit)
         self.setup_drag_n_drop(self.ui.mdk_path_vertical_group_box, self.ui.mdk_path_line_edit)
@@ -100,17 +105,72 @@ class MDGMainWindow(QMainWindow):
         for help_button, widget in self.help_widget_pairs.items():
             help_button.clicked.connect(self.help_button_clicked)
 
-        self.resize(self.width(), self.minimumSizeHint().height())
+        self.java_home_dict = {
+            self.ui.mdk_java_home_group_box: {
+                'check_box': self.ui.mdk_java_home_check_box,
+                'line_edit': self.ui.mdk_java_home_line_edit,
+                'select_button': self.ui.mdk_java_home_select_button,
+                'reset_button': self.ui.mdk_java_home_reset_button,
+            },
+            self.ui.bon2_java_home_group_box: {
+                'check_box': self.ui.bon2_java_home_check_box,
+                'line_edit': self.ui.bon2_java_home_line_edit,
+                'select_button': self.ui.bon2_java_home_select_button,
+                'reset_button': self.ui.bon2_java_home_reset_button,
+            },
+            self.ui.decompiler_java_home_group_box: {
+                'check_box': self.ui.decompiler_java_home_check_box,
+                'line_edit': self.ui.decompiler_java_home_line_edit,
+                'select_button': self.ui.decompiler_java_home_select_button,
+                'reset_button': self.ui.decompiler_java_home_reset_button,
+            }
+        }
+        for group_box, data in self.java_home_dict.items():
+            data['check_box'].stateChanged.connect(self.check_widgets_visibility)
+            data['line_edit'].setText(PathUtils.get_java_home_from_env())
+            self.set_path_completer(data['line_edit'])
+            self.setup_line_edit_resettable_pair(data['line_edit'],
+                                                 data['reset_button'],
+                                                 PathUtils.get_java_home_from_env())
+            self.setup_select_button(data['select_button'],
+                                     data['line_edit'],
+                                     'Select JAVA_HOME folder',
+                                     QFileDialog.getExistingDirectory,
+                                     QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
 
-        self.ui.decomp_cmd_reset_button.clicked.connect(self.reset_decomp_cmd)
-        self.ui.decomp_cmd_line_edit.textChanged.connect(self.decomp_cmd_line_edit_changed)
-
-        self.ui.decomp_cmd_line_edit.setText(DEFAULT_DECOMPILER_CMD)
+        self.default_cmd_configs = dict()
+        self.setup_line_edit_resettable_pair(self.ui.decomp_cmd_line_edit,
+                                             self.ui.decomp_cmd_reset_button,
+                                             PathUtils.DEFAULT_DECOMPILER_CMD)
+        self.setup_line_edit_resettable_pair(self.ui.bon2_cmd_line_edit,
+                                             self.ui.bon2_cmd_reset_button,
+                                             PathUtils.DEFAULT_BON2_CMD)
 
         self.ui.action_reset.triggered.connect(self.action_reset)
         self.ui.action_save.triggered.connect(self.save_ui_to_config)
 
         self.load_ui_from_config()
+        self.check_widgets_visibility()
+        self.adjust_min_height()
+
+    def setup_line_edit_resettable_pair(self, line_edit: QLineEdit,
+                                        reset_bitton: QPushButton,
+                                        default_value: str) -> None:
+        reset_bitton.clicked.connect(lambda: line_edit.setText(default_value))
+        line_edit.textChanged.connect(
+            lambda: self.on_resettable_line_edit_changed(line_edit, reset_bitton, default_value))
+        line_edit.setText(default_value)
+
+    def on_resettable_line_edit_changed(self, line_edit: QLineEdit,
+                                        reset_bitton: QPushButton,
+                                        default_value: str) -> None:
+        print(1)
+        text = line_edit.text()
+        reset_bitton.setEnabled(text != default_value)
+        config_name = f"using_default_cmd_{line_edit.objectName().split('_')[0]}"
+        self.default_cmd_configs[config_name] = line_edit.objectName()
+        self.config.set(config_name, text == default_value)
+        line_edit.setStyleSheet('')
 
     def action_reset(self) -> None:
         self.setEnabled(False)
@@ -120,7 +180,21 @@ class MDGMainWindow(QMainWindow):
         widget.show()
         self.destroy()
 
-    def select_button(self, line_edit: QLineEdit, msg: str, get_from: callable, options: Any) -> None:
+    def setup_select_button(self, button: QPushButton,
+                            line_edit: QLineEdit,
+                            msg: str,
+                            get_from: callable,
+                            options: Any) -> None:
+        button.clicked.connect(
+            lambda e: self.select_button(line_edit,
+                                         msg,
+                                         get_from,
+                                         options))
+
+    def select_button(self, line_edit: QLineEdit,
+                      msg: str,
+                      get_from: callable,
+                      options: Any) -> None:
         line_edit_path = line_edit.text()
         if not os.path.exists(line_edit_path):
             line_edit_path = ''
@@ -133,14 +207,8 @@ class MDGMainWindow(QMainWindow):
         self.set_path_completer(line_edit)
 
     def setup_slider_and_spinbox_pair(self, spin_box: QSpinBox, slider: QSlider) -> None:
-        slider.valueChanged.connect(lambda value: self.slider_value_changed(value, spin_box))
-        spin_box.valueChanged.connect(lambda value: self.spin_box_value_changed(value, slider))
-
-    def slider_value_changed(self, value: int, spinbox: QSpinBox) -> None:
-        spinbox.setValue(value)
-
-    def spin_box_value_changed(self, value: int, slider: QSlider) -> None:
-        slider.setValue(value)
+        slider.valueChanged.connect(lambda value: spin_box.setValue(value))
+        spin_box.valueChanged.connect(lambda value: slider.setValue(value))
 
     def setup_drag_n_drop(self, element: QWidget, line_edit: QLineEdit) -> None:
         element.dragEnterEvent = lambda event: self.drag_enter_event(event, element)
@@ -169,22 +237,8 @@ class MDGMainWindow(QMainWindow):
         event.accept()
         return file_paths[0]
 
-    def decomp_cmd_line_edit_changed(self, value: str) -> None:
-        self.ui.decomp_cmd_reset_button.setEnabled(value != DEFAULT_DECOMPILER_CMD)
-        self.config.set('using_default_cmd', value == DEFAULT_DECOMPILER_CMD)
-        self.ui.decomp_cmd_line_edit.setStyleSheet('')
-
-    def reset_decomp_cmd(self) -> None:
-        self.ui.decomp_cmd_line_edit.setText(DEFAULT_DECOMPILER_CMD)
-
     def help_button_clicked(self) -> None:
         self.help_window.start_help_window(self.help_widget_pairs[self.sender()])
-
-    def mods_line_edit_changed(self, text: str) -> None:
-        self.ui.mods_path_line_edit.setStyleSheet('')
-
-    def mdk_line_edit_changed(self, text: str) -> None:
-        self.ui.mdk_path_line_edit.setStyleSheet('')
 
     def start_button(self) -> None:
         self.save_ui_to_config()
@@ -252,6 +306,7 @@ class MDGMainWindow(QMainWindow):
             member_object = getattr(self.ui, member_name)
             member_attrs = [attr for attr in dir(member_object) if not attr.startswith('__')]
             required_fields = ('text', 'value', 'isChecked', 'isEnabled')
+            out[member_name]['class'] = type(member_object).__name__
             for field in required_fields:
                 if field in member_attrs:
                     out[member_name][field] = getattr(member_object, field)()
@@ -259,8 +314,9 @@ class MDGMainWindow(QMainWindow):
 
     def save_ui_to_config(self) -> None:
         serialized_widgets = self.serialize_to_dict()
-        if self.config.get('using_default_cmd') is True:
-            serialized_widgets.pop('decomp_cmd_line_edit')
+        for config, line_edit in self.default_cmd_configs.items():
+            if self.config.get(config) is True:
+                serialized_widgets.pop(line_edit)
         self.config.set('serialized_widgets', serialized_widgets)
 
     def load_ui_from_config(self) -> None:
@@ -272,17 +328,32 @@ class MDGMainWindow(QMainWindow):
         get_set_pairs = {
             'text': 'setText',
             'value': 'setValue',
+            'class': 'skip',
             'isChecked': 'setChecked',
             'isEnabled': 'setEnabled'
         }
+        required = {'QCheckBox': {'isChecked'},
+                    'QLineEdit': {'text'},
+                    'QRadioButton': {'isChecked'},
+                    'QSlider': {'value'},
+                    'QSpinBox': {'value'}}
+        skip = {'setEnabled', 'skip'}
         for member_name, member_fields_dict in serialized_dict.items():
             try:
                 member_object = getattr(self.ui, member_name)
             except AttributeError:
                 continue
+            class_name = type(member_object).__name__
+            if class_name not in required:
+                continue
             for field_name, field_value in member_fields_dict.items():
+                if field_name not in required[class_name]:
+                    continue
                 try:
-                    getattr(member_object, get_set_pairs[field_name])(field_value)
+                    pair_filed_name = get_set_pairs[field_name]
+                    if pair_filed_name in skip:
+                        continue
+                    getattr(member_object, pair_filed_name)(field_value)
                 except AttributeError:
                     continue
 
@@ -304,35 +375,13 @@ class MDGMainWindow(QMainWindow):
             event.ignore()
 
     def deobf_checkbox_changed(self, state: int) -> None:
-        self.ui.deobf_failed_group_box.setEnabled(state == 2)
-        self.ui.deobf_threads_group_box.setEnabled(state == 2)
-        self.check_mdk_needed()
+        self.check_widgets_visibility()
 
     def decomp_checkbox_changed(self, state: int) -> None:
-        if state != 2:
-            self.was_decomp_enabled = self.ui.deobf_failed_radio_decompile.isChecked()
-            if self.was_decomp_enabled:
-                self.ui.deobf_failed_radio_interrupt.setChecked(True)
-        elif self.was_decomp_enabled:
-            self.ui.deobf_failed_radio_decompile.setChecked(True)
-            self.was_decomp_enabled = False
-        self.ui.deobf_failed_radio_decompile.setEnabled(state == 2)
-
-        self.ui.merge_group_box.setEnabled(state == 2 and self.ui.merge_check_box.isChecked())
-        self.ui.patch_mdk_group_box.setEnabled(state == 2 and self.ui.merge_check_box.isChecked())
-
-        self.ui.merge_check_box.setEnabled(state == 2)
-        self.ui.decomp_threads_group_box.setEnabled(state == 2)
-        self.ui.decomp_cmd_groupbox.setEnabled(state == 2)
+        self.check_widgets_visibility()
 
     def merge_checkbox_changed(self, state: int) -> None:
-        self.ui.merge_group_box.setEnabled(state == 2)
-        self.ui.patch_mdk_group_box.setEnabled(state == 2)
-        self.check_mdk_needed()
-
-    def check_mdk_needed(self) -> None:
-        self.ui.mdk_path_vertical_group_box.setEnabled(
-            self.ui.deobf_check_box.isChecked() or self.ui.merge_check_box.isChecked())
+        self.check_widgets_visibility()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         self.save_ui_to_config()
@@ -345,3 +394,100 @@ class MDGMainWindow(QMainWindow):
         fs_model.setRootPath(initial_path)
         fs_completer = QCompleter(fs_model, line_edit)
         line_edit.setCompleter(fs_completer)
+
+    def mods_line_edit_changed(self, text: str) -> None:
+        self.ui.mods_path_line_edit.setStyleSheet('')
+
+    def mdk_line_edit_changed(self, text: str) -> None:
+        self.ui.mdk_path_line_edit.setStyleSheet('')
+
+    def adjust_min_height(self) -> None:
+        QCoreApplication.processEvents()
+        if self.minimumSizeHint().height() != self.height():
+            self.resize(self.width(), self.minimumSizeHint().height())
+            QTimer.singleShot(0, self.adjust_min_height)
+
+    def change_visibility_of_widget(self, element: QWidget, visible: bool) -> None:
+        was_min_size = self.minimumSizeHint().height() == self.height()
+        element.setVisible(visible)
+        element.setEnabled(visible)
+        if was_min_size:
+            self.adjust_min_height()
+
+    def check_widgets_visibility(self, recursive: bool = True) -> None:
+        """Setting visibility of widgets according to settings."""
+
+        QCoreApplication.processEvents()
+        deobfuscation_enabled = UiUtils.is_checked_and_enabled(self.ui.deobf_check_box)
+        decompilation_enabled = UiUtils.is_checked_and_enabled(self.ui.decomp_check_box)
+        merging_enabled = UiUtils.is_checked_and_enabled(self.ui.merge_check_box)
+        deobfuscation_algo_using_mdk = (self.ui.deobf_algo_radio_safe_mdk.isChecked() or
+                                        self.ui.deobf_algo_radio_fast_mdk.isChecked())
+        mdk_widgets_visible = ((deobfuscation_enabled and deobfuscation_algo_using_mdk) or merging_enabled)
+        bon2_widgets_visible = (deobfuscation_enabled and
+                                UiUtils.is_checked_and_enabled(self.ui.deobf_algo_radio_bon2))
+        fast_deobf_selected = self.ui.deobf_algo_radio_fast_mdk.isChecked()
+        at_least_one_java_home_active = (mdk_widgets_visible or
+                                         bon2_widgets_visible or
+                                         decompilation_enabled)
+
+        fail_logic_radio_buttons = (self.ui.deobf_failed_radio_interrupt,
+                                    self.ui.deobf_failed_radio_skip,
+                                    self.ui.deobf_failed_radio_decompile,)
+        deobf_algo_radio_buttons = (self.ui.deobf_algo_radio_safe_mdk,
+                                    self.ui.deobf_algo_radio_fast_mdk,
+                                    self.ui.deobf_algo_radio_bon2)
+
+        """is mdk needed"""
+        self.change_visibility_of_widget(self.ui.mdk_path_vertical_group_box, mdk_widgets_visible)
+        self.change_visibility_of_widget(self.ui.mdk_java_home_group_box, mdk_widgets_visible)
+
+        """bon2 widgets"""
+        self.change_visibility_of_widget(self.ui.bon2_cmd_groupbox, bon2_widgets_visible)
+        self.change_visibility_of_widget(self.ui.bon2_java_home_group_box, bon2_widgets_visible)
+        self.change_visibility_of_widget(self.ui.bon2_version_combo_box, bon2_widgets_visible)
+        self.change_visibility_of_widget(self.ui.bon2_mappings_combo_box, bon2_widgets_visible)
+
+        """deobf widgets"""
+        self.change_visibility_of_widget(self.ui.deobf_failed_group_box, deobfuscation_enabled)
+        self.change_visibility_of_widget(self.ui.deobf_threads_group_box, deobfuscation_enabled)
+        self.change_visibility_of_widget(self.ui.deobf_algo_group_box, deobfuscation_enabled)
+
+        self.ui.deobf_failed_radio_decompile.setEnabled(decompilation_enabled and not fast_deobf_selected)
+        self.ui.deobf_failed_radio_skip.setEnabled(not fast_deobf_selected)
+
+        """decomp widgets"""
+        self.change_visibility_of_widget(self.ui.decomp_threads_group_box, decompilation_enabled)
+        self.change_visibility_of_widget(self.ui.decomp_cmd_groupbox, decompilation_enabled)
+        self.change_visibility_of_widget(self.ui.decompiler_java_home_group_box, decompilation_enabled)
+
+        """merge widgets"""
+        self.change_visibility_of_widget(self.ui.merge_main_group_box, decompilation_enabled)
+        self.change_visibility_of_widget(self.ui.merge_group_box, merging_enabled)
+        self.change_visibility_of_widget(self.ui.patch_mdk_group_box, merging_enabled)
+
+        """java home"""
+        self.change_visibility_of_widget(self.ui.java_home_main_group_box, at_least_one_java_home_active)
+        for group_box, data in self.java_home_dict.items():
+            check_box_checked = data['check_box'].isChecked()
+            for widget_name in {'line_edit', 'select_button'}:
+                data[widget_name].setEnabled(check_box_checked)
+            is_default_line_edit = data['line_edit'].text() == PathUtils.get_java_home_from_env()
+            data['reset_button'].setEnabled(check_box_checked and not is_default_line_edit)
+            if self.sender() == data['check_box'] and not check_box_checked:
+                data['line_edit'].setText(PathUtils.get_java_home_from_env())
+
+        """fail logic radio buttons"""
+        if self.ui.deobf_failed_group_box.isEnabled():
+            for radio in fail_logic_radio_buttons:
+                if radio.isChecked() and not radio.isEnabled():
+                    self.ui.deobf_failed_radio_interrupt.setChecked(True)
+                    if radio == self.ui.deobf_failed_radio_decompile:
+                        self.was_decomp_enabled = True
+        if self.sender() in deobf_algo_radio_buttons or self.sender() is self.ui.decomp_check_box:
+            if self.was_decomp_enabled and self.ui.deobf_failed_radio_decompile.isEnabled():
+                self.was_decomp_enabled = False
+                self.ui.deobf_failed_radio_decompile.setChecked(True)
+
+        if recursive:
+            self.check_widgets_visibility(recursive=False)

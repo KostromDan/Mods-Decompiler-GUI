@@ -99,7 +99,7 @@ class InitialisationThread(AbstractMDGThread):
                     self.critical_signal.emit('Incorrect java version for decompiler',
                                               'This message indicates that decompiler was '
                                               'compiled with more recent version of java '
-                                              'than in your JAVA_HOME. Default decompiler uses 17\'th version of java. '
+                                              "than in your JAVA_HOME. Default decompiler uses 17'th version of java. "
                                               'Try to specify path to recent version of java in decompiler cmd.')
                     return
                 self.critical_signal.emit('Incorrect decompiler cmd',

@@ -201,7 +201,7 @@ class DeobfuscationThread(AbstractMDGThread):
                     for thread_number, thread_data in self.threads_data.items():
                         if thread_data['status'].value != Status.CREATED and thread_number not in self.started_mods_set:
                             self.started_mods_set.add(thread_number)
-                            logging.info(f'Started deobfuscation of {os.path.basename(thread_data['mod_path'])}')
+                            logging.info(f"Started deobfuscation of {os.path.basename(thread_data['mod_path'])}")
                     time.sleep(0.1)
 
                 pool.join()
