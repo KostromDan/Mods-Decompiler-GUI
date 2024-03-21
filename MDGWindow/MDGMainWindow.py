@@ -1,9 +1,11 @@
 # This Python file uses the following encoding: utf-8
+import functools
 import multiprocessing
 import os
+import pprint
 import sys
 import zipfile
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from typing import Any, Optional
 
 import psutil
@@ -13,7 +15,7 @@ from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QFileSystem
     QSlider, QSpinBox, QPushButton
 
 from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
-from MDGUtil import UiUtils, PathUtils
+from MDGUtil import UiUtils, PathUtils, BON2Utils
 from MDGUtil.LocalConfig import LocalConfig
 from MDGWindow.MDGHelpWindow import MDGHelpWindow
 from MDGWindow.MDGProgressWindow import MDGProgressWindow
@@ -29,6 +31,8 @@ class MDGMainWindow(QMainWindow):
         self.was_decomp_enabled = False
         self.serialized_widgets = None
         self.progress_window = None
+
+        self.bon2_mappings = BON2Utils.DEFAULT_MAPPINGS
 
         if self.config.is_first_launch():
             QMessageBox.information(self, 'First launch information',
@@ -149,9 +153,16 @@ class MDGMainWindow(QMainWindow):
         self.ui.action_reset.triggered.connect(self.action_reset)
         self.ui.action_save.triggered.connect(self.save_ui_to_config)
 
+        self.ui.bon2_version_combo_box.currentTextChanged.connect(self.bon2_version_changed)
+        self.ui.bon2_version_combo_box.addItems(self.bon2_mappings.keys())
+
         self.load_ui_from_config()
         self.check_widgets_visibility()
         self.adjust_min_height()
+
+    def bon2_version_changed(self, value) -> None:
+        self.ui.bon2_mappings_combo_box.clear()
+        self.ui.bon2_mappings_combo_box.addItems(self.bon2_mappings[value])
 
     def setup_line_edit_resettable_pair(self, line_edit: QLineEdit,
                                         reset_bitton: QPushButton,
@@ -164,7 +175,6 @@ class MDGMainWindow(QMainWindow):
     def on_resettable_line_edit_changed(self, line_edit: QLineEdit,
                                         reset_bitton: QPushButton,
                                         default_value: str) -> None:
-        print(1)
         text = line_edit.text()
         reset_bitton.setEnabled(text != default_value)
         config_name = f"using_default_cmd_{line_edit.objectName().split('_')[0]}"
@@ -185,11 +195,10 @@ class MDGMainWindow(QMainWindow):
                             msg: str,
                             get_from: callable,
                             options: Any) -> None:
-        button.clicked.connect(
-            lambda e: self.select_button(line_edit,
-                                         msg,
-                                         get_from,
-                                         options))
+        button.clicked.connect(lambda e: self.select_button(line_edit,
+                                                            msg,
+                                                            get_from,
+                                                            options))
 
     def select_button(self, line_edit: QLineEdit,
                       msg: str,
@@ -305,7 +314,7 @@ class MDGMainWindow(QMainWindow):
         for member_name in members:
             member_object = getattr(self.ui, member_name)
             member_attrs = [attr for attr in dir(member_object) if not attr.startswith('__')]
-            required_fields = ('text', 'value', 'isChecked', 'isEnabled')
+            required_fields = ('text', 'value', 'isChecked', 'isEnabled', 'currentText')
             out[member_name]['class'] = type(member_object).__name__
             for field in required_fields:
                 if field in member_attrs:
@@ -327,6 +336,7 @@ class MDGMainWindow(QMainWindow):
     def deserialize_ui_from_dict(self, serialized_dict: dict[str, dict[str]]) -> None:
         get_set_pairs = {
             'text': 'setText',
+            'currentText': 'setCurrentText',
             'value': 'setValue',
             'class': 'skip',
             'isChecked': 'setChecked',
@@ -334,10 +344,23 @@ class MDGMainWindow(QMainWindow):
         }
         required = {'QCheckBox': {'isChecked'},
                     'QLineEdit': {'text'},
+                    'QComboBox': {'currentText'},
                     'QRadioButton': {'isChecked'},
                     'QSlider': {'value'},
                     'QSpinBox': {'value'}}
         skip = {'setEnabled', 'skip'}
+        widgets_priority = ['bon2_version_combo_box', 'bon2_mappings_combo_box']
+
+        def find_index_with_default(lst, elem, default):
+            try:
+                index = lst.index(elem)
+            except ValueError:
+                index = default
+            return index
+
+        serialized_dict = OrderedDict(sorted(serialized_dict.items(), key=lambda x: (
+            find_index_with_default(widgets_priority, x[0], len(widgets_priority)), x[0])))
+
         for member_name, member_fields_dict in serialized_dict.items():
             try:
                 member_object = getattr(self.ui, member_name)

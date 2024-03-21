@@ -217,6 +217,7 @@ class Ui_MDGMainWindow(object):
 
         self.bon2_mappings_combo_box = QComboBox(self.deobf_algo_group_box)
         self.bon2_mappings_combo_box.setObjectName(u"bon2_mappings_combo_box")
+        self.bon2_mappings_combo_box.setMinimumSize(QSize(80, 0))
 
         self.horizontalLayout_10.addWidget(self.bon2_mappings_combo_box)
 

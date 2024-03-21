@@ -380,7 +380,14 @@
            <widget class="QComboBox" name="bon2_version_combo_box"/>
           </item>
           <item>
-           <widget class="QComboBox" name="bon2_mappings_combo_box"/>
+           <widget class="QComboBox" name="bon2_mappings_combo_box">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+           </widget>
           </item>
           <item>
            <spacer name="horizontalSpacer_7">

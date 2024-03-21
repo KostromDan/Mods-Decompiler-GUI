@@ -1,4 +1,5 @@
 import faulthandler
+import multiprocessing
 import sys
 
 from PySide6.QtWidgets import QApplication
@@ -9,6 +10,7 @@ from MDGUtil.MDGLogger import MDGLogger
 
 if __name__ == '__main__':
     faulthandler.enable()
+    multiprocessing.freeze_support()
 
     if not PathUtils.check_pyinstaller_env():
         generate_ui()
