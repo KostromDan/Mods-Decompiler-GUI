@@ -29,6 +29,7 @@ class MDGMainWindow(QMainWindow):
         self.was_decomp_enabled = False
         self.serialized_widgets = None
         self.progress_window = None
+        self.default_cmd_configs = dict()
 
         self.bon2_mappings = BON2Utils.DEFAULT_MAPPINGS
 
@@ -128,18 +129,17 @@ class MDGMainWindow(QMainWindow):
         }
         for group_box, data in self.java_home_dict.items():
             data['check_box'].stateChanged.connect(self.check_widgets_visibility)
-            data['line_edit'].setText(PathUtils.get_java_home_from_env())
             self.set_path_completer(data['line_edit'])
             self.setup_line_edit_resettable_pair(data['line_edit'],
                                                  data['reset_button'],
                                                  PathUtils.get_java_home_from_env())
+            data['line_edit'].setText(PathUtils.get_java_home_from_env())
             self.setup_select_button(data['select_button'],
                                      data['line_edit'],
                                      'Select JAVA_HOME folder',
                                      QFileDialog.getExistingDirectory,
                                      QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
 
-        self.default_cmd_configs = dict()
         self.setup_line_edit_resettable_pair(self.ui.decomp_cmd_line_edit,
                                              self.ui.decomp_cmd_reset_button,
                                              PathUtils.DEFAULT_DECOMPILER_CMD)
