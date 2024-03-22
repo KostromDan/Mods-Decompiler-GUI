@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from PySide6.QtCore import QThread, Signal
 

@@ -7,12 +7,12 @@ from collections import defaultdict, OrderedDict
 from typing import Any, Optional
 
 import psutil
+from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from PySide6.QtCore import QMimeData, QCoreApplication, QTimer
 from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QFileSystemModel, QCompleter, QWidget, QLineEdit, \
     QSlider, QSpinBox, QPushButton
 
-from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from MDGUtil import UiUtils, PathUtils, BON2Utils
 from MDGUtil.LocalConfig import LocalConfig
 from MDGWindow.MDGHelpWindow import MDGHelpWindow
@@ -378,7 +378,7 @@ class MDGMainWindow(QMainWindow):
                     continue
 
     def critical_from_progress_window(self, title: str, text: str, widget_name: str) -> None:
-        if widget_name not in [None,'']:
+        if widget_name not in [None, '']:
             getattr(self.ui, widget_name).setStyleSheet('border: 1px solid red')
         self.setEnabled(True)
         self.show()
