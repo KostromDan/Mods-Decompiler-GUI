@@ -83,8 +83,12 @@ class InitialisationThread(AbstractMDGThread):
             FileUtils.create_folder(PathUtils.TMP_DECOMPILER_TEST_PATH)
             cmd_analyse_thread = None
             try:
-                decomp_cmd_formatted = decomp_cmd.format(path_to_jar=PathUtils.TEST_MOD_PATH,
-                                                         out_path=PathUtils.TMP_DECOMPILER_TEST_PATH)
+                java_home = self.serialized_widgets['decompiler_java_home_line_edit']['text']
+                decomp_cmd_formatted = (PathUtils.format_decompiler_command(decomp_cmd,
+                                                                            java_home,
+                                                                            PathUtils.TEST_MOD_PATH,
+                                                                            PathUtils.TMP_DECOMPILER_TEST_PATH))
+                print(decomp_cmd_formatted)
                 self.cmd = subprocess.Popen(decomp_cmd_formatted, shell=True,
                                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 cmd_analyse_thread = SubprocessOutsAnalyseThread(self.cmd)
@@ -100,13 +104,15 @@ class InitialisationThread(AbstractMDGThread):
                                               'This message indicates that decompiler was '
                                               'compiled with more recent version of java '
                                               "than in your JAVA_HOME. Default decompiler uses 17'th version of java. "
-                                              'Try to specify path to recent version of java in decompiler cmd.')
+                                              'Try to specify path to recent version of java in JAVA_HOME settings.',
+                                              'decompiler_java_home_line_edit')
                     return
                 self.critical_signal.emit('Incorrect decompiler cmd',
                                           "With this decompiler/decompiler cmd program won't work.\n"
                                           'This message indicates that {path_to_jar} is not decompiled to {out_path}.\n'
                                           'Check decompiler/decompiler cmd: path, syntax, etc. And try again.\n'
-                                          'Open the lastest log for more details.\n')
+                                          'Open the lastest log for more details.\n',
+                                          'decomp_cmd_line_edit')
                 return
             logging.info('Checked decompiler/decompiler cmd are correct successfully.')
 

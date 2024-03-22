@@ -47,6 +47,7 @@ def clear_forge_gradle():
 def deobfuscate(mod_path: str | os.PathLike,
                 mdk_path: str | os.PathLike,
                 out_path: str | os.PathLike,
+                java_home: str | os.PathLike,
                 thread_number: int,
                 lock: threading.Lock,
                 status: ValueProxy[int],
@@ -63,8 +64,10 @@ def deobfuscate(mod_path: str | os.PathLike,
     shutil.copy(mod_path, os.path.join(current_mdk_path, 'libs'))
     current_mod_deobf_path = os.path.join(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER,
                                           folder_name_in_gradle_cache)
+    env = os.environ.copy()
+    env['JAVA_HOME'] = java_home
     with lock:
-        cmd = subprocess.Popen(['gradlew.bat', 'compileJava'], cwd=current_mdk_path, shell=True)
+        cmd = subprocess.Popen(['gradlew.bat', 'compileJava'], env=env, cwd=current_mdk_path, shell=True)
         cmd_pid.value = cmd.pid
     cmd.wait()
 
@@ -147,7 +150,7 @@ class DeobfuscationThread(AbstractMDGThread):
                             logging.critical(f'Finished deobfuscation of {mod_name} with error. '
                                              f'Interrupted.')
                             self.critical_signal.emit('Deobfuscation failed',
-                                                      f'Deobfuscation of {mod_name} failed!')
+                                                      f'Deobfuscation of {mod_name} failed!', None)
                     self.failed_mod_signal.emit(mod_name)
 
     def run(self) -> None:
@@ -174,6 +177,7 @@ class DeobfuscationThread(AbstractMDGThread):
                         'mod_path': os.path.join(PathUtils.TMP_MODS_PATH, mod_name),
                         'mdk_path': self.serialized_widgets['mdk_path_line_edit']['text'],
                         'out_path': PathUtils.DEOBFUSCATED_MODS_PATH,
+                        'java_home': self.serialized_widgets['mdk_java_home_line_edit']['text'],
                         'thread_number': thread_number,
                         'lock': self.lock,
                         'status': manager.Value(int, Status.CREATED),

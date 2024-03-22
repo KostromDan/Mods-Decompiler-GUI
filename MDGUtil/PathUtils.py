@@ -29,8 +29,9 @@ MERGED_MDK_RESOURCES_PATH = os.path.join(MERGED_MDK_SRC_PATH, 'resources')
 MERGED_MDK_JAVA_PATH = os.path.join(MERGED_MDK_SRC_PATH, 'java')
 
 DEFAULT_DECOMPILER_CMD = rf'{{java}} -jar {DECOMPILER_JAR_PATH} -dgs=1 -din=1 {{path_to_jar}} {{out_path}}'
-DEFAULT_BON2_CMD = (rf'{{java}} -jar {BON2_PATH} --inputJar {{path_to_jar}} --outputJar {{out_path}} --mcVer {{mc_ver}} '
-                    rf'--mappingsVer {{mappings_ver}} --notch')
+DEFAULT_BON2_CMD = (
+    rf'{{java}} -jar {BON2_PATH} --inputJar {{path_to_jar}} --outputJar {{out_path}} --mcVer {{mc_ver}} '
+    rf'--mappingsVer {{mappings_ver}} --notch')
 
 
 def check_pyinstaller_env() -> bool:
@@ -39,3 +40,20 @@ def check_pyinstaller_env() -> bool:
 
 def get_java_home_from_env() -> str:
     return os.environ.get('JAVA_HOME', '')
+
+
+def get_path_to_java(java_home: str) -> str:
+    java = os.path.join(java_home, 'bin', 'java')
+    if os.path.exists(java):
+        return f'"{java}"'
+    java += '.exe'
+    if os.path.exists(java):
+        return f'"{java}"'
+    raise FileNotFoundError('Cannot find jvm in provided path!')
+
+
+def format_decompiler_command(cmd: str,
+                              java_home: str | os.PathLike,
+                              path_to_jar: str | os.PathLike,
+                              out_path: str | os.PathLike, ) -> str:
+    return cmd.format(java=get_path_to_java(java_home), path_to_jar=path_to_jar, out_path=out_path)

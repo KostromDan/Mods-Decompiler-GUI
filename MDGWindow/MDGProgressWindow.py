@@ -4,7 +4,6 @@ import logging
 import sys
 from typing import Callable, Optional
 
-from MDGUi.generated.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 from PySide6.QtCore import QThread, Signal
 from PySide6.QtGui import QTextCursor, QColor, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QMessageBox, QProgressBar
@@ -16,6 +15,7 @@ from MDGLogic.DeobfuscationThread import DeobfuscationThread, FailLogic
 from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
+from MDGUi.generated.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 from MDGUtil import FileUtils
 from MDGUtil.MDGLogger import MDGLogger
 from MDGWindow.MDGResultWindow import MDGResultWindow
@@ -89,7 +89,6 @@ class MDGProgressWindow(QMainWindow):
                      thread_class: QThread.__class__,
                      progress_bar: QProgressBar,
                      on_finished: Callable,
-                     critical_signal: Signal = None,
                      thread_signals: dict[str: Callable] = None) -> Optional[QThread]:
         if not self.isEnabled():
             return
@@ -101,17 +100,15 @@ class MDGProgressWindow(QMainWindow):
         thread.progress.connect(self.set_progress)
         thread.progress_bar.connect(self.update_progress_bar)
         thread.finished.connect(on_finished)
-        if critical_signal is None:
-            thread.critical_signal.connect(self.critical_signal)
-        else:
-            thread.critical_signal.connect(critical_signal)
+        thread.critical_signal.connect(self.critical_signal)
+
         for signal, func in thread_signals.items():
             getattr(thread, signal).connect(func)
         thread.start()
         return thread
 
     def start(self) -> None:
-        self.start_thread(InitialisationThread, self.ui.init_progress_bar, self.copy_mods, self.decomp_cmd_check_failed)
+        self.start_thread(InitialisationThread, self.ui.init_progress_bar, self.copy_mods)
 
     @only_if_window_active
     def copy_mods(self) -> None:
@@ -177,16 +174,11 @@ class MDGProgressWindow(QMainWindow):
     def update_progress_bar(self, value: int) -> None:
         self.current_progress_bar.setValue(value)
 
-    def critical_signal(self, title: str, text: str, main_window_func: Callable = None) -> None:
-        if main_window_func is None:
-            main_window_func = self.main_window.critical_from_progress_window
-        self.main_window.mb = CriticalMBThread(title, text)
-        self.main_window.mb.critical_signal.connect(main_window_func)
+    def critical_signal(self, title: str, text: str, main_window_widget_name: str = None) -> None:
+        self.main_window.mb = CriticalMBThread(title, text, main_window_widget_name)
+        self.main_window.mb.critical_signal.connect(self.main_window.critical_from_progress_window)
         self.main_window.mb.start()
         self.destroy()
-
-    def decomp_cmd_check_failed(self, title: str, text: str) -> None:
-        self.critical_signal(title, text, self.main_window.decomp_cmd_check_failed)
 
     def failed_deobf_mod(self, mod: str) -> None:
         self.failed_deobfuscation_mods.append(mod)
