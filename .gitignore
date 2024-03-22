@@ -166,3 +166,4 @@ cython_debug/
 /result/*
 /tmp/*
 /logs/*
+/decompiler/data/*

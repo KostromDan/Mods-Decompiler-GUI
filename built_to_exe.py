@@ -12,6 +12,7 @@ def main():
     FileUtils.remove_folder('dist')
     FileUtils.remove_folder(PathUtils.RESULT_FOLDER_PATH)
     FileUtils.remove_folder(PathUtils.TMP_FOLDER_PATH)
+    FileUtils.remove_folder(os.path.join(PathUtils.DECOMPILER_FOLDER_PATH, 'data'))
     file_name = f'MDG_{VERSION}'
     file_name_with_extension = file_name + '.exe'
     os.system(f'.venv\\Scripts\\activate && pyinstaller.exe MDG.py --onefile --name {file_name}')
