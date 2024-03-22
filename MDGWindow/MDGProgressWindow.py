@@ -4,6 +4,7 @@ import logging
 import sys
 from typing import Callable, Optional
 
+from MDGUi.generated.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 from PySide6.QtCore import QThread, Signal
 from PySide6.QtGui import QTextCursor, QColor, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QMessageBox, QProgressBar
@@ -15,7 +16,6 @@ from MDGLogic.DeobfuscationThread import DeobfuscationThread, FailLogic
 from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
-from MDGUi.generated.Ui_MDGProgressWindow import Ui_MDGProgressWindow
 from MDGUtil import FileUtils
 from MDGUtil.MDGLogger import MDGLogger
 from MDGWindow.MDGResultWindow import MDGResultWindow

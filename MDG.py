@@ -2,9 +2,9 @@ import faulthandler
 import multiprocessing
 import sys
 
+from MDGUi.generate_ui import generate_ui
 from PySide6.QtWidgets import QApplication
 
-from MDGUi.generate_ui import generate_ui
 from MDGUtil import PathUtils
 from MDGUtil.MDGLogger import MDGLogger
 

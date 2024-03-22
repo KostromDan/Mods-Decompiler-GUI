@@ -1,20 +1,18 @@
 # This Python file uses the following encoding: utf-8
-import functools
 import multiprocessing
 import os
-import pprint
 import sys
 import zipfile
 from collections import defaultdict, OrderedDict
 from typing import Any, Optional
 
 import psutil
+from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from PySide6.QtCore import QMimeData, QCoreApplication, QTimer
 from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QFileSystemModel, QCompleter, QWidget, QLineEdit, \
     QSlider, QSpinBox, QPushButton
 
-from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from MDGUtil import UiUtils, PathUtils, BON2Utils
 from MDGUtil.LocalConfig import LocalConfig
 from MDGWindow.MDGHelpWindow import MDGHelpWindow
@@ -71,7 +69,6 @@ class MDGMainWindow(QMainWindow):
 
         self.ui.mdk_path_line_edit.textChanged.connect(self.mdk_line_edit_changed)
 
-        # added to set the file system completer for mods_path_line_edit
         self.set_path_completer(self.ui.mods_path_line_edit)
         self.set_path_completer(self.ui.mdk_path_line_edit)
 
@@ -160,7 +157,7 @@ class MDGMainWindow(QMainWindow):
         self.check_widgets_visibility()
         self.adjust_min_height()
 
-    def bon2_version_changed(self, value) -> None:
+    def bon2_version_changed(self, value: str) -> None:
         self.ui.bon2_mappings_combo_box.clear()
         self.ui.bon2_mappings_combo_box.addItems(self.bon2_mappings[value])
 
