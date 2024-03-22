@@ -7,12 +7,12 @@ from collections import defaultdict, OrderedDict
 from typing import Any, Optional
 
 import psutil
-from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from PySide6.QtCore import QMimeData, QCoreApplication, QTimer
 from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QFileSystemModel, QCompleter, QWidget, QLineEdit, \
     QSlider, QSpinBox, QPushButton
 
+from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from MDGUtil import UiUtils, PathUtils, BON2Utils
 from MDGUtil.LocalConfig import LocalConfig
 from MDGWindow.MDGHelpWindow import MDGHelpWindow
@@ -42,9 +42,9 @@ class MDGMainWindow(QMainWindow):
                                     'It will provide useful information and tips.',
                                     QMessageBox.StandardButton.Ok)
 
-        self.ui.deobf_check_box.stateChanged.connect(self.deobf_checkbox_changed)
-        self.ui.merge_check_box.stateChanged.connect(self.merge_checkbox_changed)
-        self.ui.decomp_check_box.stateChanged.connect(self.decomp_checkbox_changed)
+        self.ui.deobf_check_box.stateChanged.connect(self.check_widgets_visibility)
+        self.ui.merge_check_box.stateChanged.connect(self.check_widgets_visibility)
+        self.ui.decomp_check_box.stateChanged.connect(self.check_widgets_visibility)
 
         self.ui.deobf_algo_radio_safe_mdk.toggled.connect(self.check_widgets_visibility)
         self.ui.deobf_algo_radio_fast_mdk.toggled.connect(self.check_widgets_visibility)
@@ -66,9 +66,9 @@ class MDGMainWindow(QMainWindow):
 
         self.ui.start_button.clicked.connect(self.start_button)
 
-        self.ui.mods_path_line_edit.textChanged.connect(self.mods_line_edit_changed)
+        self.ui.mods_path_line_edit.textChanged.connect(lambda: self.ui.mods_path_line_edit.setStyleSheet(''))
 
-        self.ui.mdk_path_line_edit.textChanged.connect(self.mdk_line_edit_changed)
+        self.ui.mdk_path_line_edit.textChanged.connect(lambda: self.ui.mdk_path_line_edit.setStyleSheet(''))
 
         self.set_path_completer(self.ui.mods_path_line_edit)
         self.set_path_completer(self.ui.mdk_path_line_edit)
@@ -174,7 +174,7 @@ class MDGMainWindow(QMainWindow):
                                         default_value: str) -> None:
         text = line_edit.text()
         reset_bitton.setEnabled(text != default_value)
-        config_name = f"using_default_{line_edit.objectName()}"
+        config_name = f'using_default_{line_edit.objectName()}'
         self.default_cmd_configs[config_name] = line_edit.objectName()
         self.config.set(config_name, text == default_value)
         line_edit.setStyleSheet('')
@@ -392,15 +392,6 @@ class MDGMainWindow(QMainWindow):
         else:
             event.ignore()
 
-    def deobf_checkbox_changed(self, state: int) -> None:
-        self.check_widgets_visibility()
-
-    def decomp_checkbox_changed(self, state: int) -> None:
-        self.check_widgets_visibility()
-
-    def merge_checkbox_changed(self, state: int) -> None:
-        self.check_widgets_visibility()
-
     def closeEvent(self, event: QCloseEvent) -> None:
         self.save_ui_to_config()
         event.accept()
@@ -413,17 +404,11 @@ class MDGMainWindow(QMainWindow):
         fs_completer = QCompleter(fs_model, line_edit)
         line_edit.setCompleter(fs_completer)
 
-    def mods_line_edit_changed(self, text: str) -> None:
-        self.ui.mods_path_line_edit.setStyleSheet('')
-
-    def mdk_line_edit_changed(self, text: str) -> None:
-        self.ui.mdk_path_line_edit.setStyleSheet('')
-
     def adjust_min_height(self) -> None:
         QCoreApplication.processEvents()
         if self.minimumSizeHint().height() != self.height():
             self.resize(self.width(), self.minimumSizeHint().height())
-            QTimer.singleShot(0, self.adjust_min_height)
+            QTimer.singleShot(20, self.adjust_min_height)
 
     def change_visibility_of_widget(self, element: QWidget, visible: bool) -> None:
         was_min_size = self.minimumSizeHint().height() == self.height()
@@ -473,6 +458,8 @@ class MDGMainWindow(QMainWindow):
 
         self.ui.deobf_failed_radio_decompile.setEnabled(decompilation_enabled and not fast_deobf_selected)
         self.ui.deobf_failed_radio_skip.setEnabled(not fast_deobf_selected)
+        self.change_visibility_of_widget(self.ui.deobf_threads_group_box,
+                                         not self.ui.deobf_algo_radio_fast_mdk.isChecked())
 
         """decomp widgets"""
         self.change_visibility_of_widget(self.ui.decomp_threads_group_box, decompilation_enabled)
