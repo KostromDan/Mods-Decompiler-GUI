@@ -174,7 +174,7 @@ class MDGMainWindow(QMainWindow):
                                         default_value: str) -> None:
         text = line_edit.text()
         reset_bitton.setEnabled(text != default_value)
-        config_name = f"using_default_cmd_{line_edit.objectName().split('_')[0]}"
+        config_name = f"using_default_{line_edit.objectName()}"
         self.default_cmd_configs[config_name] = line_edit.objectName()
         self.config.set(config_name, text == default_value)
         line_edit.setStyleSheet('')
