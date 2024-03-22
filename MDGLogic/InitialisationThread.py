@@ -88,7 +88,7 @@ class InitialisationThread(AbstractMDGThread):
                                                                             java_home,
                                                                             PathUtils.TEST_MOD_PATH,
                                                                             PathUtils.TMP_DECOMPILER_TEST_PATH))
-                print(decomp_cmd_formatted)
+
                 self.cmd = subprocess.Popen(decomp_cmd_formatted, shell=True,
                                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 cmd_analyse_thread = SubprocessOutsAnalyseThread(self.cmd)

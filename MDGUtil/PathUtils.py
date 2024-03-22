@@ -52,6 +52,12 @@ def get_path_to_java(java_home: str) -> str:
     raise FileNotFoundError('Cannot find jvm in provided path!')
 
 
+def get_env_with_patched_java_home(java_home: str) -> dict[str, str]:
+    env = os.environ.copy()
+    env['JAVA_HOME'] = java_home
+    return env
+
+
 def format_decompiler_command(cmd: str,
                               java_home: str | os.PathLike,
                               path_to_jar: str | os.PathLike,

@@ -64,10 +64,12 @@ def deobfuscate(mod_path: str | os.PathLike,
     shutil.copy(mod_path, os.path.join(current_mdk_path, 'libs'))
     current_mod_deobf_path = os.path.join(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER,
                                           folder_name_in_gradle_cache)
-    env = os.environ.copy()
-    env['JAVA_HOME'] = java_home
+
     with lock:
-        cmd = subprocess.Popen(['gradlew.bat', 'compileJava'], env=env, cwd=current_mdk_path, shell=True)
+        cmd = subprocess.Popen(['gradlew.bat', 'compileJava'],
+                               env=PathUtils.get_env_with_patched_java_home(java_home),
+                               cwd=current_mdk_path,
+                               shell=True)
         cmd_pid.value = cmd.pid
     cmd.wait()
 

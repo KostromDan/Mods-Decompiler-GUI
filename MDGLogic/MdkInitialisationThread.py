@@ -85,11 +85,14 @@ class MdkInitialisationThread(AbstractMDGThread):
         self.progress.emit(30, 'Started initialisation of mdk.')
         logging.info('Started initialisation of mdk.')
         logging.warning('If you initializing mdk of this version first time on you pc, it can take some time.')
-        env = os.environ.copy()
-        env['JAVA_HOME'] = self.serialized_widgets['mdk_java_home_line_edit']['text']
-        self.cmd = subprocess.Popen(['gradlew.bat', 'compileJava'], cwd=PathUtils.MERGED_MDK_PATH, shell=True,
-                                    env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+        self.cmd = subprocess.Popen(['gradlew.bat', 'compileJava'],
+                                    cwd=PathUtils.MERGED_MDK_PATH,
+                                    shell=True,
+                                    env=PathUtils.get_env_with_patched_java_home(
+                                        self.serialized_widgets['mdk_java_home_line_edit']['text']),
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE)
         cmd_out_analyse_thread = SubprocessOutsAnalyseThread(self.cmd, stderr=sys.stdout, err_logger=logging.info)
         cmd_out_analyse_thread.start()
         cmd_out_analyse_thread.join()

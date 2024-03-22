@@ -19,6 +19,7 @@ class DecompilationThread(AbstractDeobfDecompThread):
         result_folder = os.path.join(PathUtils.DECOMPILED_MODS_PATH,
                                      os.path.basename(self.mod_path.removesuffix('.jar')))
         FileUtils.create_folder(result_folder)
+
         java_home = self.serialized_widgets['decompiler_java_home_line_edit']['text']
         decomp_cmd_formatted = (PathUtils.format_decompiler_command(decomp_cmd,
                                                                     java_home,
