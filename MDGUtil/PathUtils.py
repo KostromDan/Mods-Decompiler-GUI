@@ -74,14 +74,6 @@ def get_path_to_java(java_home: str) -> str:
     raise FileNotFoundError("Can't find JVM in provided path!")
 
 
-def is_valid_java_home(java_home: str) -> bool:
-    try:
-        get_path_to_java(java_home)
-        return True
-    except FileNotFoundError:
-        return False
-
-
 def get_env_with_patched_java_home(java_home: str) -> dict[str, str]:
     env = os.environ.copy()
     env['JAVA_HOME'] = java_home
