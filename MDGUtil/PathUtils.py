@@ -31,7 +31,7 @@ MERGED_MDK_SRC_PATH = os.path.join(MERGED_MDK_PATH, 'src', 'main')
 MERGED_MDK_RESOURCES_PATH = os.path.join(MERGED_MDK_SRC_PATH, 'resources')
 MERGED_MDK_JAVA_PATH = os.path.join(MERGED_MDK_SRC_PATH, 'java')
 
-DEFAULT_DECOMPILER_CMD = rf'{{java}} -jar {DECOMPILER_JAR_PATH} -dgs=1 -din=1 {{path_to_jar}} {{out_path}}'
+DEFAULT_DECOMPILER_CMD = rf'{{java}} -jar {DECOMPILER_JAR_PATH} -dgs=1 -din=1 -log=WARN {{path_to_jar}} {{out_path}}'
 DEFAULT_BON2_CMD = (
     rf'{{java}} -jar {BON2_PATH} --inputJar {{path_to_jar}} --outputJar {{out_path}} --mcVer {{mc_ver}} '
     rf'--mappingsVer {{mappings_ver}} --notch')
