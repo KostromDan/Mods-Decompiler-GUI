@@ -71,6 +71,7 @@ class CopyThread(AbstractMDGThread):
                         logging.info(f'Found {mod_name} in decompiled_mods.'
                                      f"Current mod list doesn't include it. Removing.")
 
+
             # remove mods from deobfuscated_mods which not in current mods_list
             if os.path.exists(PathUtils.DEOBFUSCATED_MODS_PATH):
                 for mod in os.listdir(PathUtils.DEOBFUSCATED_MODS_PATH):
@@ -78,7 +79,10 @@ class CopyThread(AbstractMDGThread):
                     if mod_name in mods_list:
                         use_cached_deobf.append(mod_name)
                         logging.info(f'Found {mod_name} in deobfuscated mods. Coping skipped.')
-                        os.remove(os.path.join(PathUtils.TMP_MODS_PATH, mod_name))
+                        try:
+                            os.remove(os.path.join(PathUtils.TMP_MODS_PATH, mod_name))
+                        except FileNotFoundError:
+                            pass
                     else:
                         os.remove(os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH, mod))
                         logging.info(f'Found {mod_name} in deobfuscated mods.'

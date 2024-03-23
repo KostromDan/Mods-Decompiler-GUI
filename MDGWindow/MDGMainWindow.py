@@ -164,7 +164,8 @@ class MDGMainWindow(QMainWindow):
         if PathUtils.get_java_home() == '':
             QTimer.singleShot(20, UiUtils.show_java_not_found_message_box)
 
-        self.change_visibility_of_widget(self.ui.commit_after_finish_group_box, False)  # NotImplemented
+        self.change_visibility_of_widget(self.ui.commit_after_finish_group_box, False)  # NotImplemented yet
+        self.change_visibility_of_widget(self.ui.deobf_algo_radio_fast_mdk, False)  # NotImplemented yet
 
     def setup_java_home_combo_box(self, combo_box: QComboBox, line_edit: QLineEdit):
         combo_box.addItems(PathUtils.get_all_java_homes())

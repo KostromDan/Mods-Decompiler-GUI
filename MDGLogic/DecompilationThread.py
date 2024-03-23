@@ -1,4 +1,5 @@
 import json
+import logging
 import os.path
 import subprocess
 import threading
@@ -23,8 +24,8 @@ class DecompilationThread(AbstractDeobfDecompThread):
         java_home = self.serialized_widgets['decompiler_java_home_line_edit']['text']
         decomp_cmd_formatted = (PathUtils.format_decompiler_command(decomp_cmd,
                                                                     java_home,
-                                                                    PathUtils.TEST_MOD_PATH,
-                                                                    PathUtils.TMP_DECOMPILER_TEST_PATH))
+                                                                    self.mod_path,
+                                                                    result_folder))
         self.cmd = subprocess.Popen(decomp_cmd_formatted, shell=True)
         while self.cmd.poll() is None:
             time.sleep(0.1)
