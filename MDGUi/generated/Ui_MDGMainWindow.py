@@ -26,8 +26,9 @@ class Ui_MDGMainWindow(object):
     def setupUi(self, MDGMainWindow):
         if not MDGMainWindow.objectName():
             MDGMainWindow.setObjectName(u"MDGMainWindow")
-        MDGMainWindow.resize(1336, 888)
+        MDGMainWindow.resize(1066, 888)
         MDGMainWindow.setMaximumSize(QSize(16777215, 16777215))
+        MDGMainWindow.setLayoutDirection(Qt.LeftToRight)
         self.action_reset = QAction(MDGMainWindow)
         self.action_reset.setObjectName(u"action_reset")
         self.action_save = QAction(MDGMainWindow)
@@ -66,6 +67,7 @@ class Ui_MDGMainWindow(object):
         self.select_mods_button = QPushButton(self.mods_path_vertical_group_box)
         self.select_mods_button.setObjectName(u"select_mods_button")
         self.select_mods_button.setMinimumSize(QSize(0, 24))
+        self.select_mods_button.setMaximumSize(QSize(44, 16777215))
 
         self.mods_path_horizontal_layout.addWidget(self.select_mods_button)
 
@@ -125,6 +127,7 @@ class Ui_MDGMainWindow(object):
         self.select_mdk_button = QPushButton(self.mdk_path_vertical_group_box)
         self.select_mdk_button.setObjectName(u"select_mdk_button")
         self.select_mdk_button.setMinimumSize(QSize(0, 24))
+        self.select_mdk_button.setMaximumSize(QSize(44, 16777215))
 
         self.mdk_path_horizontal_layout.addWidget(self.select_mdk_button)
 
@@ -212,6 +215,8 @@ class Ui_MDGMainWindow(object):
 
         self.bon2_version_combo_box = QComboBox(self.deobf_algo_group_box)
         self.bon2_version_combo_box.setObjectName(u"bon2_version_combo_box")
+        self.bon2_version_combo_box.setEditable(False)
+        self.bon2_version_combo_box.setMaxVisibleItems(10)
 
         self.horizontalLayout_10.addWidget(self.bon2_version_combo_box)
 
@@ -579,8 +584,16 @@ class Ui_MDGMainWindow(object):
 
         self.horizontalLayout_15.addWidget(self.bon2_java_home_line_edit)
 
+        self.bon2_java_home_combo_box = QComboBox(self.bon2_java_home_group_box)
+        self.bon2_java_home_combo_box.setObjectName(u"bon2_java_home_combo_box")
+        self.bon2_java_home_combo_box.setMaximumSize(QSize(18, 16777215))
+        self.bon2_java_home_combo_box.setLayoutDirection(Qt.RightToLeft)
+
+        self.horizontalLayout_15.addWidget(self.bon2_java_home_combo_box)
+
         self.bon2_java_home_select_button = QPushButton(self.bon2_java_home_group_box)
         self.bon2_java_home_select_button.setObjectName(u"bon2_java_home_select_button")
+        self.bon2_java_home_select_button.setMaximumSize(QSize(44, 16777215))
 
         self.horizontalLayout_15.addWidget(self.bon2_java_home_select_button)
 
@@ -620,8 +633,16 @@ class Ui_MDGMainWindow(object):
 
         self.horizontalLayout_9.addWidget(self.mdk_java_home_line_edit)
 
+        self.mdk_java_home_combo_box = QComboBox(self.mdk_java_home_group_box)
+        self.mdk_java_home_combo_box.setObjectName(u"mdk_java_home_combo_box")
+        self.mdk_java_home_combo_box.setMaximumSize(QSize(18, 16777215))
+        self.mdk_java_home_combo_box.setLayoutDirection(Qt.RightToLeft)
+
+        self.horizontalLayout_9.addWidget(self.mdk_java_home_combo_box)
+
         self.mdk_java_home_select_button = QPushButton(self.mdk_java_home_group_box)
         self.mdk_java_home_select_button.setObjectName(u"mdk_java_home_select_button")
+        self.mdk_java_home_select_button.setMaximumSize(QSize(44, 16777215))
 
         self.horizontalLayout_9.addWidget(self.mdk_java_home_select_button)
 
@@ -661,8 +682,16 @@ class Ui_MDGMainWindow(object):
 
         self.horizontalLayout_14.addWidget(self.decompiler_java_home_line_edit)
 
+        self.decompiler_java_home_combo_box = QComboBox(self.decompiler_java_home_group_box)
+        self.decompiler_java_home_combo_box.setObjectName(u"decompiler_java_home_combo_box")
+        self.decompiler_java_home_combo_box.setMaximumSize(QSize(18, 16777215))
+        self.decompiler_java_home_combo_box.setLayoutDirection(Qt.RightToLeft)
+
+        self.horizontalLayout_14.addWidget(self.decompiler_java_home_combo_box)
+
         self.decompiler_java_home_select_button = QPushButton(self.decompiler_java_home_group_box)
         self.decompiler_java_home_select_button.setObjectName(u"decompiler_java_home_select_button")
+        self.decompiler_java_home_select_button.setMaximumSize(QSize(44, 16777215))
 
         self.horizontalLayout_14.addWidget(self.decompiler_java_home_select_button)
 
@@ -771,7 +800,7 @@ class Ui_MDGMainWindow(object):
         MDGMainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGMainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1336, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1066, 22))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         MDGMainWindow.setMenuBar(self.menubar)

@@ -1,7 +1,10 @@
 import os
+import platform
 import sys
 
 MINECRAFT_FORGE_DOWNLOADS_PAGE = 'https://files.minecraftforge.net/net/minecraftforge/forge/'
+ADOPTIUM_DOWNLOADS_PAGE = ('https://adoptium.net/temurin/releases/'
+                           f'?version=18&package=jdk&arch=x{platform.architecture()[0].removesuffix('bit')}')
 
 FORGE_GRADLE_DEOBF_CACHE_FOLDER = os.path.join(os.path.expanduser('~'),
                                                '.gradle',
@@ -38,8 +41,27 @@ def check_pyinstaller_env() -> bool:
     return getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS')
 
 
-def get_java_home_from_env() -> str:
-    return os.environ.get('JAVA_HOME', '')
+def get_all_java_homes() -> list[str]:
+    java_homes = list()
+    java_home = os.environ.get('JAVA_HOME', '')
+    if java_home != '':
+        java_homes.append(java_home)
+    try:
+        paths = os.environ['PATH'].split(os.pathsep)
+        for path in paths:
+            java_path = os.path.join(path, 'java.exe')
+            if os.path.exists(java_path):
+                java_home = os.path.dirname(os.path.dirname(java_path))
+                if java_home not in java_homes:
+                    java_homes.append(java_home)
+    except KeyError:
+        pass
+    return java_homes
+
+
+def get_java_home() -> str:
+    java_homes = get_all_java_homes()
+    return java_homes[0] if java_homes else ''
 
 
 def get_path_to_java(java_home: str) -> str:
@@ -49,7 +71,15 @@ def get_path_to_java(java_home: str) -> str:
     java += '.exe'
     if os.path.exists(java):
         return f'"{java}"'
-    raise FileNotFoundError('Cannot find jvm in provided path!')
+    raise FileNotFoundError("Can't find JVM in provided path!")
+
+
+def is_valid_java_home(java_home: str) -> bool:
+    try:
+        get_path_to_java(java_home)
+        return True
+    except FileNotFoundError:
+        return False
 
 
 def get_env_with_patched_java_home(java_home: str) -> dict[str, str]:

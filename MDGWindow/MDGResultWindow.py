@@ -57,11 +57,11 @@ class MDGResultWindow(QMainWindow):
 
     def intellij_idea_button(self) -> None:
         try:
-            subprocess.Popen(['idea64.exe', PathUtils.MERGED_MDK_PATH])
+            subprocess.Popen(['idea', PathUtils.MERGED_MDK_PATH])
         except FileNotFoundError:
             QMessageBox.warning(self, 'IntelliJ IDEA not found',
                                 f"Can't open {PathUtils.MERGED_MDK_PATH} as project in IntelliJ IDEA\n"
-                                'due to "idea64.exe" not found!',
+                                'due to "idea" not found!',
                                 QMessageBox.StandardButton.Ok)
 
     def close_button(self) -> None:

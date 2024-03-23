@@ -7,10 +7,10 @@ from collections import defaultdict, OrderedDict
 from typing import Any, Optional
 
 import psutil
-from PySide6.QtCore import QMimeData, QCoreApplication, QTimer
-from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent
+from PySide6.QtCore import QMimeData, QCoreApplication, QTimer, Qt
+from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent, QFontMetrics
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QFileSystemModel, QCompleter, QWidget, QLineEdit, \
-    QSlider, QSpinBox, QPushButton
+    QSlider, QSpinBox, QPushButton, QComboBox
 
 from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from MDGUtil import UiUtils, PathUtils, BON2Utils
@@ -113,18 +113,21 @@ class MDGMainWindow(QMainWindow):
                 'line_edit': self.ui.mdk_java_home_line_edit,
                 'select_button': self.ui.mdk_java_home_select_button,
                 'reset_button': self.ui.mdk_java_home_reset_button,
+                'combo_box': self.ui.mdk_java_home_combo_box,
             },
             self.ui.bon2_java_home_group_box: {
                 'check_box': self.ui.bon2_java_home_check_box,
                 'line_edit': self.ui.bon2_java_home_line_edit,
                 'select_button': self.ui.bon2_java_home_select_button,
                 'reset_button': self.ui.bon2_java_home_reset_button,
+                'combo_box': self.ui.bon2_java_home_combo_box,
             },
             self.ui.decompiler_java_home_group_box: {
                 'check_box': self.ui.decompiler_java_home_check_box,
                 'line_edit': self.ui.decompiler_java_home_line_edit,
                 'select_button': self.ui.decompiler_java_home_select_button,
                 'reset_button': self.ui.decompiler_java_home_reset_button,
+                'combo_box': self.ui.decompiler_java_home_combo_box,
             }
         }
         for group_box, data in self.java_home_dict.items():
@@ -132,13 +135,14 @@ class MDGMainWindow(QMainWindow):
             self.set_path_completer(data['line_edit'])
             self.setup_line_edit_resettable_pair(data['line_edit'],
                                                  data['reset_button'],
-                                                 PathUtils.get_java_home_from_env())
-            data['line_edit'].setText(PathUtils.get_java_home_from_env())
+                                                 PathUtils.get_java_home())
+            data['line_edit'].setText(PathUtils.get_java_home())
             self.setup_select_button(data['select_button'],
                                      data['line_edit'],
                                      'Select JAVA_HOME folder',
                                      QFileDialog.getExistingDirectory,
                                      QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+            self.setup_java_home_combo_box(data['combo_box'], data['line_edit'])
 
         self.setup_line_edit_resettable_pair(self.ui.decomp_cmd_line_edit,
                                              self.ui.decomp_cmd_reset_button,
@@ -156,6 +160,25 @@ class MDGMainWindow(QMainWindow):
         self.load_ui_from_config()
         self.check_widgets_visibility()
         self.adjust_min_height()
+
+        if PathUtils.get_java_home() == '':
+            QTimer.singleShot(20, UiUtils.show_java_not_found_message_box)
+
+        self.change_visibility_of_widget(self.ui.commit_after_finish_group_box, False)  # NotImplemented
+
+    def setup_java_home_combo_box(self, combo_box: QComboBox, line_edit: QLineEdit):
+        combo_box.addItems(PathUtils.get_all_java_homes())
+        font_metrics = QFontMetrics(combo_box.font())
+        longest_width = 0
+        for index in range(combo_box.count()):
+            item_width = font_metrics.boundingRect(combo_box.itemText(index)).width()
+            longest_width = max(longest_width, item_width)
+        combo_box.view().setFixedWidth(longest_width + 8)
+        combo_box.view().setLayoutDirection(Qt.LeftToRight)
+        combo_box.activated.connect(lambda: self.java_home_combo_box_activated(combo_box, line_edit))
+
+    def java_home_combo_box_activated(self, combo_box: QComboBox, line_edit: QLineEdit):
+        line_edit.setText(combo_box.currentText())
 
     def bon2_version_changed(self, value: str) -> None:
         self.ui.bon2_mappings_combo_box.clear()
@@ -298,6 +321,18 @@ class MDGMainWindow(QMainWindow):
             QMessageBox.warning(self, 'Incorrect configuration', 'With this configuration program will do nothing.',
                                 QMessageBox.StandardButton.Ok)
             return
+        for group_box, data in self.java_home_dict.items():
+            if not data['line_edit'].isEnabled():
+                continue
+            try:
+                PathUtils.get_path_to_java(data['line_edit'].text())
+            except FileNotFoundError:
+                data['line_edit'].setStyleSheet('border: 1px solid red')
+                QMessageBox.warning(self, 'Incorrect JAVA_HOME path',
+                                    "Can't find executable java in this path.\n"
+                                    'Check this JAVA_HOME path.',
+                                    QMessageBox.StandardButton.Ok)
+                return
         self.serialized_widgets = self.serialize_to_dict()
         self.progress_window = MDGProgressWindow(self)
         self.progress_window.show()
@@ -475,12 +510,12 @@ class MDGMainWindow(QMainWindow):
         self.change_visibility_of_widget(self.ui.java_home_main_group_box, at_least_one_java_home_active)
         for group_box, data in self.java_home_dict.items():
             check_box_checked = data['check_box'].isChecked()
-            for widget_name in {'line_edit', 'select_button'}:
+            for widget_name in {'line_edit', 'select_button', 'combo_box'}:
                 data[widget_name].setEnabled(check_box_checked)
-            is_default_line_edit = data['line_edit'].text() == PathUtils.get_java_home_from_env()
+            is_default_line_edit = data['line_edit'].text() == PathUtils.get_java_home()
             data['reset_button'].setEnabled(check_box_checked and not is_default_line_edit)
             if self.sender() == data['check_box'] and not check_box_checked:
-                data['line_edit'].setText(PathUtils.get_java_home_from_env())
+                data['line_edit'].setText(PathUtils.get_java_home())
 
         """fail logic radio buttons"""
         if self.ui.deobf_failed_group_box.isEnabled():
