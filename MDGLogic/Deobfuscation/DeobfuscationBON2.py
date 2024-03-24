@@ -45,7 +45,6 @@ def deobfuscate_bon2(mod_path: str | os.PathLike,
         stderr.value = analyse_thread.err
         stdall.value = analyse_thread.all
     if analyse_thread.err != '':
-        print(mod_original_name, analyse_thread.err)
         try:
             os.remove(out_path_with_file_name)
         except FileNotFoundError:

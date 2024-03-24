@@ -179,6 +179,8 @@ class DeobfuscationThread(AbstractMDGThread):
 
         logging.info('Deobfuscation complete.')
 
+        FileUtils.remove_folder('data')
+
         self.progress.emit(100, 'Deobfuscation complete.')
 
         shutil.rmtree(PathUtils.TMP_DEOBFUSCATION_MDKS_PATH)

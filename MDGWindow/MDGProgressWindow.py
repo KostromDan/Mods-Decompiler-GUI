@@ -66,10 +66,11 @@ class MDGProgressWindow(QMainWindow):
         super().destroy(*args, **kwargs)
 
     def stop_button(self) -> None:
+        if self.completed:
+            self.hide()
+            sys.exit()
         self.main_window.setEnabled(True)
         self.main_window.show()
-        if self.completed:
-            sys.exit()
         self.destroy()
 
     def closeEvent(self, event: QCloseEvent) -> None:
