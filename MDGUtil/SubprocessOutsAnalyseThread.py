@@ -4,14 +4,13 @@ import subprocess
 import sys
 import threading
 from collections import OrderedDict
-from multiprocessing.managers import ValueProxy
 from typing import Callable, TextIO, Any
 
 
 class SubprocessOutAnalyseThread(threading.Thread):
     def __init__(self,
                  cmd: subprocess.Popen,
-                 line_count:multiprocessing.Value,
+                 line_count: multiprocessing.Value,
                  cmd_out: subprocess.PIPE,
                  sys_out: TextIO,
                  logger: Callable[[str], Any],

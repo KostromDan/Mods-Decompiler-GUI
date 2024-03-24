@@ -36,7 +36,7 @@ def deobfuscate_bon2(mod_path: str | os.PathLike,
     with lock:
         cmd = subprocess.Popen(bon2_cmd_formatted, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                shell=True)
-        analyse_thread = SubprocessOutsAnalyseThread(cmd,repeat_output_to_sys_out=True)
+        analyse_thread = SubprocessOutsAnalyseThread(cmd, repeat_output_to_sys_out=True)
         analyse_thread.start()
         cmd_pid.value = cmd.pid
     analyse_thread.join()
