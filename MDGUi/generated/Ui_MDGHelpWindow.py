@@ -17,7 +17,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QHBoxLayout, QMainWindow,
     QMenuBar, QPushButton, QScrollArea, QSizePolicy,
-    QStatusBar, QTextBrowser, QVBoxLayout, QWidget)
+    QTextBrowser, QVBoxLayout, QWidget)
 
 class Ui_MDGHelpWindow(object):
     def setupUi(self, MDGHelpWindow):
@@ -221,9 +221,6 @@ class Ui_MDGHelpWindow(object):
         self.menubar.setObjectName(u"menubar")
         self.menubar.setGeometry(QRect(0, 0, 1200, 22))
         MDGHelpWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(MDGHelpWindow)
-        self.statusbar.setObjectName(u"statusbar")
-        MDGHelpWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MDGHelpWindow)
 

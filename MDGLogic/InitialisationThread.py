@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 import shutil
@@ -14,6 +13,11 @@ from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
 
 
 class ExceptionThread(QThread):
+    """
+    Class created to raise exception without interrupting process.
+    For logging.
+    """
+
     def __init__(self, e: Exception):
         super().__init__()
         self.e = e
@@ -47,23 +51,6 @@ class InitialisationThread(AbstractMDGThread):
                     else:
                         logging.info(f'Clearing {file}')
                         shutil.rmtree(path)
-
-            cache_path = os.path.join(PathUtils.DECOMPILED_MODS_PATH, 'cache.json')
-            if not os.path.exists(cache_path):
-                FileUtils.remove_folder(PathUtils.DECOMPILED_MODS_PATH)
-            try:  # remove mods decompilation of which was interrupted
-                with open(cache_path, 'r') as f:
-                    cache = json.loads(f.read())
-                for mod in os.listdir(PathUtils.DECOMPILED_MODS_PATH):
-                    mod_path = os.path.join(PathUtils.DECOMPILED_MODS_PATH, mod)
-                    if mod not in cache and os.path.isdir(mod_path):
-                        shutil.rmtree(mod_path)
-                        logging.info(f'Found {mod} in decompiled mods.'
-                                     f"But it's not in cache. Removing. "
-                                     f'Maybe decompilation of it was interrupted.')
-            except FileNotFoundError:
-                pass
-
         else:
             FileUtils.clear_result_folders()
         logging.info('Cleared result folders.')
@@ -76,9 +63,14 @@ class InitialisationThread(AbstractMDGThread):
             self.progress.emit(80, 'Checking decompiler/decompiler cmd are correct')
             logging.info('Checking decompiler/decompiler cmd are correct')
             FileUtils.create_folder(PathUtils.TMP_DECOMPILER_TEST_PATH)
+            cmd_analyse_thread = None
             try:
-                decomp_cmd_formatted = decomp_cmd.format(path_to_jar=PathUtils.TEST_MOD_PATH,
-                                                         out_path=PathUtils.TMP_DECOMPILER_TEST_PATH)
+                java_home = self.serialized_widgets['decompiler_java_home_line_edit']['text']
+                decomp_cmd_formatted = (PathUtils.format_decompiler_command(decomp_cmd,
+                                                                            java_home,
+                                                                            PathUtils.TEST_MOD_PATH,
+                                                                            PathUtils.TMP_DECOMPILER_TEST_PATH))
+
                 self.cmd = subprocess.Popen(decomp_cmd_formatted, shell=True,
                                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 cmd_analyse_thread = SubprocessOutsAnalyseThread(self.cmd)
@@ -89,11 +81,20 @@ class InitialisationThread(AbstractMDGThread):
                 thread = ExceptionThread(e)
                 thread.start()
                 time.sleep(0.1)
+                if cmd_analyse_thread is not None and 'has been compiled by a more recent version of the Java' in cmd_analyse_thread.err:
+                    self.critical_signal.emit('Incorrect java version for decompiler',
+                                              'This message indicates that decompiler was '
+                                              'compiled with more recent version of java '
+                                              "than in your JAVA_HOME. Default decompiler uses 17'th version of java. "
+                                              'Try to specify path to recent version of java in JAVA_HOME settings.',
+                                              'decompiler_java_home_line_edit')
+                    return
                 self.critical_signal.emit('Incorrect decompiler cmd',
                                           "With this decompiler/decompiler cmd program won't work.\n"
                                           'This message indicates that {path_to_jar} is not decompiled to {out_path}.\n'
                                           'Check decompiler/decompiler cmd: path, syntax, etc. And try again.\n'
-                                          'Open the lastest log for more details.\n')
+                                          'Open the lastest log for more details.\n',
+                                          'decomp_cmd_line_edit')
                 return
             logging.info('Checked decompiler/decompiler cmd are correct successfully.')
 

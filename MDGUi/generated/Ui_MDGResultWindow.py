@@ -16,14 +16,14 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
-    QMenuBar, QPushButton, QSizePolicy, QStatusBar,
-    QTextEdit, QVBoxLayout, QWidget)
+    QMenuBar, QPushButton, QSizePolicy, QTextEdit,
+    QVBoxLayout, QWidget)
 
 class Ui_MDGResultWindow(object):
     def setupUi(self, MDGResultWindow):
         if not MDGResultWindow.objectName():
             MDGResultWindow.setObjectName(u"MDGResultWindow")
-        MDGResultWindow.resize(800, 434)
+        MDGResultWindow.resize(800, 418)
         MDGResultWindow.setMaximumSize(QSize(16777215, 16777215))
         self.centralwidget = QWidget(MDGResultWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -104,9 +104,6 @@ class Ui_MDGResultWindow(object):
         self.menubar.setObjectName(u"menubar")
         self.menubar.setGeometry(QRect(0, 0, 800, 22))
         MDGResultWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(MDGResultWindow)
-        self.statusbar.setObjectName(u"statusbar")
-        MDGResultWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MDGResultWindow)
 

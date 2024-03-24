@@ -3,11 +3,11 @@ import os.path
 import subprocess
 import sys
 
-from MDGUi.generated.Ui_MDGResultWindow import Ui_MDGResultWindow
 from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 
-from MDGLogic.DeobfuscationMainThread import FailLogic
+from MDGLogic.DeobfuscationThread import FailLogic
+from MDGUi.generated.Ui_MDGResultWindow import Ui_MDGResultWindow
 from MDGUtil import PathUtils
 
 
@@ -30,7 +30,7 @@ class MDGResultWindow(QMainWindow):
         self.ui.decompiled_mods_button.clicked.connect(lambda e: self.open_folder(PathUtils.DECOMPILED_MODS_PATH))
         self.ui.merged_mdk_button.clicked.connect(lambda e: self.open_folder(PathUtils.MERGED_MDK_PATH))
         self.ui.intellij_idea_button.clicked.connect(self.intellij_idea_button)
-        self.ui.exit_button.clicked.connect(sys.exit)
+        self.ui.exit_button.clicked.connect(self.exit_button)
         self.ui.close_button.clicked.connect(self.close_button)
 
         if self.progress_window.failed_deobfuscation_mods or self.progress_window.failed_decompilation_mods:
@@ -39,7 +39,7 @@ class MDGResultWindow(QMainWindow):
                     case FailLogic.SKIP:
                         self.append_logger('orange',
                                            f'Finished deobfuscation of {mod_name} with error. '
-                                           f'Mod was be skipped.')
+                                           f'Mod was skipped.')
 
                     case FailLogic.DECOMPILE:
                         self.append_logger('orange',
@@ -68,6 +68,10 @@ class MDGResultWindow(QMainWindow):
         self.progress_window.setEnabled(True)
         self.progress_window.show()
         self.destroy()
+
+    def exit_button(self) -> None:
+        self.destroy()
+        sys.exit()
 
     def append_logger(self, color: str, msg: str) -> None:
         cursor = self.ui.result_text_edit.textCursor()

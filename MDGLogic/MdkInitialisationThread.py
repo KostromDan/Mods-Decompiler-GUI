@@ -85,21 +85,32 @@ class MdkInitialisationThread(AbstractMDGThread):
         self.progress.emit(30, 'Started initialisation of mdk.')
         logging.info('Started initialisation of mdk.')
         logging.warning('If you initializing mdk of this version first time on you pc, it can take some time.')
-        self.cmd = subprocess.Popen(['gradlew.bat', 'compileJava'], cwd=PathUtils.MERGED_MDK_PATH, shell=True,
-                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+        self.cmd = subprocess.Popen(['gradlew.bat', 'compileJava'],
+                                    cwd=PathUtils.MERGED_MDK_PATH,
+                                    shell=True,
+                                    env=PathUtils.get_env_with_patched_java_home(
+                                        self.serialized_widgets['mdk_java_home_line_edit']['text']),
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE)
         cmd_out_analyse_thread = SubprocessOutsAnalyseThread(self.cmd, stderr=sys.stdout, err_logger=logging.info)
         cmd_out_analyse_thread.start()
         cmd_out_analyse_thread.join()
 
         if 'BUILD SUCCESSFUL' not in cmd_out_analyse_thread.out:
-            if 'Could not determine java version from' in cmd_out_analyse_thread.err:
+            version_errors = ['Could not determine java version from',
+                              'java.lang.ExceptionInInitializerError (no error message)']
+            if any(error in cmd_out_analyse_thread.err for error in version_errors):
                 self.critical_signal.emit('Wrong java version',
-                                          'MDK init failed due to wrong java version.\n'
-                                          'Check what your java version is fit for this MDK.')
+                                          'MDK init failed due to wrong JAVA_HOME.\n'
+                                          'Try to specify JAVA_HOME that fit for this MDK in '
+                                          'JAVA_HOME settings.',
+                                          'mdk_java_home_line_edit')
             else:
-                self.critical_signal.emit('MDK init failed', 'MDK init failed.\n'
-                                                             'Check the lastest log for more details.')
+                self.critical_signal.emit('MDK init failed',
+                                          'MDK init failed.\n'
+                                          'Check the lastest log for more details.',
+                                          None)
 
         logging.info('Finished initialisation of mdk.')
 

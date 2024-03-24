@@ -633,7 +633,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

@@ -17,14 +17,14 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QHBoxLayout, QLabel,
     QMainWindow, QMenuBar, QPushButton, QSizePolicy,
-    QStatusBar, QTextBrowser, QVBoxLayout, QWidget)
+    QTextBrowser, QVBoxLayout, QWidget)
 from . import resources_rc
 
 class Ui_MDGMdkWindow(object):
     def setupUi(self, MDGMdkWindow):
         if not MDGMdkWindow.objectName():
             MDGMdkWindow.setObjectName(u"MDGMdkWindow")
-        MDGMdkWindow.resize(1380, 930)
+        MDGMdkWindow.resize(1380, 909)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -88,9 +88,6 @@ class Ui_MDGMdkWindow(object):
         self.menubar.setObjectName(u"menubar")
         self.menubar.setGeometry(QRect(0, 0, 1380, 22))
         MDGMdkWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(MDGMdkWindow)
-        self.statusbar.setObjectName(u"statusbar")
-        MDGMdkWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MDGMdkWindow)
 

@@ -1,14 +1,16 @@
 import faulthandler
+import multiprocessing
 import sys
 
+from MDGUi.generate_ui import generate_ui
 from PySide6.QtWidgets import QApplication
 
-from MDGUi.generate_ui import generate_ui
 from MDGUtil import PathUtils
 from MDGUtil.MDGLogger import MDGLogger
 
 if __name__ == '__main__':
     faulthandler.enable()
+    multiprocessing.freeze_support()
 
     if not PathUtils.check_pyinstaller_env():
         generate_ui()
