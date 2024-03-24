@@ -158,6 +158,7 @@ class MDGMainWindow(QMainWindow):
         self.ui.bon2_version_combo_box.addItems(self.bon2_mappings.keys())
 
         self.change_visibility_of_widget(self.ui.commit_after_finish_group_box, False)  # NotImplemented yet
+        self.change_visibility_of_widget(self.ui.deobf_algo_radio_bon2, False)  # NotImplemented yet
         self.change_visibility_of_widget(self.ui.deobf_algo_radio_fast_mdk, False)  # NotImplemented yet
 
         self.load_ui_from_config()
