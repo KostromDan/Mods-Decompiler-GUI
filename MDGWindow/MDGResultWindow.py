@@ -75,6 +75,7 @@ class MDGResultWindow(QMainWindow):
 
     def closeEvent(self, event: QCloseEvent) -> None:
         event.accept()
+        self.hide()
         sys.exit()
 
     def append_logger(self, color: str, msg: str) -> None:
