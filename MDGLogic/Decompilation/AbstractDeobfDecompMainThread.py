@@ -3,7 +3,7 @@ from typing import Optional, Any
 from PySide6.QtCore import Signal
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
-from MDGLogic.DecompilationThread import DecompilationThread
+from MDGLogic.Decompilation.DecompilationThread import DecompilationThread
 
 
 class AbstractDeobfDecompMainThread(AbstractMDGThread):

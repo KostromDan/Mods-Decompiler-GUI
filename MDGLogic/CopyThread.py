@@ -67,7 +67,7 @@ class CopyThread(AbstractMDGThread):
                 cache = json.loads(f.read())
             for mod in os.listdir(PathUtils.DEOBFUSCATED_MODS_PATH):
                 mod_path = os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH, mod)
-                if (mod.removesuffix('.jar').removesuffix('_mapped_official') not in cache and
+                if (mod.removesuffix('.jar').removesuffix('_mapped') not in cache and
                         not os.path.basename(mod_path).endswith('.json')):
                     os.remove(mod_path)
                     logging.info(f'Found {mod} in deobfuscated mods.'
@@ -86,9 +86,9 @@ class CopyThread(AbstractMDGThread):
                     cache = json.loads(f.read())
                 for mod in os.listdir(PathUtils.DECOMPILED_MODS_PATH):
                     mod_path = os.path.join(PathUtils.DECOMPILED_MODS_PATH, mod)
-                    mod_name_without_jar = mod.removesuffix('.jar').removesuffix('_mapped_official')
+                    mod_name_without_jar = mod.removesuffix('.jar').removesuffix('_mapped')
                     mod_name_with_jar = mod_name_without_jar + '.jar'
-                    decompiled_with_deobf = '_mapped_official' in mod
+                    decompiled_with_deobf = '_mapped' in mod
                     deobf_enabled = self.serialized_widgets['deobf_check_box']['isChecked']
                     if mod_name_without_jar.endswith('.json'):
                         continue
@@ -120,7 +120,7 @@ class CopyThread(AbstractMDGThread):
                     cache = json.loads(f.read())
                 for mod in os.listdir(PathUtils.DEOBFUSCATED_MODS_PATH):
                     mod_path = os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH, mod)
-                    mod_name_without_jar = mod.removesuffix('.jar').removesuffix('_mapped_official')
+                    mod_name_without_jar = mod.removesuffix('.jar').removesuffix('_mapped')
                     mod_name_with_jar = mod_name_without_jar + '.jar'
                     if mod_name_without_jar.endswith('.json'):
                         continue

@@ -7,12 +7,12 @@ from collections import defaultdict, OrderedDict
 from typing import Any, Optional
 
 import psutil
+from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from PySide6.QtCore import QMimeData, QCoreApplication, QTimer, Qt
 from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent, QFontMetrics
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QFileSystemModel, QCompleter, QWidget, QLineEdit, \
     QSlider, QSpinBox, QPushButton, QComboBox
 
-from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from MDGUtil import UiUtils, PathUtils, BON2Utils
 from MDGUtil.LocalConfig import LocalConfig
 from MDGWindow.MDGHelpWindow import MDGHelpWindow

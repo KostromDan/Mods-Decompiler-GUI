@@ -61,7 +61,7 @@ def append_cache(cache_path: str | os.PathLike, key: str, value: str) -> None:
             cache = json.loads(cache_file.read())
     except FileNotFoundError:
         cache = dict()
-    key = key.removesuffix('.jar').removesuffix('_mapped_official')
+    key = key.removesuffix('.jar').removesuffix('_mapped')
     cache[key] = value
     with open(cache_path, 'w') as cache_file:
         cache_file.write(json.dumps(cache))
@@ -70,7 +70,7 @@ def append_cache(cache_path: str | os.PathLike, key: str, value: str) -> None:
 def get_original_mod_hash(mod_name: str) -> str:
     with open(PathUtils.TMP_MODS_HASHES_PATH, 'r') as f:
         mod_hashes = json.loads(f.read())
-    return mod_hashes[mod_name.removesuffix('.jar').removesuffix('_mapped_official')]
+    return mod_hashes[mod_name.removesuffix('.jar').removesuffix('_mapped')]
 
 
 def remove_folder(path: str | os.PathLike) -> None:

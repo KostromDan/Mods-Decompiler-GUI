@@ -3,96 +3,18 @@ import multiprocessing
 import os
 import os.path
 import shutil
-import subprocess
-import threading
 import time
-from enum import Enum
-from multiprocessing.managers import ValueProxy
-from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import Signal
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
+from MDGLogic.Deobfuscation.DeobfuscatioUtils import FailLogic, Status, clear_forge_gradle
+from MDGLogic.Deobfuscation.DeobfuscationSafeMdk import deobfuscate_safe_mdk
 from MDGLogic.InitialisationThread import ExceptionThread
-from MDGLogic.MdkInitialisationThread import unzip_and_patch_mdk
 from MDGUtil import FileUtils
 from MDGUtil import PathUtils
 from MDGUtil.SubprocessKiller import kill_subprocess
-
-
-class Status(Enum):
-    INTERRUPTED = -2
-    FAILED = -1
-    CREATED = 0
-    STARTED = 1
-    SUCCESS = 2
-
-
-class FailLogic(Enum):
-    INTERRUPT = 1
-    SKIP = 2
-    DECOMPILE = 3
-
-
-def clear_forge_gradle():
-    try:
-        for folder in os.listdir(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER):
-            if folder.startswith('local_MDG_'):
-                shutil.rmtree(os.path.join(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER, folder))
-    except FileNotFoundError:
-        logging.warning(f'Could not find {PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER}. Skipping clearing gradle cache.')
-
-
-def deobfuscate(mod_path: str | os.PathLike,
-                mdk_path: str | os.PathLike,
-                out_path: str | os.PathLike,
-                java_home: str | os.PathLike,
-                thread_number: int,
-                lock: threading.Lock,
-                status: ValueProxy[int],
-                cmd_pid: ValueProxy[int]) -> None:
-    with lock:
-        status.value = Status.STARTED
-    mod_original_name = os.path.basename(mod_path)
-    current_mdk_path = os.path.join(PathUtils.TMP_DEOBFUSCATION_MDKS_PATH, f'mdk_{thread_number}')
-    folder_name_in_gradle_cache = f'local_MDG_{thread_number}'
-    unzip_and_patch_mdk(mdk_path,
-                        current_mdk_path,
-                        folder_name_in_gradle_cache,
-                        True)
-    shutil.copy(mod_path, os.path.join(current_mdk_path, 'libs'))
-    current_mod_deobf_path = os.path.join(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER,
-                                          folder_name_in_gradle_cache)
-
-    with lock:
-        cmd = subprocess.Popen(['gradlew.bat', 'compileJava'],
-                               env=PathUtils.get_env_with_patched_java_home(java_home),
-                               cwd=current_mdk_path,
-                               shell=True)
-        cmd_pid.value = cmd.pid
-    cmd.wait()
-
-    path_to_jar_list = list(Path(current_mod_deobf_path).rglob('*.jar'))
-
-    if not path_to_jar_list:
-        return
-
-    path_to_jar = os.path.join(path_to_jar_list[0])
-
-    mod_new_mapped_name = mod_original_name.removesuffix('.jar') + '_mapped_official.jar'
-    new_jar_path = os.path.join(os.path.dirname(path_to_jar), mod_new_mapped_name)
-    try:
-        os.rename(path_to_jar,
-                  new_jar_path)
-    except FileExistsError:
-        pass
-    shutil.copy(new_jar_path, out_path)
-    with lock:
-        status.value = Status.SUCCESS
-        FileUtils.append_cache(PathUtils.DEOBFUSCATED_CACHE_PATH,
-                               mod_original_name,
-                               FileUtils.get_original_mod_hash(mod_original_name))
 
 
 class DeobfuscationThread(AbstractMDGThread):
@@ -195,7 +117,7 @@ class DeobfuscationThread(AbstractMDGThread):
                         'lock': self.lock,
                         'status': manager.Value(int, Status.CREATED),
                         'cmd_pid': manager.Value(int, -1)}
-                    pool.apply_async(deobfuscate,
+                    pool.apply_async(deobfuscate_safe_mdk,
                                      kwds=self.threads_data[thread_number],
                                      callback=lambda x, n=thread_number: self.deobf_callback(n),
                                      error_callback=lambda e, n=thread_number: self.deobf_callback(n, exception=e))

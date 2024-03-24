@@ -3,8 +3,8 @@ import os
 import time
 from typing import Iterator
 
-from MDGLogic.AbstractDeobfDecompMainThread import AbstractDeobfDecompMainThread
-from MDGLogic.DecompilationThread import DecompilationThread
+from MDGLogic.Decompilation.AbstractDeobfDecompMainThread import AbstractDeobfDecompMainThread
+from MDGLogic.Decompilation.DecompilationThread import DecompilationThread
 from MDGUtil import PathUtils, FileUtils
 
 
@@ -14,7 +14,7 @@ def get_mods_iter(use_cached: list) -> Iterator[os.PathLike]:
             yield os.path.join(PathUtils.TMP_MODS_PATH, mod)
     if os.path.exists(PathUtils.DEOBFUSCATED_MODS_PATH):
         for mod in os.listdir(PathUtils.DEOBFUSCATED_MODS_PATH):
-            if mod.removesuffix('_mapped_official.jar') + '.jar' not in use_cached and not mod.endswith('.json'):
+            if mod.removesuffix('_mapped.jar') + '.jar' not in use_cached and not mod.endswith('.json'):
                 yield os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH, mod)
 
 

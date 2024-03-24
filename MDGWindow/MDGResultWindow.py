@@ -3,11 +3,11 @@ import os.path
 import subprocess
 import sys
 
+from MDGUi.generated.Ui_MDGResultWindow import Ui_MDGResultWindow
 from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 
-from MDGLogic.DeobfuscationThread import FailLogic
-from MDGUi.generated.Ui_MDGResultWindow import Ui_MDGResultWindow
+from MDGLogic.Deobfuscation.DeobfuscatioUtils import FailLogic
 from MDGUtil import PathUtils
 
 
