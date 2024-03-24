@@ -60,8 +60,6 @@ class CopyThread(AbstractMDGThread):
         with open(PathUtils.TMP_MODS_HASHES_PATH, 'w') as f:
             f.write(json.dumps(mod_hashes))
 
-
-
         if not os.path.exists(PathUtils.DEOBFUSCATED_CACHE_PATH):
             FileUtils.remove_folder(PathUtils.DEOBFUSCATED_MODS_PATH)
         try:  # remove mods deobfuscation of which was interrupted
@@ -104,8 +102,8 @@ class CopyThread(AbstractMDGThread):
                             cache[mod_name_without_jar] != mod_hashes[mod_name_without_jar]):
                         shutil.rmtree(mod_path)
                         logging.info(f'Found {mod} in decompiled mods.'
-                                     f"But hash is not same with mod from current mod list. Removing. "
-                                     f"Maybe mod changed without changing it's name")
+                                     f'But hash is not same with mod from current mod list. Removing. '
+                                     f"Maybe mod changed without changing it's name.")
                         continue
                     if (mod_name_with_jar in mods_list and ((decompiled_with_deobf and deobf_enabled) or
                                                             (not decompiled_with_deobf and not deobf_enabled))):
@@ -136,7 +134,7 @@ class CopyThread(AbstractMDGThread):
                             cache[mod_name_without_jar] != mod_hashes[mod_name_without_jar]):
                         os.remove(mod_path)
                         logging.info(f'Found {mod} in deobfuscated mods.'
-                                     f"But hash is not same with mod from current mod list. Removing. "
+                                     f'But hash is not same with mod from current mod list. Removing. '
                                      f"Maybe mod changed without changing it's name")
                         continue
                     if mod_name_with_jar in mods_list:

@@ -1,5 +1,3 @@
-import json
-import logging
 import os.path
 import subprocess
 import threading
@@ -45,4 +43,3 @@ class DecompilationThread(AbstractDeobfDecompThread):
                 FileUtils.append_cache(PathUtils.DECOMPILED_CACHE_PATH,
                                        mod_name,
                                        FileUtils.get_original_mod_hash(mod_name))
-

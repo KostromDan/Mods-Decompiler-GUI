@@ -3,11 +3,11 @@ import os.path
 import subprocess
 import sys
 
-from MDGUi.generated.Ui_MDGResultWindow import Ui_MDGResultWindow
 from PySide6.QtGui import QTextCursor, QColor
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 
 from MDGLogic.DeobfuscationThread import FailLogic
+from MDGUi.generated.Ui_MDGResultWindow import Ui_MDGResultWindow
 from MDGUtil import PathUtils
 
 
@@ -68,6 +68,7 @@ class MDGResultWindow(QMainWindow):
         self.progress_window.setEnabled(True)
         self.progress_window.show()
         self.destroy()
+
     def exit_button(self) -> None:
         self.destroy()
         sys.exit()

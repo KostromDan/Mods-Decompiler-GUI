@@ -5,7 +5,7 @@ import sys
 
 MINECRAFT_FORGE_DOWNLOADS_PAGE = 'https://files.minecraftforge.net/net/minecraftforge/forge/'
 ADOPTIUM_DOWNLOADS_PAGE = ('https://adoptium.net/temurin/releases/'
-                           f'?version=18&package=jdk&arch=x{platform.architecture()[0].removesuffix('bit')}')
+                           f"?version=18&package=jdk&arch=x{platform.architecture()[0].removesuffix('bit')}")
 
 FORGE_GRADLE_DEOBF_CACHE_FOLDER = os.path.join(os.path.expanduser('~'),
                                                '.gradle',
