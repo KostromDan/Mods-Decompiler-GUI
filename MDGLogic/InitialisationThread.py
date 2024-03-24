@@ -52,23 +52,6 @@ class InitialisationThread(AbstractMDGThread):
                     else:
                         logging.info(f'Clearing {file}')
                         shutil.rmtree(path)
-
-            cache_path = os.path.join(PathUtils.DECOMPILED_MODS_PATH, 'cache.json')
-            if not os.path.exists(cache_path):
-                FileUtils.remove_folder(PathUtils.DECOMPILED_MODS_PATH)
-            try:  # remove mods decompilation of which was interrupted
-                with open(cache_path, 'r') as f:
-                    cache = json.loads(f.read())
-                for mod in os.listdir(PathUtils.DECOMPILED_MODS_PATH):
-                    mod_path = os.path.join(PathUtils.DECOMPILED_MODS_PATH, mod)
-                    if mod not in cache and os.path.isdir(mod_path):
-                        shutil.rmtree(mod_path)
-                        logging.info(f'Found {mod} in decompiled mods.'
-                                     f"But it's not in cache. Removing. "
-                                     f'Maybe decompilation of it was interrupted.')
-            except FileNotFoundError:
-                pass
-
         else:
             FileUtils.clear_result_folders()
         logging.info('Cleared result folders.')

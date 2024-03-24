@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 import time
@@ -10,17 +9,13 @@ from MDGUtil import PathUtils, FileUtils
 
 
 def get_mods_iter(use_cached: list) -> Iterator[os.PathLike]:
-    try:
+    if os.path.exists(PathUtils.TMP_MODS_PATH):
         for mod in os.listdir(PathUtils.TMP_MODS_PATH):
             yield os.path.join(PathUtils.TMP_MODS_PATH, mod)
-    except FileNotFoundError:
-        pass
-    try:
+    if os.path.exists(PathUtils.DEOBFUSCATED_MODS_PATH):
         for mod in os.listdir(PathUtils.DEOBFUSCATED_MODS_PATH):
-            if mod.removesuffix('_mapped_official.jar') + '.jar' not in use_cached:
+            if mod.removesuffix('_mapped_official.jar') + '.jar' not in use_cached and not mod.endswith('.json'):
                 yield os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH, mod)
-    except FileNotFoundError:
-        pass
 
 
 class DecompilationMainThread(AbstractDeobfDecompMainThread):
@@ -42,12 +37,13 @@ class DecompilationMainThread(AbstractDeobfDecompMainThread):
 
         FileUtils.create_folder(PathUtils.DECOMPILED_MODS_PATH)
 
-        with open(os.path.join(PathUtils.DECOMPILED_MODS_PATH, 'cache.json'), 'w') as f:
-            cache = []
-            for mod in os.listdir(PathUtils.DECOMPILED_MODS_PATH):
-                if os.path.isdir(os.path.join(PathUtils.DECOMPILED_MODS_PATH, mod)):
-                    cache.append(mod)
-            f.write(json.dumps(cache))
+        try:
+            os.remove(PathUtils.DECOMPILED_CACHE_PATH)
+        except FileNotFoundError:
+            pass
+        for mod in os.listdir(PathUtils.DECOMPILED_MODS_PATH):
+            if os.path.isdir(os.path.join(PathUtils.DECOMPILED_MODS_PATH, mod)):
+                FileUtils.append_cache(PathUtils.DECOMPILED_CACHE_PATH, mod, FileUtils.get_original_mod_hash(mod))
 
         while processed_mods_count < mods_to_decomp_count:
             if len(self.threads) < allocated_threads_count and started_mods_count < mods_to_decomp_count:

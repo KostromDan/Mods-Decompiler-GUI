@@ -17,8 +17,9 @@ class DecompilationThread(AbstractDeobfDecompThread):
 
     def run(self) -> None:
         decomp_cmd = self.serialized_widgets['decomp_cmd_line_edit']['text']
+        mod_name = os.path.basename(self.mod_path)
         result_folder = os.path.join(PathUtils.DECOMPILED_MODS_PATH,
-                                     os.path.basename(self.mod_path.removesuffix('.jar')))
+                                     mod_name.removesuffix('.jar'))
         FileUtils.create_folder(result_folder)
 
         java_home = self.serialized_widgets['decompiler_java_home_line_edit']['text']
@@ -41,9 +42,7 @@ class DecompilationThread(AbstractDeobfDecompThread):
         if os.listdir(result_folder) or list(Path(result_folder).rglob('*.java')):
             self.success = True
             with self.cache_lock:
-                cache_path = os.path.join(PathUtils.DECOMPILED_MODS_PATH, 'cache.json')
-                with open(cache_path, 'r') as f:
-                    cache = json.loads(f.read())
-                cache.append(os.path.basename(result_folder))
-                with open(cache_path, 'w') as f:
-                    f.write(json.dumps(cache))
+                FileUtils.append_cache(PathUtils.DECOMPILED_CACHE_PATH,
+                                       mod_name,
+                                       FileUtils.get_original_mod_hash(mod_name))
+

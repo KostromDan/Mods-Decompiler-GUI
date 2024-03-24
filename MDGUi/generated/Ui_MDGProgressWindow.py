@@ -17,8 +17,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
     QMenuBar, QProgressBar, QPushButton, QSizePolicy,
-    QSpacerItem, QStatusBar, QTextEdit, QVBoxLayout,
-    QWidget)
+    QSpacerItem, QTextEdit, QVBoxLayout, QWidget)
 
 class Ui_MDGProgressWindow(object):
     def setupUi(self, MDGProgressWindow):
@@ -149,9 +148,6 @@ class Ui_MDGProgressWindow(object):
         self.menubar.setObjectName(u"menubar")
         self.menubar.setGeometry(QRect(0, 0, 1100, 22))
         MDGProgressWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(MDGProgressWindow)
-        self.statusbar.setObjectName(u"statusbar")
-        MDGProgressWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MDGProgressWindow)
 

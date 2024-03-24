@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>434</height>
+    <height>418</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -144,7 +144,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

@@ -90,6 +90,9 @@ def deobfuscate(mod_path: str | os.PathLike,
     shutil.copy(new_jar_path, out_path)
     with lock:
         status.value = Status.SUCCESS
+        FileUtils.append_cache(PathUtils.DEOBFUSCATED_CACHE_PATH,
+                               mod_original_name,
+                               FileUtils.get_original_mod_hash(mod_original_name))
 
 
 class DeobfuscationThread(AbstractMDGThread):
@@ -171,6 +174,14 @@ class DeobfuscationThread(AbstractMDGThread):
         FileUtils.create_folder(PathUtils.TMP_DEOBFUSCATION_MDKS_PATH)
         FileUtils.create_folder(PathUtils.DEOBFUSCATED_MODS_PATH)
 
+        try:
+            os.remove(PathUtils.DEOBFUSCATED_CACHE_PATH)
+        except FileNotFoundError:
+            pass
+        for mod in os.listdir(PathUtils.DEOBFUSCATED_MODS_PATH):
+            if not os.path.basename(os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH, mod)).endswith('.json'):
+                FileUtils.append_cache(PathUtils.DEOBFUSCATED_CACHE_PATH, mod, FileUtils.get_original_mod_hash(mod))
+
         with multiprocessing.Manager() as manager:
             self.lock = manager.Lock()
             with multiprocessing.Pool(processes=allocated_threads_count) as pool:
@@ -196,12 +207,6 @@ class DeobfuscationThread(AbstractMDGThread):
                             for thread_number, thread_data in self.threads_data.items():
                                 if thread_data['cmd_pid'].value != -1:
                                     kill_subprocess(thread_data['cmd_pid'].value)
-                                if thread_data['status'].value != Status.SUCCESS:
-                                    try:
-                                        os.remove(os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH,
-                                                               os.path.basename(thread_data['mod_path'])))
-                                    except FileNotFoundError:
-                                        pass
                         pool.join()
                         return
                     for thread_number, thread_data in self.threads_data.items():

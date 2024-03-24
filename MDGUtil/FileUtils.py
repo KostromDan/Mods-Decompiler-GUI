@@ -1,4 +1,5 @@
 import filecmp
+import json
 import logging
 import os
 import shutil
@@ -52,6 +53,24 @@ def extract_jars_from_jar(jar_path: str | os.PathLike,
                 if len(path_elements) != 1:
                     shutil.rmtree(os.path.join(extract_to, path_elements[0]))
                 extract_jars_from_jar(new_jar_path, extract_to)  # Extract jar in jar in jar and so on
+
+
+def append_cache(cache_path: str | os.PathLike, key: str, value: str) -> None:
+    try:
+        with open(cache_path, 'r') as cache_file:
+            cache = json.loads(cache_file.read())
+    except FileNotFoundError:
+        cache = dict()
+    key = key.removesuffix('.jar').removesuffix('_mapped_official')
+    cache[key] = value
+    with open(cache_path, 'w') as cache_file:
+        cache_file.write(json.dumps(cache))
+
+
+def get_original_mod_hash(mod_name: str) -> str:
+    with open(PathUtils.TMP_MODS_HASHES_PATH, 'r') as f:
+        mod_hashes = json.loads(f.read())
+    return mod_hashes[mod_name.removesuffix('.jar').removesuffix('_mapped_official')]
 
 
 def remove_folder(path: str | os.PathLike) -> None:
