@@ -1,3 +1,4 @@
+[![Github All Releases](https://img.shields.io/github/downloads/KostromDan/Mods-Decompiler-GUI/total.svg)]()
 # MDG (Mods Decompiler Gui):
 
 ⚠️ WARNING ⚠️: Check license of all mods from mods folder or usage of this tool can be eligible and cause license
