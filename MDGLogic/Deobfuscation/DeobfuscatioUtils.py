@@ -20,6 +20,12 @@ class FailLogic(Enum):
     DECOMPILE = 3
 
 
+class DeobfuscationAlgorithm(Enum):
+    MDK_SAFE = 1
+    MDK_FAST = 2
+    BON2 = 3
+
+
 def clear_forge_gradle():
     try:
         for folder in os.listdir(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER):

@@ -1,25 +1,29 @@
 import logging
+import multiprocessing
 import subprocess
 import sys
 import threading
-import time
+from collections import OrderedDict
+from multiprocessing.managers import ValueProxy
 from typing import Callable, TextIO, Any
-
-from MDGUtil.SubprocessKiller import kill_subprocess
 
 
 class SubprocessOutAnalyseThread(threading.Thread):
     def __init__(self,
                  cmd: subprocess.Popen,
+                 line_count:multiprocessing.Value,
                  cmd_out: subprocess.PIPE,
                  sys_out: TextIO,
-                 logger: Callable[[str], Any]) -> None:
+                 logger: Callable[[str], Any],
+                 repeat_output_to_sys_out: bool) -> None:
         super().__init__()
         self.cmd = cmd
+        self.line_count = line_count
         self.cmd_out = cmd_out
         self.sys_out = sys_out
         self.logger = logger
-        self.out_lines: list[str] = []
+        self.repeat_output_to_sys_out = repeat_output_to_sys_out
+        self.out_lines: dict[int, str] = dict()
         self.current_line: list[str] = []
 
     def run(self) -> None:
@@ -28,13 +32,16 @@ class SubprocessOutAnalyseThread(threading.Thread):
             if symbol == '' and self.cmd.poll() is not None:
                 break
             if symbol != '':
-                # self.sys_out.write(symbol)
-                # self.sys_out.flush()
+                if self.repeat_output_to_sys_out:
+                    self.sys_out.write(symbol)
+                    self.sys_out.flush()
                 self.current_line.append(symbol)
                 if symbol == '\n':
                     line = ''.join(self.current_line).rstrip('\n\r')
                     if line != '':
-                        self.out_lines.append(line)
+                        with self.line_count.get_lock():
+                            self.out_lines[self.line_count.value] = line
+                            self.line_count.value += 1
                         self.logger(line)
                     self.current_line.clear()
 
@@ -46,29 +53,36 @@ class SubprocessOutsAnalyseThread(threading.Thread):
                  stderr: TextIO = sys.stderr,
                  std_logger: Callable[[str], Any] = logging.info,
                  err_logger: Callable[[str], Any] = logging.error,
-                 timeout: float = None,
-                 on_timeout_kill_child: bool = True) -> None:
+                 repeat_output_to_sys_out: bool = False) -> None:
         super().__init__()
         self.cmd = cmd
         self.out = None
         self.err = None
+        self.all = None
         self.stdout = stdout
         self.stderr = stderr
         self.std_logger = std_logger
         self.err_logger = err_logger
-        self.timeout = timeout
-        self.on_timeout_kill_child = on_timeout_kill_child
+        self.repeat_output_to_sys_out = repeat_output_to_sys_out
 
     def run(self) -> None:
-        stdout_thread = SubprocessOutAnalyseThread(self.cmd, self.cmd.stdout, self.stdout, self.std_logger)
-        stderr_thread = SubprocessOutAnalyseThread(self.cmd, self.cmd.stderr, self.stderr, self.err_logger)
+        line_count = multiprocessing.Value('i', 0)
+        stdout_thread = SubprocessOutAnalyseThread(self.cmd, line_count,
+                                                   self.cmd.stdout, self.stdout,
+                                                   self.std_logger, self.repeat_output_to_sys_out)
+        stderr_thread = SubprocessOutAnalyseThread(self.cmd, line_count,
+                                                   self.cmd.stderr, self.stderr,
+                                                   self.err_logger, self.repeat_output_to_sys_out)
         stdout_thread.start()
         stderr_thread.start()
-        if self.timeout is not None:
-            time.sleep(self.timeout)
-            if stdout_thread.is_alive() or stderr_thread.is_alive():
-                kill_subprocess(self.cmd.pid, kill_child=self.on_timeout_kill_child)
         stdout_thread.join()
         stderr_thread.join()
-        self.out = '\n'.join(stdout_thread.out_lines)
-        self.err = '\n'.join(stderr_thread.out_lines)
+        self.out = '\n'.join(OrderedDict(sorted(stdout_thread.out_lines.items(), key=lambda x: x[0])).values())
+        self.err = '\n'.join(OrderedDict(sorted(stderr_thread.out_lines.items(), key=lambda x: x[0])).values())
+        all_dict = dict()
+        all_dict.update(stderr_thread.out_lines)
+        all_dict.update(stdout_thread.out_lines)
+        self.all = '\n'.join(OrderedDict(sorted(all_dict.items(), key=lambda x: x[0])).values())
+        print(self.out)
+        print(self.err)
+        print(self.all)

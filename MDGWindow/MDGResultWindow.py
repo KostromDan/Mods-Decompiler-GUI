@@ -4,7 +4,7 @@ import subprocess
 import sys
 
 from MDGUi.generated.Ui_MDGResultWindow import Ui_MDGResultWindow
-from PySide6.QtGui import QTextCursor, QColor
+from PySide6.QtGui import QTextCursor, QColor, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 
 from MDGLogic.Deobfuscation.DeobfuscatioUtils import FailLogic
@@ -71,6 +71,10 @@ class MDGResultWindow(QMainWindow):
 
     def exit_button(self) -> None:
         self.destroy()
+        sys.exit()
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        event.accept()
         sys.exit()
 
     def append_logger(self, color: str, msg: str) -> None:

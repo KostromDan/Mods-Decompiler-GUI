@@ -8,6 +8,7 @@ from pathlib import Path
 from MDGLogic.Deobfuscation.DeobfuscatioUtils import Status
 from MDGLogic.MdkInitialisationThread import unzip_and_patch_mdk
 from MDGUtil import PathUtils, FileUtils
+from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
 
 
 def deobfuscate_safe_mdk(mod_path: str | os.PathLike,
@@ -17,6 +18,9 @@ def deobfuscate_safe_mdk(mod_path: str | os.PathLike,
                          thread_number: int,
                          lock: threading.Lock,
                          status: ValueProxy[int],
+                         stdout: ValueProxy[str],
+                         stderr: ValueProxy[str],
+                         stdall: ValueProxy[str],
                          cmd_pid: ValueProxy[int]) -> None:
     with lock:
         status.value = Status.STARTED
@@ -35,9 +39,17 @@ def deobfuscate_safe_mdk(mod_path: str | os.PathLike,
         cmd = subprocess.Popen(['gradlew.bat', 'compileJava'],
                                env=PathUtils.get_env_with_patched_java_home(java_home),
                                cwd=current_mdk_path,
-                               shell=True)
+                               shell=True,
+                               stderr=subprocess.PIPE,
+                               stdout=subprocess.PIPE)
+        analyse_thread = SubprocessOutsAnalyseThread(cmd, repeat_output_to_sys_out=True)
+        analyse_thread.start()
         cmd_pid.value = cmd.pid
-    cmd.wait()
+    analyse_thread.join()
+    with lock:
+        stdout.value = analyse_thread.out
+        stderr.value = analyse_thread.err
+        stdall.value = analyse_thread.all
 
     path_to_jar_list = list(Path(current_mod_deobf_path).rglob('*.jar'))
 

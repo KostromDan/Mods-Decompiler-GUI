@@ -102,5 +102,20 @@ def get_env_with_patched_java_home(java_home: str) -> dict[str, str]:
 def format_decompiler_command(cmd: str,
                               java_home: str | os.PathLike,
                               path_to_jar: str | os.PathLike,
-                              out_path: str | os.PathLike, ) -> str:
-    return cmd.format(java=get_path_to_java(java_home), path_to_jar=path_to_jar, out_path=out_path)
+                              out_path: str | os.PathLike) -> str:
+    return cmd.format(java=get_path_to_java(java_home),
+                      path_to_jar=path_to_jar,
+                      out_path=out_path)
+
+
+def format_bon2_command(cmd: str,
+                        java_home: str | os.PathLike,
+                        path_to_jar: str | os.PathLike,
+                        out_path: str | os.PathLike,
+                        version: str,
+                        mappings: str) -> str:
+    return cmd.format(java=get_path_to_java(java_home),
+                      path_to_jar=path_to_jar,
+                      out_path=out_path,
+                      mc_ver=version,
+                      mappings_ver=mappings)
