@@ -67,7 +67,7 @@ class CopyThread(AbstractMDGThread):
                 cache = json.loads(f.read())
             for mod in os.listdir(PathUtils.DEOBFUSCATED_MODS_PATH):
                 mod_path = os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH, mod)
-                if (mod.removesuffix('.jar').removesuffix('_mapped_official') not in cache and
+                if (mod.removesuffix('.jar').removesuffix('_mapped') not in cache and
                         not os.path.basename(mod_path).endswith('.json')):
                     os.remove(mod_path)
                     logging.info(f'Found {mod} in deobfuscated mods.'
@@ -86,32 +86,37 @@ class CopyThread(AbstractMDGThread):
                     cache = json.loads(f.read())
                 for mod in os.listdir(PathUtils.DECOMPILED_MODS_PATH):
                     mod_path = os.path.join(PathUtils.DECOMPILED_MODS_PATH, mod)
-                    mod_name_without_jar = mod.removesuffix('.jar').removesuffix('_mapped_official')
+                    mod_name_without_jar = mod.removesuffix('.jar').removesuffix('_mapped')
                     mod_name_with_jar = mod_name_without_jar + '.jar'
-                    decompiled_with_deobf = '_mapped_official' in mod
+                    decompiled_with_deobf = '_mapped' in mod
                     deobf_enabled = self.serialized_widgets['deobf_check_box']['isChecked']
                     if mod_name_without_jar.endswith('.json'):
                         continue
                     if mod_name_without_jar not in cache:
                         shutil.rmtree(mod_path)
                         logging.info(f'Found {mod} in decompiled mods.'
-                                     f"But it's not in cache. Removing. "
+                                     f"But it's not in cache. Removing from cache. "
                                      f'Maybe decompilation of it was interrupted.')
                         continue
                     if (mod_name_without_jar in mod_hashes and
                             cache[mod_name_without_jar] != mod_hashes[mod_name_without_jar]):
                         shutil.rmtree(mod_path)
                         logging.info(f'Found {mod} in decompiled mods.'
-                                     f'But hash is not same with mod from current mod list. Removing. '
+                                     f'But hash is not same with mod from current mod list. Removing from cache. '
                                      f"Maybe mod changed without changing it's name.")
                         continue
-                    if (mod_name_with_jar in mods_list and ((decompiled_with_deobf and deobf_enabled) or
-                                                            (not decompiled_with_deobf and not deobf_enabled))):
-                        use_cached_decomp.append(mod_name_with_jar)
-                    else:
+                    if mod_name_with_jar not in mods_list:
                         shutil.rmtree(mod_path)
                         logging.info(f'Found {mod_name_with_jar} in decompiled_mods. '
-                                     f"Current mod list doesn't include it. Removing.")
+                                     f"Current mod list doesn't include it. Removing from cache.")
+                        continue
+                    if not ((decompiled_with_deobf and deobf_enabled) or
+                            (not decompiled_with_deobf and not deobf_enabled)):
+                        shutil.rmtree(mod_path)
+                        logging.info(f'Found {mod_name_with_jar} in decompiled_mods. '
+                                     f'But mod was deobfuscated with another settings. Removing from cache.')
+                        continue
+                    use_cached_decomp.append(mod_name_with_jar)
 
             if not os.path.exists(PathUtils.DEOBFUSCATED_CACHE_PATH):
                 FileUtils.remove_folder(PathUtils.DEOBFUSCATED_MODS_PATH)
@@ -120,29 +125,29 @@ class CopyThread(AbstractMDGThread):
                     cache = json.loads(f.read())
                 for mod in os.listdir(PathUtils.DEOBFUSCATED_MODS_PATH):
                     mod_path = os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH, mod)
-                    mod_name_without_jar = mod.removesuffix('.jar').removesuffix('_mapped_official')
+                    mod_name_without_jar = mod.removesuffix('.jar').removesuffix('_mapped')
                     mod_name_with_jar = mod_name_without_jar + '.jar'
                     if mod_name_without_jar.endswith('.json'):
                         continue
                     if mod_name_without_jar not in cache:
                         os.remove(mod_path)
                         logging.info(f'Found {mod} in deobfuscated mods.'
-                                     f"But it's not in cache. Removing. "
+                                     f"But it's not in cache. Removing from cache. "
                                      f'Maybe deobfuscation of it was interrupted.')
                         continue
                     if (mod_name_without_jar in mod_hashes and
                             cache[mod_name_without_jar] != mod_hashes[mod_name_without_jar]):
                         os.remove(mod_path)
                         logging.info(f'Found {mod} in deobfuscated mods.'
-                                     f'But hash is not same with mod from current mod list. Removing. '
+                                     f'But hash is not same with mod from current mod list. Removing from cache. '
                                      f"Maybe mod changed without changing it's name")
                         continue
-                    if mod_name_with_jar in mods_list:
-                        use_cached_deobf.append(mod_name_with_jar)
-                    else:
+                    if mod_name_with_jar not in mods_list:
                         os.remove(mod_path)
                         logging.info(f'Found {mod_name_with_jar} in deobfuscated mods. '
-                                     f"Current mod list doesn't include it. Removing.")
+                                     f"Current mod list doesn't include it. Removing from cache.")
+                        continue
+                    use_cached_deobf.append(mod_name_with_jar)
 
         for mod_name in use_cached_deobf:
             logging.info(f'Found {mod_name} in cache. Removing from tmp folder.')

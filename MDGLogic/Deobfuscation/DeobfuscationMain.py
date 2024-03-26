@@ -3,96 +3,19 @@ import multiprocessing
 import os
 import os.path
 import shutil
-import subprocess
-import threading
 import time
-from enum import Enum
-from multiprocessing.managers import ValueProxy
-from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import Signal
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
+from MDGLogic.Deobfuscation.DeobfuscatioUtils import FailLogic, Status, clear_forge_gradle, DeobfuscationAlgorithm
+from MDGLogic.Deobfuscation.DeobfuscationBON2 import deobfuscate_bon2
+from MDGLogic.Deobfuscation.DeobfuscationSafeMdk import deobfuscate_safe_mdk
 from MDGLogic.InitialisationThread import ExceptionThread
-from MDGLogic.MdkInitialisationThread import unzip_and_patch_mdk
 from MDGUtil import FileUtils
 from MDGUtil import PathUtils
 from MDGUtil.SubprocessKiller import kill_subprocess
-
-
-class Status(Enum):
-    INTERRUPTED = -2
-    FAILED = -1
-    CREATED = 0
-    STARTED = 1
-    SUCCESS = 2
-
-
-class FailLogic(Enum):
-    INTERRUPT = 1
-    SKIP = 2
-    DECOMPILE = 3
-
-
-def clear_forge_gradle():
-    try:
-        for folder in os.listdir(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER):
-            if folder.startswith('local_MDG_'):
-                shutil.rmtree(os.path.join(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER, folder))
-    except FileNotFoundError:
-        logging.warning(f'Could not find {PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER}. Skipping clearing gradle cache.')
-
-
-def deobfuscate(mod_path: str | os.PathLike,
-                mdk_path: str | os.PathLike,
-                out_path: str | os.PathLike,
-                java_home: str | os.PathLike,
-                thread_number: int,
-                lock: threading.Lock,
-                status: ValueProxy[int],
-                cmd_pid: ValueProxy[int]) -> None:
-    with lock:
-        status.value = Status.STARTED
-    mod_original_name = os.path.basename(mod_path)
-    current_mdk_path = os.path.join(PathUtils.TMP_DEOBFUSCATION_MDKS_PATH, f'mdk_{thread_number}')
-    folder_name_in_gradle_cache = f'local_MDG_{thread_number}'
-    unzip_and_patch_mdk(mdk_path,
-                        current_mdk_path,
-                        folder_name_in_gradle_cache,
-                        True)
-    shutil.copy(mod_path, os.path.join(current_mdk_path, 'libs'))
-    current_mod_deobf_path = os.path.join(PathUtils.FORGE_GRADLE_DEOBF_CACHE_FOLDER,
-                                          folder_name_in_gradle_cache)
-
-    with lock:
-        cmd = subprocess.Popen(['gradlew.bat', 'compileJava'],
-                               env=PathUtils.get_env_with_patched_java_home(java_home),
-                               cwd=current_mdk_path,
-                               shell=True)
-        cmd_pid.value = cmd.pid
-    cmd.wait()
-
-    path_to_jar_list = list(Path(current_mod_deobf_path).rglob('*.jar'))
-
-    if not path_to_jar_list:
-        return
-
-    path_to_jar = os.path.join(path_to_jar_list[0])
-
-    mod_new_mapped_name = mod_original_name.removesuffix('.jar') + '_mapped_official.jar'
-    new_jar_path = os.path.join(os.path.dirname(path_to_jar), mod_new_mapped_name)
-    try:
-        os.rename(path_to_jar,
-                  new_jar_path)
-    except FileExistsError:
-        pass
-    shutil.copy(new_jar_path, out_path)
-    with lock:
-        status.value = Status.SUCCESS
-        FileUtils.append_cache(PathUtils.DEOBFUSCATED_CACHE_PATH,
-                               mod_original_name,
-                               FileUtils.get_original_mod_hash(mod_original_name))
 
 
 class DeobfuscationThread(AbstractMDGThread):
@@ -118,6 +41,14 @@ class DeobfuscationThread(AbstractMDGThread):
         elif self.serialized_widgets['deobf_failed_radio_decompile']['isChecked']:
             self.deofb_fail_logic = FailLogic.DECOMPILE
 
+        self.deofb_algo = None
+        if self.serialized_widgets['deobf_algo_radio_safe_mdk']['isChecked']:
+            self.deofb_algo = DeobfuscationAlgorithm.MDK_SAFE
+        elif self.serialized_widgets['deobf_algo_radio_fast_mdk']['isChecked']:
+            self.deofb_algo = DeobfuscationAlgorithm.MDK_FAST
+        elif self.serialized_widgets['deobf_algo_radio_bon2']['isChecked']:
+            self.deofb_algo = DeobfuscationAlgorithm.BON2
+
     def terminate(self) -> None:
         self.terminated = True
 
@@ -141,6 +72,9 @@ class DeobfuscationThread(AbstractMDGThread):
                     os.remove(mod_path)
                 case _:
                     self.threads_data[thread_number]['status'].value = Status.FAILED
+
+                    logging.error(f'Error while deobfuscating {mod_name}. stdout & stderr:\n'
+                                  f"{self.threads_data[thread_number]['stdall'].value}")
                     match self.deofb_fail_logic:
                         case FailLogic.SKIP:
                             logging.warning(f'Finished deobfuscation of {mod_name} with error. '
@@ -188,14 +122,42 @@ class DeobfuscationThread(AbstractMDGThread):
                 for thread_number, mod_name in enumerate(self.mods_list):
                     self.threads_data[thread_number] = {
                         'mod_path': os.path.join(PathUtils.TMP_MODS_PATH, mod_name),
-                        'mdk_path': self.serialized_widgets['mdk_path_line_edit']['text'],
                         'out_path': PathUtils.DEOBFUSCATED_MODS_PATH,
-                        'java_home': self.serialized_widgets['mdk_java_home_line_edit']['text'],
                         'thread_number': thread_number,
                         'lock': self.lock,
                         'status': manager.Value(int, Status.CREATED),
+                        'stdout': manager.Value(str, ''),
+                        'stderr': manager.Value(str, ''),
+                        'stdall': manager.Value(str, ''),
                         'cmd_pid': manager.Value(int, -1)}
-                    pool.apply_async(deobfuscate,
+                    deobf_function = None
+                    match self.deofb_algo:
+                        case DeobfuscationAlgorithm.MDK_SAFE:
+                            deobf_function = deobfuscate_safe_mdk
+                            self.threads_data[thread_number]['mdk_path'] = \
+                                self.serialized_widgets['mdk_path_line_edit']['text']
+                            self.threads_data[thread_number]['java_home'] = \
+                                self.serialized_widgets['mdk_java_home_line_edit']['text']
+                        case DeobfuscationAlgorithm.MDK_FAST:
+                            deobf_function = NotImplemented
+                            self.threads_data[thread_number]['mdk_path'] = \
+                                self.serialized_widgets['mdk_path_line_edit']['text']
+                            self.threads_data[thread_number]['java_home'] = \
+                                self.serialized_widgets['mdk_java_home_line_edit']['text']
+                        case DeobfuscationAlgorithm.BON2:
+                            deobf_function = deobfuscate_bon2
+                            self.threads_data[thread_number]['bon2_cmd'] = \
+                                self.serialized_widgets['bon2_cmd_line_edit']['text']
+                            self.threads_data[thread_number]['bon2_version'] = \
+                                self.serialized_widgets['bon2_version_combo_box']['currentText']
+                            self.threads_data[thread_number]['bon2_mappings'] = \
+                                self.serialized_widgets['bon2_mappings_combo_box']['currentText']
+                            self.threads_data[thread_number]['bon2_path'] = \
+                                self.serialized_widgets['bon2_path_line_edit']['text']
+                            self.threads_data[thread_number]['java_home'] = \
+                                self.serialized_widgets['bon2_java_home_line_edit']['text']
+
+                    pool.apply_async(deobf_function,
                                      kwds=self.threads_data[thread_number],
                                      callback=lambda x, n=thread_number: self.deobf_callback(n),
                                      error_callback=lambda e, n=thread_number: self.deobf_callback(n, exception=e))
@@ -227,4 +189,4 @@ class DeobfuscationThread(AbstractMDGThread):
 
         if not self.serialized_widgets['merge_check_box']['isEnabled'] or not \
                 self.serialized_widgets['merge_check_box']['isChecked']:
-            shutil.rmtree(PathUtils.MERGED_MDK_PATH)
+            FileUtils.remove_folder(PathUtils.MERGED_MDK_PATH)

@@ -14,7 +14,7 @@ FORGE_GRADLE_DEOBF_CACHE_FOLDER = os.path.join(os.path.expanduser('~'),
                                                'deobf_dependencies')
 
 DECOMPILER_FOLDER_PATH = os.path.join('decompiler')
-TEST_MOD_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'decompiler_test_mod.jar')
+TEST_MOD_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'test-mod.jar')
 DECOMPILER_JAR_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'vineflower-1.10.0+local.jar')
 BON2_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'BON2-2.5.1-CUSTOM-all.jar')
 
@@ -22,7 +22,9 @@ TMP_FOLDER_PATH = os.path.join('tmp')
 TMP_MODS_HASHES_PATH = os.path.join(TMP_FOLDER_PATH, 'mods_hashes.json')
 TMP_MODS_PATH = os.path.join(TMP_FOLDER_PATH, 'mods')
 TMP_DECOMPILER_TEST_PATH = os.path.join(TMP_FOLDER_PATH, 'decompiler_test')
+TMP_BON2_TEST_PATH = os.path.join(TMP_FOLDER_PATH, 'bon2_test')
 TMP_DEOBFUSCATION_MDKS_PATH = os.path.join(TMP_FOLDER_PATH, 'deobfuscation_MDKs')
+TMP_DEOBFUSCATION_BON2_PATH = os.path.join(TMP_FOLDER_PATH, 'deobfuscation_bon2')
 
 RESULT_FOLDER_PATH = os.path.join('result')
 DEOBFUSCATED_MODS_PATH = os.path.join(RESULT_FOLDER_PATH, 'deobfuscated_mods')
@@ -37,7 +39,7 @@ MERGED_MDK_JAVA_PATH = os.path.join(MERGED_MDK_SRC_PATH, 'java')
 
 DEFAULT_DECOMPILER_CMD = rf'{{java}} -jar {DECOMPILER_JAR_PATH} -dgs=1 -din=1 -log=WARN {{path_to_jar}} {{out_path}}'
 DEFAULT_BON2_CMD = (
-    rf'{{java}} -jar {BON2_PATH} --inputJar {{path_to_jar}} --outputJar {{out_path}} --mcVer {{mc_ver}} '
+    rf'{{java}} -jar {{bon2_path}} --inputJar {{path_to_jar}} --outputJar {{out_path}} --mcVer {{mc_ver}} '
     rf'--mappingsVer {{mappings_ver}} --notch')
 
 
@@ -51,7 +53,7 @@ def get_all_java_homes() -> list[str]:
     """JAVA_HOME"""
     java_home = os.environ.get('JAVA_HOME', '')
     if java_home != '':
-        java_homes.append(java_home)
+        java_homes.append(java_home.rstrip('/\\'))
 
     """java cmd"""
     try:
@@ -59,8 +61,9 @@ def get_all_java_homes() -> list[str]:
         output_lines = output.decode('utf-8').split('\n')
         for line in output_lines:
             if line.strip().startswith('java.home'):
-                java_path = line.split('=', 1)[1].strip()
-                java_homes.append(java_path)
+                java_path = line.split('=', 1)[1].strip().rstrip('/\\')
+                if java_path not in java_homes:
+                    java_homes.append(java_path)
     except subprocess.CalledProcessError:
         pass
 
@@ -72,7 +75,7 @@ def get_all_java_homes() -> list[str]:
             if os.path.exists(java_path):
                 java_home = os.path.dirname(os.path.dirname(java_path))
                 if java_home not in java_homes:
-                    java_homes.append(java_home)
+                    java_homes.append(java_home.rstrip('/\\'))
     except KeyError:
         pass
     return java_homes
@@ -102,5 +105,22 @@ def get_env_with_patched_java_home(java_home: str) -> dict[str, str]:
 def format_decompiler_command(cmd: str,
                               java_home: str | os.PathLike,
                               path_to_jar: str | os.PathLike,
-                              out_path: str | os.PathLike, ) -> str:
-    return cmd.format(java=get_path_to_java(java_home), path_to_jar=path_to_jar, out_path=out_path)
+                              out_path: str | os.PathLike) -> str:
+    return cmd.format(java=get_path_to_java(java_home),
+                      path_to_jar=path_to_jar,
+                      out_path=out_path)
+
+
+def format_bon2_command(cmd: str,
+                        java_home: str | os.PathLike,
+                        bon2_path: str | os.PathLike,
+                        path_to_jar: str | os.PathLike,
+                        out_path: str | os.PathLike,
+                        version: str,
+                        mappings: str) -> str:
+    return cmd.format(java=get_path_to_java(java_home),
+                      bon2_path=f'"{os.path.abspath(bon2_path)}"',
+                      path_to_jar=f'"{os.path.abspath(path_to_jar)}"',
+                      out_path=f'"{os.path.abspath(out_path)}"',
+                      mc_ver=version,
+                      mappings_ver=mappings)

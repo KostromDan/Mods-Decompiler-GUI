@@ -5,7 +5,7 @@ import time
 import zipfile
 from pathlib import Path
 
-from MDGLogic.AbstractDeobfDecompThread import AbstractDeobfDecompThread
+from MDGLogic.Decompilation.AbstractDeobfDecompThread import AbstractDeobfDecompThread
 from MDGUtil import PathUtils, FileUtils
 from MDGUtil.SubprocessKiller import kill_subprocess
 

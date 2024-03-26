@@ -16,9 +16,12 @@ def remove_unsupported_symbols(mod_name: str) -> str:
             new_name.append(symbol)
             continue
         new_name.append('-')
+    new_name = ''.join(new_name).strip().removesuffix('.jar')
     if new_name[-1] == '-':
-        new_name.append('mod')
-    return ''.join(new_name)
+        new_name += 'mod'
+    if '-' not in new_name:
+        new_name += '-mod'
+    return new_name + '.jar'
 
 
 def walk_in_zipfile(zip_ref: zipfile.ZipFile) -> Iterator[str]:
@@ -61,7 +64,7 @@ def append_cache(cache_path: str | os.PathLike, key: str, value: str) -> None:
             cache = json.loads(cache_file.read())
     except FileNotFoundError:
         cache = dict()
-    key = key.removesuffix('.jar').removesuffix('_mapped_official')
+    key = key.removesuffix('.jar').removesuffix('_mapped')
     cache[key] = value
     with open(cache_path, 'w') as cache_file:
         cache_file.write(json.dumps(cache))
@@ -70,7 +73,7 @@ def append_cache(cache_path: str | os.PathLike, key: str, value: str) -> None:
 def get_original_mod_hash(mod_name: str) -> str:
     with open(PathUtils.TMP_MODS_HASHES_PATH, 'r') as f:
         mod_hashes = json.loads(f.read())
-    return mod_hashes[mod_name.removesuffix('.jar').removesuffix('_mapped_official')]
+    return mod_hashes[mod_name.removesuffix('.jar').removesuffix('_mapped')]
 
 
 def remove_folder(path: str | os.PathLike) -> None:

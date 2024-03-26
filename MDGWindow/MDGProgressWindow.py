@@ -11,8 +11,8 @@ from PySide6.QtWidgets import QMainWindow, QMessageBox, QProgressBar
 
 from MDGLogic.CopyThread import CopyThread
 from MDGLogic.CriticalMBThread import CriticalMBThread
-from MDGLogic.DecompilationMainThread import DecompilationMainThread
-from MDGLogic.DeobfuscationThread import DeobfuscationThread, FailLogic
+from MDGLogic.Decompilation.DecompilationMainThread import DecompilationMainThread
+from MDGLogic.Deobfuscation.DeobfuscationMain import DeobfuscationThread, FailLogic
 from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
@@ -66,10 +66,11 @@ class MDGProgressWindow(QMainWindow):
         super().destroy(*args, **kwargs)
 
     def stop_button(self) -> None:
+        if self.completed:
+            self.hide()
+            sys.exit()
         self.main_window.setEnabled(True)
         self.main_window.show()
-        if self.completed:
-            sys.exit()
         self.destroy()
 
     def closeEvent(self, event: QCloseEvent) -> None:
