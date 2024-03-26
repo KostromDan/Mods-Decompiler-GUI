@@ -7,12 +7,12 @@ from collections import defaultdict, OrderedDict
 from typing import Any, Optional
 
 import psutil
-from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from PySide6.QtCore import QMimeData, QCoreApplication, QTimer, Qt
 from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent, QFontMetrics
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QFileSystemModel, QCompleter, QWidget, QLineEdit, \
     QSlider, QSpinBox, QPushButton, QComboBox
 
+from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from MDGUtil import UiUtils, PathUtils, BON2Utils
 from MDGUtil.LocalConfig import LocalConfig
 from MDGWindow.MDGHelpWindow import MDGHelpWindow
@@ -60,6 +60,11 @@ class MDGMainWindow(QMainWindow):
                                  'Select mdk archive',
                                  QFileDialog.getOpenFileName,
                                  self.tr('Archive files (*.zip)'))
+        self.setup_select_button(self.ui.bon2_path_select_button,
+                                 self.ui.bon2_path_line_edit,
+                                 'Select bon2',
+                                 QFileDialog.getOpenFileName,
+                                 self.tr('Jar files (*.jar)'))
 
         self.setup_drag_n_drop(self.ui.mods_path_vertical_group_box, self.ui.mods_path_line_edit)
         self.setup_drag_n_drop(self.ui.mdk_path_vertical_group_box, self.ui.mdk_path_line_edit)
@@ -103,6 +108,11 @@ class MDGMainWindow(QMainWindow):
             self.ui.help_decomp_cmd_button: self.help_window.ui.decomp_cmd,
             self.ui.help_cache_button: self.help_window.ui.cache,
             self.ui.jar_in_jar_help_button: self.help_window.ui.jar_in_jar,
+            self.ui.help_deobf_algo_button: self.help_window.ui.deobf_algo,
+            self.ui.help_bon2_cmd_button: self.help_window.ui.deobf_algo,
+            self.ui.help_bon2_java_home_button: self.help_window.ui.java_home,
+            self.ui.help_mdk_java_home_button: self.help_window.ui.java_home,
+            self.ui.help_decompiler_java_home_button: self.help_window.ui.java_home,
         }
         for help_button, widget in self.help_widget_pairs.items():
             help_button.clicked.connect(self.help_button_clicked)
@@ -151,6 +161,10 @@ class MDGMainWindow(QMainWindow):
                                              self.ui.bon2_cmd_reset_button,
                                              PathUtils.DEFAULT_BON2_CMD)
 
+        self.setup_line_edit_resettable_pair(self.ui.bon2_path_line_edit,
+                                             self.ui.bon2_path_reset_button,
+                                             PathUtils.BON2_PATH)
+
         self.ui.action_reset.triggered.connect(self.action_reset)
         self.ui.action_save.triggered.connect(self.save_ui_to_config)
 
@@ -158,7 +172,6 @@ class MDGMainWindow(QMainWindow):
         self.ui.bon2_version_combo_box.addItems(self.bon2_mappings.keys())
 
         self.change_visibility_of_widget(self.ui.commit_after_finish_group_box, False)  # NotImplemented yet
-        self.change_visibility_of_widget(self.ui.deobf_algo_radio_fast_mdk, False)  # NotImplemented yet
 
         self.load_ui_from_config()
         self.check_widgets_visibility()
@@ -322,6 +335,11 @@ class MDGMainWindow(QMainWindow):
             QMessageBox.warning(self, 'Incorrect configuration', 'With this configuration program will do nothing.',
                                 QMessageBox.StandardButton.Ok)
             return
+        if UiUtils.is_checked_and_enabled(self.ui.deobf_algo_radio_bon2):
+            if not os.path.exists(self.ui.bon2_path_line_edit.text()):
+                self.ui.bon2_path_line_edit.setStyleSheet('border: 1px solid red')
+                QMessageBox.warning(self, 'Incorrect path', "Bon2 path doesn't exists.",
+                                    QMessageBox.StandardButton.Ok)
         for group_box, data in self.java_home_dict.items():
             if not data['line_edit'].isEnabled():
                 continue
@@ -458,6 +476,13 @@ class MDGMainWindow(QMainWindow):
         """Setting visibility of widgets according to settings."""
 
         QCoreApplication.processEvents()
+        fast_deobf_selected = self.ui.deobf_algo_radio_fast_mdk.isChecked()
+        if fast_deobf_selected:
+            self.ui.deobf_algo_radio_safe_mdk.setChecked(True)
+            fast_deobf_selected = False  # NotImplemented
+            QMessageBox.warning(self, 'NotImplemented', 'Fast unsafe mdk deobf algorithm will be '
+                                                        'released in one of the next updates.',
+                                QMessageBox.StandardButton.Ok)
         deobfuscation_enabled = UiUtils.is_checked_and_enabled(self.ui.deobf_check_box)
         decompilation_enabled = UiUtils.is_checked_and_enabled(self.ui.decomp_check_box)
         merging_enabled = UiUtils.is_checked_and_enabled(self.ui.merge_check_box)
@@ -466,7 +491,6 @@ class MDGMainWindow(QMainWindow):
         mdk_widgets_visible = ((deobfuscation_enabled and deobfuscation_algo_using_mdk) or merging_enabled)
         bon2_widgets_visible = (deobfuscation_enabled and
                                 UiUtils.is_checked_and_enabled(self.ui.deobf_algo_radio_bon2))
-        fast_deobf_selected = self.ui.deobf_algo_radio_fast_mdk.isChecked()
         at_least_one_java_home_active = (mdk_widgets_visible or
                                          bon2_widgets_visible or
                                          decompilation_enabled)
@@ -487,6 +511,7 @@ class MDGMainWindow(QMainWindow):
         self.change_visibility_of_widget(self.ui.bon2_java_home_group_box, bon2_widgets_visible)
         self.change_visibility_of_widget(self.ui.bon2_version_combo_box, bon2_widgets_visible)
         self.change_visibility_of_widget(self.ui.bon2_mappings_combo_box, bon2_widgets_visible)
+        self.change_visibility_of_widget(self.ui.bon2_path_group_box, bon2_widgets_visible)
 
         """deobf widgets"""
         self.change_visibility_of_widget(self.ui.deobf_failed_group_box, deobfuscation_enabled)

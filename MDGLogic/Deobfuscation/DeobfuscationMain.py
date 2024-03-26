@@ -152,6 +152,8 @@ class DeobfuscationThread(AbstractMDGThread):
                                 self.serialized_widgets['bon2_version_combo_box']['currentText']
                             self.threads_data[thread_number]['bon2_mappings'] = \
                                 self.serialized_widgets['bon2_mappings_combo_box']['currentText']
+                            self.threads_data[thread_number]['bon2_path'] = \
+                                self.serialized_widgets['bon2_path_line_edit']['text']
                             self.threads_data[thread_number]['java_home'] = \
                                 self.serialized_widgets['bon2_java_home_line_edit']['text']
 
@@ -189,4 +191,4 @@ class DeobfuscationThread(AbstractMDGThread):
 
         if not self.serialized_widgets['merge_check_box']['isEnabled'] or not \
                 self.serialized_widgets['merge_check_box']['isChecked']:
-            shutil.rmtree(PathUtils.MERGED_MDK_PATH)
+            FileUtils.remove_folder(PathUtils.MERGED_MDK_PATH)

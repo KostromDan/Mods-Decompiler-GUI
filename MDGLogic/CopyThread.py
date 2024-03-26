@@ -114,7 +114,7 @@ class CopyThread(AbstractMDGThread):
                             (not decompiled_with_deobf and not deobf_enabled)):
                         shutil.rmtree(mod_path)
                         logging.info(f'Found {mod_name_with_jar} in decompiled_mods. '
-                                     f"But mod was deobfuscated with another settings. Removing from cache.")
+                                     f'But mod was deobfuscated with another settings. Removing from cache.')
                         continue
                     use_cached_decomp.append(mod_name_with_jar)
 

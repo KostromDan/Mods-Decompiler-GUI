@@ -7,16 +7,8 @@ import jpype
 from MDGLogic.InitialisationThread import ExceptionThread
 from MDGUtil import PathUtils
 
-DEFAULT_MAPPINGS = OrderedDict([('1.16.5', ['official']),
-                                ('1.16.4', ['official']),
-                                ('1.16.3', ['official']),
-                                ('1.16.2', ['official']),
-                                ('1.16.1', ['official']),
-                                ('1.16', ['official']),
-                                ('1.15.2', ['official']),
-                                ('1.15.1', ['official']),
-                                ('1.15', ['official', 'stable_60']),
-                                ('1.14.4', ['official', 'stable_58']),
+DEFAULT_MAPPINGS = OrderedDict([('1.15', ['stable_60']),
+                                ('1.14.4', ['stable_58']),
                                 ('1.14.3', ['stable_56']),
                                 ('1.14.2', ['stable_53']),
                                 ('1.14.1', ['stable_51']),
@@ -53,7 +45,10 @@ def get_mappings() -> OrderedDict[str, list]:
             if get_cmp_key(key) > [1, 16, 5]:
                 continue
             value = list(reversed([str(v).removeprefix(f'{key} ').replace(' ', '_')
-                                   for v in entry.getValue() if 'snapshot' not in str(v)]))
+                                   for v in entry.getValue() if
+                                   not any(e in str(v) for e in ['snapshot', 'official'])]))
+            if not value:
+                continue
             known_versions_dict[key] = value
 
         sorted_dict = OrderedDict(sorted(known_versions_dict.items(), key=lambda x: get_cmp_key(x[0]), reverse=True))

@@ -1,15 +1,18 @@
 import logging
 import os
+import shutil
 import subprocess
 import sys
 import zipfile
 
 from MDGLogic.AbstractMDGThread import AbstractMDGThread
-from MDGUtil import PathUtils, FileUtils
+from MDGLogic.Deobfuscation.DeobfuscatioUtils import clear_forge_gradle
+from MDGUtil import PathUtils, FileUtils, UiUtils
 from MDGUtil.SubprocessKiller import kill_subprocess
 from MDGUtil.SubprocessOutsAnalyseThread import SubprocessOutsAnalyseThread
 
-MDK_PATCH_STRING_DEOBF = """repositories {
+MDK_PATCH_STRING_DEOBF = """
+repositories {
     flatDir {
         dir 'libs'
     }
@@ -21,8 +24,10 @@ dependencies {
         project.logger.warn("starting deobfuscating ${file.name}")
         implementation fg.deobf("local_MDG:${fileNameWithoutDotJarExtension.substring(0, indexOfLastDash)}:${fileNameWithoutDotJarExtension.substring(indexOfLastDash + 1)}")
     }
-}"""
-MDK_PATCH_STRING_DOWNLOAD_SOURCES = """apply plugin: 'idea'
+}
+"""
+MDK_PATCH_STRING_DOWNLOAD_SOURCES = """
+apply plugin: 'idea'
 idea {
     module {
         downloadSources = true
@@ -65,21 +70,32 @@ def unzip_and_patch_mdk(mdk_path: str | os.PathLike,
 
 class MdkInitialisationThread(AbstractMDGThread):
     def run(self) -> None:
-        if (not self.serialized_widgets['mdk_path_line_edit']['isEnabled'] or
-                (not (self.serialized_widgets['merge_check_box']['isEnabled'] and
-                      self.serialized_widgets['merge_check_box']['isChecked']) and
-                 len(os.listdir(PathUtils.TMP_MODS_PATH)) == 0)):
+        do_path_download_sources = (
+            UiUtils.is_checked_and_enabled(self.serialized_widgets['download_sources_check_box']))
+        mdk_path = self.serialized_widgets['mdk_path_line_edit']['text']
+
+        if (self.serialized_widgets['deobf_algo_radio_bon2']['isChecked'] or
+                not self.serialized_widgets['mdk_path_line_edit']['isEnabled'] or
+                len(os.listdir(PathUtils.TMP_MODS_PATH)) == 0):
+            if UiUtils.is_checked_and_enabled(self.serialized_widgets['merge_check_box']):
+                unzip_and_patch_mdk(mdk_path,
+                                    PathUtils.MERGED_MDK_PATH,
+                                    'local_MDG_0',
+                                    False,
+                                    do_path_download_sources)
             self.progress.emit(100, 'Initialisation of mdk skipped.')
             logging.info('Initialisation of mdk skipped.')
             return
 
-        mdk_path = self.serialized_widgets['mdk_path_line_edit']['text']
-        do_path_download_sources = (self.serialized_widgets['download_sources_check_box']['isEnabled'] and
-                                    self.serialized_widgets['download_sources_check_box']['isChecked'])
-
         self.progress.emit(10, 'Unzipping and patching mdk.')
         logging.info('Started unzipping and patching mdk.')
-        unzip_and_patch_mdk(mdk_path, PathUtils.MERGED_MDK_PATH, 'local_MDG', False, do_path_download_sources)
+        clear_forge_gradle()
+        unzip_and_patch_mdk(mdk_path,
+                            PathUtils.MERGED_MDK_PATH,
+                            'local_MDG_0',
+                            True,
+                            do_path_download_sources)
+        shutil.copy(PathUtils.TEST_MOD_PATH, os.path.join(PathUtils.MERGED_MDK_PATH, 'libs'))
         logging.info('Finished unzipping and patching mdk.')
 
         self.progress.emit(30, 'Started initialisation of mdk.')
@@ -97,20 +113,36 @@ class MdkInitialisationThread(AbstractMDGThread):
         cmd_out_analyse_thread.start()
         cmd_out_analyse_thread.join()
 
+        try:
+            os.remove(os.path.join(PathUtils.MERGED_MDK_PATH, 'libs',
+                                   os.path.basename(PathUtils.TEST_MOD_PATH)))
+        except FileNotFoundError:
+            pass
+
         if 'BUILD SUCCESSFUL' not in cmd_out_analyse_thread.out:
             version_errors = ['Could not determine java version from',
                               'java.lang.ExceptionInInitializerError (no error message)']
+            legacy_errors = ["property 'fg'", 'Could not resolve net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT.']
             if any(error in cmd_out_analyse_thread.err for error in version_errors):
                 self.critical_signal.emit('Wrong java version',
                                           'MDK init failed due to wrong JAVA_HOME.\n'
                                           'Try to specify JAVA_HOME that fit for this MDK in '
                                           'JAVA_HOME settings.',
                                           'mdk_java_home_line_edit')
+                return
+            if any(error in cmd_out_analyse_thread.err for error in legacy_errors):
+                self.critical_signal.emit('Wrong deobfuscation algorithm',
+                                          'For minecraft versions < 1.12.2 use BON2.\n'
+                                          'Forge mdk of minecraft versions < 1.12.2 does not support '
+                                          'fg.deobf() which is used for deobfuscation using mdk algorithms.',
+                                          None)
+                return
             else:
                 self.critical_signal.emit('MDK init failed',
                                           'MDK init failed.\n'
                                           'Check the lastest log for more details.',
                                           None)
+                return
 
         logging.info('Finished initialisation of mdk.')
 

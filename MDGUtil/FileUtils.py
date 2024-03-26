@@ -16,9 +16,10 @@ def remove_unsupported_symbols(mod_name: str) -> str:
             new_name.append(symbol)
             continue
         new_name.append('-')
+    new_name = ''.join(new_name).strip().removesuffix('.jar')
     if new_name[-1] == '-':
-        new_name.append('mod')
-    return ''.join(new_name)
+        new_name += 'mod'
+    return new_name + '.jar'
 
 
 def walk_in_zipfile(zip_ref: zipfile.ZipFile) -> Iterator[str]:

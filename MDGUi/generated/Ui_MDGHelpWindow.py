@@ -23,7 +23,7 @@ class Ui_MDGHelpWindow(object):
     def setupUi(self, MDGHelpWindow):
         if not MDGHelpWindow.objectName():
             MDGHelpWindow.setObjectName(u"MDGHelpWindow")
-        MDGHelpWindow.resize(1200, 900)
+        MDGHelpWindow.resize(1200, 1151)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -43,7 +43,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 2082))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, -1363, 1163, 2444))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)
@@ -107,6 +107,17 @@ class Ui_MDGHelpWindow(object):
         self.deobf_mods.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
 
         self.verticalLayout_2.addWidget(self.deobf_mods)
+
+        self.deobf_algo = QTextBrowser(self.scrollAreaWidgetContents)
+        self.deobf_algo.setObjectName(u"deobf_algo")
+        sizePolicy1.setHeightForWidth(self.deobf_algo.sizePolicy().hasHeightForWidth())
+        self.deobf_algo.setSizePolicy(sizePolicy1)
+        self.deobf_algo.setMinimumSize(QSize(0, 230))
+        self.deobf_algo.setMaximumSize(QSize(16777215, 230))
+        self.deobf_algo.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.deobf_algo.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+
+        self.verticalLayout_2.addWidget(self.deobf_algo)
 
         self.threads = QTextBrowser(self.scrollAreaWidgetContents)
         self.threads.setObjectName(u"threads")
@@ -184,6 +195,17 @@ class Ui_MDGHelpWindow(object):
         self.patch_mdk.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
 
         self.verticalLayout_2.addWidget(self.patch_mdk)
+
+        self.java_home = QTextBrowser(self.scrollAreaWidgetContents)
+        self.java_home.setObjectName(u"java_home")
+        sizePolicy1.setHeightForWidth(self.java_home.sizePolicy().hasHeightForWidth())
+        self.java_home.setSizePolicy(sizePolicy1)
+        self.java_home.setMinimumSize(QSize(0, 120))
+        self.java_home.setMaximumSize(QSize(16777215, 120))
+        self.java_home.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.java_home.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+
+        self.verticalLayout_2.addWidget(self.java_home)
 
         self.jar_in_jar = QTextBrowser(self.scrollAreaWidgetContents)
         self.jar_in_jar.setObjectName(u"jar_in_jar")
@@ -279,6 +301,21 @@ class Ui_MDGHelpWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Deobfuscate Mods:</span><br />Deobfuscation is needed before decompilation in Minecraft modding because the Minecraft codebase is obfuscated before release. Obfuscation is a technique used to make code harder to understand by renaming variables, methods, and classes to obscure their purpose. Deobfuscation is the process of undoing this obfuscation, mak"
                         "ing the code more readable and understandable. Decompilation, on the other hand, is the process of converting bytecode back into human-readable Java code. Without deobfuscation, decompilation would result in code that is difficult to understand and work with, making modding much more challenging. </p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">If enabled, mods will be deobfuscated before decompilation, and the results can be found in the &quot;<span style=\" font-weight:700;\">deobfuscated_mods</span>&quot; folder. </p></body></html>", None))
+        self.deobf_algo.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Deobfuscation algorithm:</span><br />MDK: 1.12.2+<br />BON2: 1.7.10 - 1.16.5</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">You can select one of the deobfuscation algorithms:</p>\n"
+"<ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px"
+                        "; -qt-list-indent: 1;\">\n"
+"<li style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Safe (using MDK): Mods will be deobfuscated with the <span style=\" font-family:'Courier New';\">fg.deobf()</span> function from MDK. The MDK Gradle will be patched with a patch that will apply <span style=\" font-family:'Courier New';\">fg.deobf()</span> to every mod in the libs folder. The mod we are going to deobfuscate will be copied to the libs folder, and the <span style=\" font-family:'Courier New';\">compileJava</span> function will be run. After it finishes, the deobfuscated mod will be copied from the Gradle cache to the deobfuscated mods folder. Each mod will be deobfuscated with a separate MDK.</li>\n"
+"<li style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Fast (using MDK): Same as safe, but all mods will be deobfuscated with one MDK. This can save significant time, but if MDK fa"
+                        "ils to deobfuscate a single mod, the whole process will fail without the ability to determine which mod caused this. Use this if you are 100% sure that your modpack does not contain such mods.</li>\n"
+"<li style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">BON2: Mods will be deobfuscated with a program called BON2. Use this for legacy versions. Select the version and mappings. Do not touch the BON2 command if you are not sure what you are doing.</li></ul></body></html>", None))
         self.threads.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -371,6 +408,20 @@ class Ui_MDGHelpWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-ri"
                         "ght:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-style:italic;\"> }</span> </p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-style:italic;\">}</span></p></body></html>", None))
+        self.java_home.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Specify JAVA_HOME:</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">You can select JAVA_HOME for every tool that MDG uses. For example, if your JAVA_HOME is a legacy version:</p>\n"
+"<ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right:"
+                        " 0px; -qt-list-indent: 1;\">\n"
+"<li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">BON2: select Java 17+</li>\n"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">MDK: select the version of Java that is suitable for your MDK.</li>\n"
+"<li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Decompiler: select Java 17+</li></ul></body></html>", None))
         self.jar_in_jar.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

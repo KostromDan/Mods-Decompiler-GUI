@@ -26,7 +26,7 @@ class Ui_MDGMainWindow(object):
     def setupUi(self, MDGMainWindow):
         if not MDGMainWindow.objectName():
             MDGMainWindow.setObjectName(u"MDGMainWindow")
-        MDGMainWindow.resize(1066, 888)
+        MDGMainWindow.resize(974, 920)
         MDGMainWindow.setMaximumSize(QSize(16777215, 16777215))
         MDGMainWindow.setLayoutDirection(Qt.LeftToRight)
         self.action_reset = QAction(MDGMainWindow)
@@ -240,6 +240,47 @@ class Ui_MDGMainWindow(object):
 
 
         self.verticalLayout.addWidget(self.deobf_algo_group_box)
+
+        self.bon2_path_group_box = QGroupBox(self.deobf_main_group_box)
+        self.bon2_path_group_box.setObjectName(u"bon2_path_group_box")
+        self.horizontalLayout_16 = QHBoxLayout(self.bon2_path_group_box)
+        self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
+        self.horizontalLayout_16.setContentsMargins(0, 0, 0, 0)
+        self.bon2_path_label = QLabel(self.bon2_path_group_box)
+        self.bon2_path_label.setObjectName(u"bon2_path_label")
+
+        self.horizontalLayout_16.addWidget(self.bon2_path_label)
+
+        self.bon2_path_line_edit = QLineEdit(self.bon2_path_group_box)
+        self.bon2_path_line_edit.setObjectName(u"bon2_path_line_edit")
+        self.bon2_path_line_edit.setClearButtonEnabled(False)
+
+        self.horizontalLayout_16.addWidget(self.bon2_path_line_edit)
+
+        self.bon2_path_select_button = QPushButton(self.bon2_path_group_box)
+        self.bon2_path_select_button.setObjectName(u"bon2_path_select_button")
+        self.bon2_path_select_button.setMaximumSize(QSize(44, 16777215))
+
+        self.horizontalLayout_16.addWidget(self.bon2_path_select_button)
+
+        self.bon2_path_reset_button = QPushButton(self.bon2_path_group_box)
+        self.bon2_path_reset_button.setObjectName(u"bon2_path_reset_button")
+        sizePolicy.setHeightForWidth(self.bon2_path_reset_button.sizePolicy().hasHeightForWidth())
+        self.bon2_path_reset_button.setSizePolicy(sizePolicy)
+        self.bon2_path_reset_button.setMaximumSize(QSize(40, 16777215))
+
+        self.horizontalLayout_16.addWidget(self.bon2_path_reset_button)
+
+        self.help_bon2_path_button = QPushButton(self.bon2_path_group_box)
+        self.help_bon2_path_button.setObjectName(u"help_bon2_path_button")
+        sizePolicy.setHeightForWidth(self.help_bon2_path_button.sizePolicy().hasHeightForWidth())
+        self.help_bon2_path_button.setSizePolicy(sizePolicy)
+        self.help_bon2_path_button.setMaximumSize(QSize(20, 16777215))
+
+        self.horizontalLayout_16.addWidget(self.help_bon2_path_button)
+
+
+        self.verticalLayout.addWidget(self.bon2_path_group_box)
 
         self.bon2_cmd_groupbox = QGroupBox(self.deobf_main_group_box)
         self.bon2_cmd_groupbox.setObjectName(u"bon2_cmd_groupbox")
@@ -605,13 +646,13 @@ class Ui_MDGMainWindow(object):
 
         self.horizontalLayout_15.addWidget(self.bon2_java_home_reset_button)
 
-        self.bon2_decompiler_java_home_button = QPushButton(self.bon2_java_home_group_box)
-        self.bon2_decompiler_java_home_button.setObjectName(u"bon2_decompiler_java_home_button")
-        sizePolicy.setHeightForWidth(self.bon2_decompiler_java_home_button.sizePolicy().hasHeightForWidth())
-        self.bon2_decompiler_java_home_button.setSizePolicy(sizePolicy)
-        self.bon2_decompiler_java_home_button.setMaximumSize(QSize(20, 16777215))
+        self.help_bon2_java_home_button = QPushButton(self.bon2_java_home_group_box)
+        self.help_bon2_java_home_button.setObjectName(u"help_bon2_java_home_button")
+        sizePolicy.setHeightForWidth(self.help_bon2_java_home_button.sizePolicy().hasHeightForWidth())
+        self.help_bon2_java_home_button.setSizePolicy(sizePolicy)
+        self.help_bon2_java_home_button.setMaximumSize(QSize(20, 16777215))
 
-        self.horizontalLayout_15.addWidget(self.bon2_decompiler_java_home_button)
+        self.horizontalLayout_15.addWidget(self.help_bon2_java_home_button)
 
 
         self.verticalLayout_7.addWidget(self.bon2_java_home_group_box)
@@ -800,7 +841,7 @@ class Ui_MDGMainWindow(object):
         MDGMainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGMainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1066, 22))
+        self.menubar.setGeometry(QRect(0, 0, 974, 22))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         MDGMainWindow.setMenuBar(self.menubar)
@@ -829,11 +870,16 @@ class Ui_MDGMainWindow(object):
         self.deobf_main_group_box.setTitle(QCoreApplication.translate("MDGMainWindow", u"Deobfuscation settings:", None))
         self.deobf_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Deobfuscate mods", None))
         self.help_deobf_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
-        self.deobf_algo_label.setText(QCoreApplication.translate("MDGMainWindow", u"Deobfuscation algoritm:", None))
+        self.deobf_algo_label.setText(QCoreApplication.translate("MDGMainWindow", u"Deobfuscation algorithm:", None))
         self.deobf_algo_radio_safe_mdk.setText(QCoreApplication.translate("MDGMainWindow", u"safe (using mdk)", None))
         self.deobf_algo_radio_fast_mdk.setText(QCoreApplication.translate("MDGMainWindow", u"fast (using mdk)", None))
         self.deobf_algo_radio_bon2.setText(QCoreApplication.translate("MDGMainWindow", u"BON2", None))
         self.help_deobf_algo_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.bon2_path_label.setText(QCoreApplication.translate("MDGMainWindow", u"BON2 path:", None))
+        self.bon2_path_line_edit.setText("")
+        self.bon2_path_select_button.setText(QCoreApplication.translate("MDGMainWindow", u"select", None))
+        self.bon2_path_reset_button.setText(QCoreApplication.translate("MDGMainWindow", u"reset", None))
+        self.help_bon2_path_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.bon2_cmd_label.setText(QCoreApplication.translate("MDGMainWindow", u"BON2 cmd:", None))
         self.bon2_cmd_line_edit.setText("")
         self.bon2_cmd_reset_button.setText(QCoreApplication.translate("MDGMainWindow", u"reset", None))
@@ -880,7 +926,7 @@ class Ui_MDGMainWindow(object):
         self.bon2_java_home_line_edit.setText("")
         self.bon2_java_home_select_button.setText(QCoreApplication.translate("MDGMainWindow", u"select", None))
         self.bon2_java_home_reset_button.setText(QCoreApplication.translate("MDGMainWindow", u"reset", None))
-        self.bon2_decompiler_java_home_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.help_bon2_java_home_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.mdk_java_home_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"mdk            ", None))
         self.mdk_java_home_line_edit.setText("")
         self.mdk_java_home_select_button.setText(QCoreApplication.translate("MDGMainWindow", u"select", None))
