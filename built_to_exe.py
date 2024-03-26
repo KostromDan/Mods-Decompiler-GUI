@@ -3,7 +3,7 @@ import shutil
 
 from MDGUtil import PathUtils, FileUtils
 
-VERSION = '2.3.0BETA'
+VERSION = '2.3.0BETA_2'
 
 
 def main():

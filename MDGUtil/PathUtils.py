@@ -7,9 +7,20 @@ MINECRAFT_FORGE_DOWNLOADS_PAGE = 'https://files.minecraftforge.net/net/minecraft
 ADOPTIUM_DOWNLOADS_PAGE = ('https://adoptium.net/temurin/releases/'
                            f"?version=18&package=jdk&arch=x{platform.architecture()[0].removesuffix('bit')}")
 
-FORGE_GRADLE_DEOBF_CACHE_FOLDER = os.path.join(os.path.expanduser('~'),
-                                               '.gradle',
-                                               'caches',
+
+def get_gradle_caches_path():
+    gradle_user_home = os.environ.get("GRADLE_USER_HOME")
+
+    if gradle_user_home:
+        gradle_caches_path = os.path.join(gradle_user_home, "caches")
+    else:
+        home_dir = os.path.expanduser("~")
+        gradle_caches_path = os.path.join(home_dir, ".gradle", "caches")
+
+    return gradle_caches_path
+
+
+FORGE_GRADLE_DEOBF_CACHE_FOLDER = os.path.join(get_gradle_caches_path(),
                                                'forge_gradle',
                                                'deobf_dependencies')
 
