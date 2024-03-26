@@ -113,6 +113,7 @@ class MDGMainWindow(QMainWindow):
             self.ui.help_bon2_java_home_button: self.help_window.ui.java_home,
             self.ui.help_mdk_java_home_button: self.help_window.ui.java_home,
             self.ui.help_decompiler_java_home_button: self.help_window.ui.java_home,
+            self.ui.help_bon2_path_button: self.help_window.ui.deobf_algo,
         }
         for help_button, widget in self.help_widget_pairs.items():
             help_button.clicked.connect(self.help_button_clicked)
@@ -515,13 +516,12 @@ class MDGMainWindow(QMainWindow):
 
         """deobf widgets"""
         self.change_visibility_of_widget(self.ui.deobf_failed_group_box, deobfuscation_enabled)
-        self.change_visibility_of_widget(self.ui.deobf_threads_group_box, deobfuscation_enabled)
+        self.change_visibility_of_widget(self.ui.deobf_threads_group_box, deobfuscation_enabled and
+                                         not self.ui.deobf_algo_radio_fast_mdk.isChecked())
         self.change_visibility_of_widget(self.ui.deobf_algo_group_box, deobfuscation_enabled)
 
         self.ui.deobf_failed_radio_decompile.setEnabled(decompilation_enabled and not fast_deobf_selected)
         self.ui.deobf_failed_radio_skip.setEnabled(not fast_deobf_selected)
-        self.change_visibility_of_widget(self.ui.deobf_threads_group_box,
-                                         not self.ui.deobf_algo_radio_fast_mdk.isChecked())
 
         """decomp widgets"""
         self.change_visibility_of_widget(self.ui.decomp_threads_group_box, decompilation_enabled)

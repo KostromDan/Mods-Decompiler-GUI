@@ -19,6 +19,8 @@ def remove_unsupported_symbols(mod_name: str) -> str:
     new_name = ''.join(new_name).strip().removesuffix('.jar')
     if new_name[-1] == '-':
         new_name += 'mod'
+    if '-' not in new_name:
+        new_name += '-mod'
     return new_name + '.jar'
 
 

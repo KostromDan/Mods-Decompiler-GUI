@@ -101,6 +101,7 @@ class InitialisationThread(AbstractMDGThread):
             self.progress.emit(90, 'Checking bon2/bon2 cmd are correct')
             logging.info('Checking bon2/bon2 cmd are correct')
             FileUtils.remove_folder('data')
+            FileUtils.remove_folder('--notch')
             FileUtils.create_folder(PathUtils.TMP_BON2_TEST_PATH)
             cmd_analyse_thread = None
             try:
@@ -121,6 +122,7 @@ class InitialisationThread(AbstractMDGThread):
                 cmd_analyse_thread.start()
                 cmd_analyse_thread.join()
                 FileUtils.remove_folder('data')
+                FileUtils.remove_folder('--notch')
                 assert len(os.listdir(PathUtils.TMP_BON2_TEST_PATH)) >= 1
                 assert cmd_analyse_thread.err == ''
             except Exception as e:

@@ -43,7 +43,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -1363, 1163, 2444))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 2444))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)
@@ -308,7 +308,7 @@ class Ui_MDGHelpWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Deobfuscation algorithm:</span><br />MDK: 1.12.2+<br />BON2: 1.7.10 - 1.16.5</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Deobfuscation algorithm:</span><br />MDK: 1.12.2+<br />BON2: 1.7.10 - 1.15.2</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">You can select one of the deobfuscation algorithms:</p>\n"
 "<ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px"
                         "; -qt-list-indent: 1;\">\n"
