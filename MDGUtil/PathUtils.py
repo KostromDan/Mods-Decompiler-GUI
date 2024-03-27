@@ -9,13 +9,13 @@ ADOPTIUM_DOWNLOADS_PAGE = ('https://adoptium.net/temurin/releases/'
 
 
 def get_gradle_caches_path():
-    gradle_user_home = os.environ.get("GRADLE_USER_HOME")
+    gradle_user_home = os.environ.get('GRADLE_USER_HOME')
 
     if gradle_user_home:
-        gradle_caches_path = os.path.join(gradle_user_home, "caches")
+        gradle_caches_path = os.path.join(gradle_user_home, 'caches')
     else:
-        home_dir = os.path.expanduser("~")
-        gradle_caches_path = os.path.join(home_dir, ".gradle", "caches")
+        home_dir = os.path.expanduser('~')
+        gradle_caches_path = os.path.join(home_dir, '.gradle', 'caches')
 
     return gradle_caches_path
 
@@ -50,8 +50,8 @@ MERGED_MDK_JAVA_PATH = os.path.join(MERGED_MDK_SRC_PATH, 'java')
 
 DEFAULT_DECOMPILER_CMD = rf'{{java}} -jar {DECOMPILER_JAR_PATH} -dgs=1 -din=1 -log=WARN {{path_to_jar}} {{out_path}}'
 DEFAULT_BON2_CMD = (
-    rf'{{java}} -jar {{bon2_path}} --inputJar {{path_to_jar}} --outputJar {{out_path}} --mcVer {{mc_ver}} '
-    rf'--mappingsVer {{mappings_ver}} --notch')
+    r'{java} -jar {bon2_path} --inputJar {path_to_jar} --outputJar {out_path} --mcVer {mc_ver} '
+    r'--mappingsVer {mappings_ver} --notch')
 
 
 def check_pyinstaller_env() -> bool:

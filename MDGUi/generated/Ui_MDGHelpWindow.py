@@ -43,7 +43,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 2444))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 2454))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)
@@ -75,8 +75,8 @@ class Ui_MDGHelpWindow(object):
         self.mdk_path.setObjectName(u"mdk_path")
         sizePolicy1.setHeightForWidth(self.mdk_path.sizePolicy().hasHeightForWidth())
         self.mdk_path.setSizePolicy(sizePolicy1)
-        self.mdk_path.setMinimumSize(QSize(0, 120))
-        self.mdk_path.setMaximumSize(QSize(16777215, 120))
+        self.mdk_path.setMinimumSize(QSize(0, 130))
+        self.mdk_path.setMaximumSize(QSize(16777215, 130))
         self.mdk_path.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.mdk_path.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
 
@@ -285,9 +285,9 @@ class Ui_MDGHelpWindow(object):
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">MDK Archive Path:</span> </p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Choose the Forge MDK archive corresponding to the Minecraft version you are using. </p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0;"
-                        " text-indent:0px;\">You can find it on the MinecraftForge downloads page.</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Choose the Forge MDK archive corresponding to the Minecraft version you are using. Always use the latest MDK because mappings remain same for corresponding version of Minecraft, although some deo"
+                        "bfuscation issues may be fixed between different versions of the MDK.</p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">You can find it on the MinecraftForge downloads page.</p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">After downloading the MDK, select the file without unarchiving it, using the same method as selecting the mods folder. </p></body></html>", None))
         self.mdk_help_download_button.setText(QCoreApplication.translate("MDGHelpWindow", u"how to download mdk?", None))
         self.mdk_button.setText(QCoreApplication.translate("MDGHelpWindow", u"open MinecraftForge downloads page", None))

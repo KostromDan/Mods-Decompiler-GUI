@@ -24,13 +24,6 @@ def log_exceptions(exc_type: Type[BaseException], value: BaseException, tb: Trac
     sys.__excepthook__(exc_type, value, tb)
 
 
-class RelativePathFilter(logging.Filter):
-    def filter(self, record: logging.LogRecord) -> bool:
-        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-        record.relativepath = os.path.relpath(record.pathname, project_root)
-        return True
-
-
 class LoggerSignal(QObject):
     append_logger_signal = Signal(str, str)
 
@@ -73,7 +66,6 @@ class MDGLogger:
                             format=LOGGER_FORMAT)
 
         logger = logging.getLogger()
-        logger.addFilter(RelativePathFilter())
 
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(logging.Formatter(LOGGER_FORMAT))
