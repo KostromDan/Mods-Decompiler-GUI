@@ -24,7 +24,7 @@ class DeobfuscationThread(AbstractMDGThread):
 
     def __init__(self, widgets: dict[str, dict[str, Any] | list[str]]) -> None:
         super().__init__(widgets)
-        self.threads_data: dict[int, dict[str, multiprocessing.Manager.Value]] = dict()
+        self.threads_data: dict[int, dict[str, Any]] = dict()
         self.lock: multiprocessing.Lock = None
         self.finished_mods_count = 0
         self.started_mods_count = 0

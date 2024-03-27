@@ -4,14 +4,34 @@ import threading
 import time
 import zipfile
 from pathlib import Path
+from typing import Any, Optional
 
-from MDGLogic.Decompilation.AbstractDeobfDecompThread import AbstractDeobfDecompThread
 from MDGUtil import PathUtils, FileUtils
 from MDGUtil.SubprocessKiller import kill_subprocess
 
 
-class DecompilationThread(AbstractDeobfDecompThread):
+class DecompilationThread(threading.Thread):
     cache_lock = threading.Lock()
+
+    def __init__(self,
+                 mod_path: str,
+                 thread_number: int,
+                 serialized_widgets: dict[str, dict[str, Any] | list[str]]) -> None:
+        super().__init__()
+        self.mod_path = mod_path
+        self.thread_number = thread_number
+        self.serialized_widgets = serialized_widgets
+        self.cmd: Optional[subprocess.Popen] = None
+        self.kill_cmd: bool = False
+        self.success: bool = False
+
+    def terminate(self) -> None:
+        self.kill_cmd = True
+        if self.cmd is None:
+            try:
+                super().kill()
+            except AttributeError:
+                pass
 
     def run(self) -> None:
         decomp_cmd = self.serialized_widgets['decomp_cmd_line_edit']['text']

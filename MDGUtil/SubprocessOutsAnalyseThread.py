@@ -39,7 +39,7 @@ class SubprocessOutAnalyseThread(threading.Thread):
                             self.out_lines[self.line_count.value] = line
                             self.line_count.value += 1
                         if self.repeat_output_to_sys_out:
-                            self.sys_out.write(line+'\n')
+                            self.sys_out.write(line + '\n')
                             self.sys_out.flush()
                         self.logger(line)
                     self.current_line.clear()

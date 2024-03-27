@@ -1,9 +1,11 @@
 import logging
 import os
 import time
-from typing import Iterator
+from typing import Iterator, Any, Optional
 
-from MDGLogic.Decompilation.AbstractDeobfDecompMainThread import AbstractDeobfDecompMainThread
+from PySide6.QtCore import Signal
+
+from MDGLogic.AbstractMDGThread import AbstractMDGThread
 from MDGLogic.Decompilation.DecompilationThread import DecompilationThread
 from MDGUtil import PathUtils, FileUtils
 
@@ -18,7 +20,18 @@ def get_mods_iter(use_cached: list) -> Iterator[os.PathLike]:
                 yield os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH, mod)
 
 
-class DecompilationMainThread(AbstractDeobfDecompMainThread):
+class DecompilationMainThread(AbstractMDGThread):
+    failed_mod_signal = Signal(str)
+
+    def __init__(self, widgets: dict[str, dict[str, Any] | list[str]]) -> None:
+        super().__init__(widgets)
+        self.threads: list[Optional[DecompilationThread]] = []
+
+    def terminate(self) -> None:
+        for thread in self.threads:
+            thread.terminate()
+        super().terminate()
+
     def run(self) -> None:
         if not self.serialized_widgets['decomp_check_box']['isChecked']:
             self.progress.emit(100, 'Decompilation skipped.')
