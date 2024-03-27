@@ -31,7 +31,7 @@ class DeobfuscationThread(AbstractMDGThread):
         self.mods_list = os.listdir(PathUtils.TMP_MODS_PATH)
         self.mods_to_deobf_count = len(self.mods_list)
         self.started_mods_set = set()
-        self.terminated = False
+        self.terminated = 0
 
         self.deofb_fail_logic = None
         if self.serialized_widgets['deobf_failed_radio_interrupt']['isChecked']:
@@ -50,7 +50,9 @@ class DeobfuscationThread(AbstractMDGThread):
             self.deofb_algo = DeobfuscationAlgorithm.BON2
 
     def terminate(self) -> None:
-        self.terminated = True
+        self.terminated = 1
+        while not self.isFinished() and self.terminated != 2:
+            time.sleep(0.1)
 
     def deobf_callback(self, thread_number: int, exception: Exception = None) -> None:
         self.finished_mods_count += 1
@@ -170,6 +172,7 @@ class DeobfuscationThread(AbstractMDGThread):
                                 if thread_data['cmd_pid'].value != -1:
                                     kill_subprocess(thread_data['cmd_pid'].value)
                         pool.join()
+                        self.terminated = 2
                         return
                     for thread_number, thread_data in self.threads_data.items():
                         if thread_data['status'].value != Status.CREATED and thread_number not in self.started_mods_set:

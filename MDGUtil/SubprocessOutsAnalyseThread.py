@@ -31,9 +31,6 @@ class SubprocessOutAnalyseThread(threading.Thread):
             if symbol == '' and self.cmd.poll() is not None:
                 break
             if symbol != '':
-                if self.repeat_output_to_sys_out:
-                    self.sys_out.write(symbol)
-                    self.sys_out.flush()
                 self.current_line.append(symbol)
                 if symbol == '\n':
                     line = ''.join(self.current_line).rstrip('\n\r')
@@ -41,6 +38,9 @@ class SubprocessOutAnalyseThread(threading.Thread):
                         with self.line_count.get_lock():
                             self.out_lines[self.line_count.value] = line
                             self.line_count.value += 1
+                        if self.repeat_output_to_sys_out:
+                            self.sys_out.write(line+'\n')
+                            self.sys_out.flush()
                         self.logger(line)
                     self.current_line.clear()
 
