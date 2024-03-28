@@ -33,11 +33,14 @@ class SubprocessOutAnalyseThread(threading.Thread):
             if symbol != '':
                 self.current_line.append(symbol)
                 if symbol == '\n':
-                    line = ''.join(self.current_line).rstrip('\n\r')
+                    line = ''.join(self.current_line).strip('\n\r')
                     if line != '':
                         with self.line_count.get_lock():
-                            self.out_lines[self.line_count.value] = line
-                            self.line_count.value += 1
+                            if self.line_count.value in self.out_lines and line.startswith('\t'):
+                                self.out_lines[self.line_count.value] += '\n' + line
+                            else:
+                                self.line_count.value += 1
+                                self.out_lines[self.line_count.value] = line
                         if self.repeat_output_to_sys_out:
                             self.sys_out.write(line + '\n')
                             self.sys_out.flush()
@@ -54,6 +57,9 @@ class SubprocessOutsAnalyseThread(threading.Thread):
                  err_logger: Callable[[str], Any] = logging.error,
                  repeat_output_to_sys_out: bool = False) -> None:
         super().__init__()
+        self.all_msgs = None
+        self.err_msgs = None
+        self.out_msgs = None
         self.cmd = cmd
         self.out = None
         self.err = None
@@ -76,9 +82,12 @@ class SubprocessOutsAnalyseThread(threading.Thread):
         stderr_thread.start()
         stdout_thread.join()
         stderr_thread.join()
-        self.out = '\n'.join(OrderedDict(sorted(stdout_thread.out_lines.items(), key=lambda x: x[0])).values())
-        self.err = '\n'.join(OrderedDict(sorted(stderr_thread.out_lines.items(), key=lambda x: x[0])).values())
+        self.out_msgs = list(OrderedDict(sorted(stdout_thread.out_lines.items(), key=lambda x: x[0])).values())
+        self.err_msgs = list(OrderedDict(sorted(stderr_thread.out_lines.items(), key=lambda x: x[0])).values())
+        self.out = '\n'.join(self.out_msgs)
+        self.err = '\n'.join(self.err_msgs)
         all_dict = dict()
         all_dict.update(stderr_thread.out_lines)
         all_dict.update(stdout_thread.out_lines)
-        self.all = '\n'.join(OrderedDict(sorted(all_dict.items(), key=lambda x: x[0])).values())
+        self.all_msgs = list(OrderedDict(sorted(all_dict.items(), key=lambda x: x[0])).values())
+        self.all = '\n'.join(self.all_msgs)

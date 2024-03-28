@@ -2,7 +2,7 @@ import os.path
 import subprocess
 import threading
 import zipfile
-from multiprocessing.managers import ValueProxy
+from multiprocessing.managers import ValueProxy, ListProxy
 from pathlib import Path
 
 from MDGLogic.Deobfuscation.DeobfuscatioUtils import Status
@@ -17,9 +17,8 @@ def decompile(mod_path: str | os.PathLike,
               thread_number: int,
               lock: threading.Lock,
               status: ValueProxy[int],
-              stdout: ValueProxy[str],
-              stderr: ValueProxy[str],
               stdall: ValueProxy[str],
+              all_msgs: ListProxy,
               cmd_pid: ValueProxy[int]) -> None:
     with lock:
         status.value = Status.STARTED
@@ -37,9 +36,8 @@ def decompile(mod_path: str | os.PathLike,
         cmd_pid.value = cmd.pid
     analyse_thread.join()
     with lock:
-        stdout.value = analyse_thread.out
-        stderr.value = analyse_thread.err
         stdall.value = analyse_thread.all
+        all_msgs.extend(analyse_thread.all_msgs)
     try:
         decompiled_jar_path = os.path.join(out_path, os.path.basename(mod_path))
         zipfile.ZipFile(decompiled_jar_path).extractall(out_path)

@@ -59,13 +59,22 @@ class DecompilationThread(AbstractMDGThread):
             mod_name = os.path.basename(mod_path)
 
             if thread_data['stdall'].value != '':
-                logging_func = lambda e: logging.warning(e, extra={
-                    'debug': not self.serialized_widgets['decomp_logging_warnings_check_box']['isChecked']})
-                if 'ERROR: ' in thread_data['stdall'].value:
-                    logging_func = lambda e: logging.error(e, extra={
-                        'debug': not self.serialized_widgets['decomp_logging_errors_check_box']['isChecked']})
-                logging_func(f'Something happened while decompiling {mod_name}. stdout & stderr:\n'
-                             f"{thread_data['stdall'].value}")
+                show_warn = self.serialized_widgets['decomp_logging_warnings_check_box']['isChecked']
+                show_err = self.serialized_widgets['decomp_logging_errors_check_box']['isChecked']
+                logging.warning(f'Something happened while decompiling {mod_name}. stdout & stderr:', extra={
+                    'debug': (not ((show_warn and 'WARN: ' in thread_data['stdall'].value) or
+                                   (show_err and 'ERROR: ' in thread_data['stdall'].value)))})
+                logging_func_warn = lambda e: logging.warning(e, extra={
+                    'debug': not show_warn})
+                logging_func_err = lambda e: logging.error(e, extra={
+                    'debug': not show_err})
+                logging_func = logging_func_warn
+                for msg in thread_data['all_msgs']:
+                    if 'ERROR: ' in msg:
+                        logging_func = logging_func_err
+                    if 'WARN: ' in msg:
+                        logging_func = logging_func_warn
+                    logging_func(msg)
 
             match thread_data['status'].value:
                 case Status.SUCCESS:
@@ -115,9 +124,8 @@ class DecompilationThread(AbstractMDGThread):
                             'thread_number': thread_number,
                             'lock': self.lock,
                             'status': manager.Value(int, Status.CREATED),
-                            'stdout': manager.Value(str, ''),
-                            'stderr': manager.Value(str, ''),
                             'stdall': manager.Value(str, ''),
+                            'all_msgs': manager.list([]),
                             'cmd_pid': manager.Value(int, -1)}
                         pool.apply_async(decompile,
                                          kwds=self.threads_data[thread_number],
