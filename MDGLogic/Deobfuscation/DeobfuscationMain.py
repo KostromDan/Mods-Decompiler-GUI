@@ -70,6 +70,8 @@ class DeobfuscationThread(AbstractMDGThread):
 
             match thread_data['status'].value:
                 case Status.SUCCESS:
+                    logging.info(f'Finished deobfuscation of {mod_name}. stdout & stderr:\n'
+                                 f"{thread_data['stdall'].value}", extra={'debug': True})
                     logging.info(f'Finished deobfuscation of {mod_name} with success.')
                     os.remove(mod_path)
                 case _:

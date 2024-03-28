@@ -82,6 +82,7 @@ class MDGLogger:
         sys.excepthook = log_exceptions
 
         logging.info('Logger initialisation complete.')
+        logging.debug('Logger initialisation complete.')
 
     def get_log_name(self) -> str:
         current_date = datetime.now().strftime('%Y-%m-%d')

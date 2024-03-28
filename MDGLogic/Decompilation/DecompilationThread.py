@@ -32,7 +32,7 @@ def decompile(mod_path: str | os.PathLike,
                                                                 out_path))
     with lock:
         cmd = subprocess.Popen(decomp_cmd_formatted, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        analyse_thread = SubprocessOutsAnalyseThread(cmd, repeat_output_to_sys_out=True)
+        analyse_thread = SubprocessOutsAnalyseThread(cmd)
         analyse_thread.start()
         cmd_pid.value = cmd.pid
     analyse_thread.join()
