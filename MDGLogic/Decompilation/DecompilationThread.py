@@ -18,6 +18,7 @@ def decompile(mod_path: str | os.PathLike,
               lock: threading.Lock,
               status: ValueProxy[int],
               stdall: ValueProxy[str],
+              formatted_cmd: ValueProxy[str],
               all_msgs: ListProxy,
               cmd_pid: ValueProxy[int]) -> None:
     with lock:
@@ -25,11 +26,13 @@ def decompile(mod_path: str | os.PathLike,
     mod_name = os.path.basename(mod_path)
     FileUtils.create_folder(out_path)
 
-    decomp_cmd_formatted = (PathUtils.format_decompiler_command(decomp_cmd,
-                                                                java_home,
-                                                                mod_path,
-                                                                out_path))
+
     with lock:
+        decomp_cmd_formatted = (PathUtils.format_decompiler_command(decomp_cmd,
+                                                                    java_home,
+                                                                    mod_path,
+                                                                    out_path))
+        formatted_cmd.value = decomp_cmd_formatted
         cmd = subprocess.Popen(decomp_cmd_formatted, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         analyse_thread = SubprocessOutsAnalyseThread(cmd)
         analyse_thread.start()

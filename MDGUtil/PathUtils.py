@@ -43,6 +43,8 @@ DEOBFUSCATED_CACHE_PATH = os.path.join(DEOBFUSCATED_MODS_PATH, 'cache.json')
 DECOMPILED_MODS_PATH = os.path.join(RESULT_FOLDER_PATH, 'decompiled_mods')
 DECOMPILED_CACHE_PATH = os.path.join(DECOMPILED_MODS_PATH, 'cache.json')
 MERGED_MDK_PATH = os.path.join(RESULT_FOLDER_PATH, 'merged_mdk')
+VINEFLOWER_ISSUES = os.path.join(RESULT_FOLDER_PATH, 'vineflower_issues')
+VINEFLOWER_ISSUE_TEMPLATE = os.path.join(DECOMPILER_FOLDER_PATH, 'vineflower_issue_template.md')
 
 MERGED_MDK_SRC_PATH = os.path.join(MERGED_MDK_PATH, 'src', 'main')
 MERGED_MDK_RESOURCES_PATH = os.path.join(MERGED_MDK_SRC_PATH, 'resources')

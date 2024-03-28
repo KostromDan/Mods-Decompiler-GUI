@@ -2,6 +2,7 @@ import logging
 import multiprocessing
 import os
 import time
+import zipfile
 from pathlib import Path
 from typing import Iterator, Any
 
@@ -25,6 +26,14 @@ def get_mods_iter(use_cached: list) -> Iterator[os.PathLike]:
                 yield os.path.join(PathUtils.DEOBFUSCATED_MODS_PATH, mod)
 
 
+def unzip_class(mod_path, class_path, current_issue_folder):
+    with zipfile.ZipFile(mod_path, 'r') as zip_ref:
+        zip_ref.extract(class_path, current_issue_folder)
+    os.rename(os.path.join(current_issue_folder, class_path),
+              os.path.join(current_issue_folder, os.path.basename(class_path) + '.txt'))
+    FileUtils.remove_folder(os.path.join(current_issue_folder, class_path.split('/')[0]))
+
+
 class DecompilationThread(AbstractMDGThread):
     failed_mod_signal = Signal(str)
 
@@ -45,6 +54,7 @@ class DecompilationThread(AbstractMDGThread):
             time.sleep(0.1)
 
     def decomp_callback(self, thread_number: int, exception: Exception = None) -> None:
+        smth_failed = False
         self.finished_mods_count += 1
         self.progress_bar.emit((self.finished_mods_count / self.mods_to_decomp_count) * 100)
 
@@ -59,6 +69,7 @@ class DecompilationThread(AbstractMDGThread):
             mod_name = os.path.basename(mod_path)
 
             if thread_data['stdall'].value != '':
+                smth_failed = True
                 show_warn = self.serialized_widgets['decomp_logging_warnings_check_box']['isChecked']
                 show_err = self.serialized_widgets['decomp_logging_errors_check_box']['isChecked']
                 logging.warning(f'Something happened while decompiling {mod_name}. stdout & stderr:', extra={
@@ -88,6 +99,32 @@ class DecompilationThread(AbstractMDGThread):
                     else:
                         logging.warning(f'Finished decompilation of {mod_name} with error.')
                     self.failed_mod_signal.emit(mod_name)
+        if smth_failed:
+            for n, msg in enumerate(thread_data['all_msgs']):
+                if ' in class ' not in msg:
+                    continue
+                path = msg.split(' in class ')[1].split(' ')[0]
+                class_path = path + '.class'
+                java_path = os.path.join(thread_data['out_path'], path.split('$')[0]) + '.java'
+                FileUtils.create_folder(PathUtils.VINEFLOWER_ISSUES)
+                current_issue_folder = os.path.join(PathUtils.VINEFLOWER_ISSUES,
+                                                    f'{str(len(os.listdir(PathUtils.VINEFLOWER_ISSUES)))}_{mod_name}')
+                FileUtils.create_folder(current_issue_folder)
+                process = multiprocessing.Process(target=unzip_class, args=(
+                    thread_data['mod_path'], class_path, current_issue_folder))
+                process.start()
+
+                with open(PathUtils.VINEFLOWER_ISSUE_TEMPLATE, 'r') as f:
+                    issue_text = f.read()
+                with self.lock:
+                    issue_text = issue_text.format(mod_name=mod_name,
+                                                   decompiler_cmd=thread_data['formatted_cmd'].value,
+                                                   class_path=class_path,
+                                                   error_msg=msg + '\n' + thread_data['all_msgs'][n + 1],
+                                                   java_text=open(java_path, 'r').read())
+                with open(os.path.join(current_issue_folder, 'issue.md'), 'w') as f:
+                    f.write(issue_text)
+                process.join()
 
     def run(self) -> None:
         if not self.serialized_widgets['decomp_check_box']['isChecked']:
@@ -125,6 +162,7 @@ class DecompilationThread(AbstractMDGThread):
                             'lock': self.lock,
                             'status': manager.Value(int, Status.CREATED),
                             'stdall': manager.Value(str, ''),
+                            'formatted_cmd': manager.Value(str, ''),
                             'all_msgs': manager.list([]),
                             'cmd_pid': manager.Value(int, -1)}
                         pool.apply_async(decompile,
