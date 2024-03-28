@@ -26,7 +26,7 @@ class Ui_MDGMainWindow(object):
     def setupUi(self, MDGMainWindow):
         if not MDGMainWindow.objectName():
             MDGMainWindow.setObjectName(u"MDGMainWindow")
-        MDGMainWindow.resize(974, 920)
+        MDGMainWindow.resize(1201, 952)
         MDGMainWindow.setMaximumSize(QSize(16777215, 16777215))
         MDGMainWindow.setLayoutDirection(Qt.LeftToRight)
         self.action_reset = QAction(MDGMainWindow)
@@ -429,6 +429,43 @@ class Ui_MDGMainWindow(object):
 
 
         self.verticalLayout_3.addWidget(self.decomp_group_box)
+
+        self.decomp_logging_group_box = QGroupBox(self.decomp_main_group_box)
+        self.decomp_logging_group_box.setObjectName(u"decomp_logging_group_box")
+        self.horizontalLayout_17 = QHBoxLayout(self.decomp_logging_group_box)
+        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
+        self.horizontalLayout_17.setContentsMargins(0, 0, 0, 0)
+        self.decomp_logging_label = QLabel(self.decomp_logging_group_box)
+        self.decomp_logging_label.setObjectName(u"decomp_logging_label")
+
+        self.horizontalLayout_17.addWidget(self.decomp_logging_label)
+
+        self.decomp_logging_warnings_check_box = QCheckBox(self.decomp_logging_group_box)
+        self.decomp_logging_warnings_check_box.setObjectName(u"decomp_logging_warnings_check_box")
+        self.decomp_logging_warnings_check_box.setChecked(True)
+
+        self.horizontalLayout_17.addWidget(self.decomp_logging_warnings_check_box)
+
+        self.decomp_logging_errors_check_box = QCheckBox(self.decomp_logging_group_box)
+        self.decomp_logging_errors_check_box.setObjectName(u"decomp_logging_errors_check_box")
+        self.decomp_logging_errors_check_box.setChecked(True)
+
+        self.horizontalLayout_17.addWidget(self.decomp_logging_errors_check_box)
+
+        self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_17.addItem(self.horizontalSpacer_8)
+
+        self.help_decomp_logging_button = QPushButton(self.decomp_logging_group_box)
+        self.help_decomp_logging_button.setObjectName(u"help_decomp_logging_button")
+        sizePolicy.setHeightForWidth(self.help_decomp_logging_button.sizePolicy().hasHeightForWidth())
+        self.help_decomp_logging_button.setSizePolicy(sizePolicy)
+        self.help_decomp_logging_button.setMaximumSize(QSize(20, 16777215))
+
+        self.horizontalLayout_17.addWidget(self.help_decomp_logging_button)
+
+
+        self.verticalLayout_3.addWidget(self.decomp_logging_group_box)
 
         self.decomp_threads_group_box = QGroupBox(self.decomp_main_group_box)
         self.decomp_threads_group_box.setObjectName(u"decomp_threads_group_box")
@@ -841,7 +878,7 @@ class Ui_MDGMainWindow(object):
         MDGMainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGMainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 974, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1201, 22))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         MDGMainWindow.setMenuBar(self.menubar)
@@ -894,6 +931,10 @@ class Ui_MDGMainWindow(object):
         self.decomp_main_group_box.setTitle(QCoreApplication.translate("MDGMainWindow", u"Decompilation settings:", None))
         self.decomp_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"Decompile mods", None))
         self.help_decomp_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
+        self.decomp_logging_label.setText(QCoreApplication.translate("MDGMainWindow", u"Show:", None))
+        self.decomp_logging_warnings_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"warnings", None))
+        self.decomp_logging_errors_check_box.setText(QCoreApplication.translate("MDGMainWindow", u"errors", None))
+        self.help_decomp_logging_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.decomp_threads_label.setText(QCoreApplication.translate("MDGMainWindow", u"Decompilation threads:", None))
         self.help_decomp_threads_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))
         self.decomp_cmd_label.setText(QCoreApplication.translate("MDGMainWindow", u"Decompilation cmd:", None))

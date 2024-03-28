@@ -114,6 +114,7 @@ class MDGMainWindow(QMainWindow):
             self.ui.help_mdk_java_home_button: self.help_window.ui.java_home,
             self.ui.help_decompiler_java_home_button: self.help_window.ui.java_home,
             self.ui.help_bon2_path_button: self.help_window.ui.deobf_algo,
+            self.ui.help_decomp_logging_button: self.help_window.ui.decomp_logging,
         }
         for help_button, widget in self.help_widget_pairs.items():
             help_button.clicked.connect(self.help_button_clicked)
@@ -473,7 +474,7 @@ class MDGMainWindow(QMainWindow):
         if was_min_size:
             self.adjust_min_height()
 
-    def check_widgets_visibility(self, recursive: bool = True) -> None:
+    def check_widgets_visibility(self, recursive: int = 0) -> None:
         """Setting visibility of widgets according to settings."""
 
         QCoreApplication.processEvents()
@@ -527,6 +528,7 @@ class MDGMainWindow(QMainWindow):
         self.change_visibility_of_widget(self.ui.decomp_threads_group_box, decompilation_enabled)
         self.change_visibility_of_widget(self.ui.decomp_cmd_groupbox, decompilation_enabled)
         self.change_visibility_of_widget(self.ui.decompiler_java_home_group_box, decompilation_enabled)
+        self.change_visibility_of_widget(self.ui.decomp_logging_group_box, decompilation_enabled)
 
         """merge widgets"""
         self.change_visibility_of_widget(self.ui.merge_main_group_box, decompilation_enabled)
@@ -556,5 +558,7 @@ class MDGMainWindow(QMainWindow):
                 self.was_decomp_enabled = False
                 self.ui.deobf_failed_radio_decompile.setChecked(True)
 
-        if recursive:
-            self.check_widgets_visibility(recursive=False)
+        if recursive == 0:
+            recursive = 3
+        if recursive > 1:
+            self.check_widgets_visibility(recursive=recursive - 1)

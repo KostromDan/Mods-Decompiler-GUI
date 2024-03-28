@@ -37,7 +37,11 @@ class PySideHandler(logging.Handler):
 
     def emit(self, record: logging.LogRecord) -> None:
         msg = self.format(record)
-        MDGLogger().logger_signal.append_logger(LOGGER_WIDGET_COLORS[record.levelname], msg)
+        debug = False
+        if hasattr(record, 'debug'):
+            debug = getattr(record, 'debug')
+        if not debug:
+            MDGLogger().logger_signal.append_logger(LOGGER_WIDGET_COLORS[record.levelname], msg)
 
 
 class MDGLogger:

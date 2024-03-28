@@ -58,7 +58,7 @@ def get_mappings() -> OrderedDict[str, list]:
     except BaseException as e:
         thread = ExceptionThread(e)
         thread.start()
-        time.sleep(0.1)
+        thread.wait()
         return OrderedDict()  # Empty ordered dictionary
     finally:
         jpype.shutdownJVM()

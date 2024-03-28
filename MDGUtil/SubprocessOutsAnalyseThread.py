@@ -82,6 +82,3 @@ class SubprocessOutsAnalyseThread(threading.Thread):
         all_dict.update(stderr_thread.out_lines)
         all_dict.update(stdout_thread.out_lines)
         self.all = '\n'.join(OrderedDict(sorted(all_dict.items(), key=lambda x: x[0])).values())
-        print(self.out)
-        print(self.err)
-        print(self.all)

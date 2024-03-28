@@ -78,7 +78,9 @@ class CopyThread(AbstractMDGThread):
 
         use_cached_decomp = []
         use_cached_deobf = []
+        deobf_enabled = self.serialized_widgets['deobf_check_box']['isChecked']
         if cache_enabled:
+            self.progress.emit(100, 'Analysing cache.')
             if not os.path.exists(PathUtils.DECOMPILED_CACHE_PATH):
                 FileUtils.remove_folder(PathUtils.DECOMPILED_MODS_PATH)
             elif os.path.exists(PathUtils.DECOMPILED_MODS_PATH):
@@ -89,7 +91,6 @@ class CopyThread(AbstractMDGThread):
                     mod_name_without_jar = mod.removesuffix('.jar').removesuffix('_mapped')
                     mod_name_with_jar = mod_name_without_jar + '.jar'
                     decompiled_with_deobf = '_mapped' in mod
-                    deobf_enabled = self.serialized_widgets['deobf_check_box']['isChecked']
                     if mod_name_without_jar.endswith('.json'):
                         continue
                     if mod_name_without_jar not in cache:
@@ -149,7 +150,11 @@ class CopyThread(AbstractMDGThread):
                         continue
                     use_cached_deobf.append(mod_name_with_jar)
 
-        for mod_name in use_cached_deobf:
+        to_remove = set(use_cached_deobf)
+        if not deobf_enabled:
+            to_remove.update(use_cached_decomp)
+
+        for mod_name in to_remove:
             logging.info(f'Found {mod_name} in cache. Removing from tmp folder.')
             os.remove(os.path.join(PathUtils.TMP_MODS_PATH, mod_name))
 

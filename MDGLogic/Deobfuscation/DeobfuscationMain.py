@@ -61,7 +61,7 @@ class DeobfuscationThread(AbstractMDGThread):
         if exception:
             thread = ExceptionThread(exception)
             thread.start()
-            time.sleep(0.1)
+            thread.wait()
 
         with self.lock:
             thread_data = self.threads_data[thread_number]
@@ -73,10 +73,10 @@ class DeobfuscationThread(AbstractMDGThread):
                     logging.info(f'Finished deobfuscation of {mod_name} with success.')
                     os.remove(mod_path)
                 case _:
-                    self.threads_data[thread_number]['status'].value = Status.FAILED
+                    thread_data['status'].value = Status.FAILED
 
                     logging.error(f'Error while deobfuscating {mod_name}. stdout & stderr:\n'
-                                  f"{self.threads_data[thread_number]['stdall'].value}")
+                                  f"{thread_data['stdall'].value}")
                     match self.deofb_fail_logic:
                         case FailLogic.SKIP:
                             logging.warning(f'Finished deobfuscation of {mod_name} with error. '
@@ -121,48 +121,49 @@ class DeobfuscationThread(AbstractMDGThread):
         with multiprocessing.Manager() as manager:
             self.lock = manager.Lock()
             with multiprocessing.Pool(processes=allocated_threads_count) as pool:
-                for thread_number, mod_name in enumerate(self.mods_list):
-                    self.threads_data[thread_number] = {
-                        'mod_path': os.path.join(PathUtils.TMP_MODS_PATH, mod_name),
-                        'out_path': PathUtils.DEOBFUSCATED_MODS_PATH,
-                        'thread_number': thread_number,
-                        'lock': self.lock,
-                        'status': manager.Value(int, Status.CREATED),
-                        'stdout': manager.Value(str, ''),
-                        'stderr': manager.Value(str, ''),
-                        'stdall': manager.Value(str, ''),
-                        'cmd_pid': manager.Value(int, -1)}
-                    deobf_function = None
-                    match self.deofb_algo:
-                        case DeobfuscationAlgorithm.MDK_SAFE:
-                            deobf_function = deobfuscate_safe_mdk
-                            self.threads_data[thread_number]['mdk_path'] = \
-                                self.serialized_widgets['mdk_path_line_edit']['text']
-                            self.threads_data[thread_number]['java_home'] = \
-                                self.serialized_widgets['mdk_java_home_line_edit']['text']
-                        case DeobfuscationAlgorithm.MDK_FAST:
-                            deobf_function = NotImplemented
-                            self.threads_data[thread_number]['mdk_path'] = \
-                                self.serialized_widgets['mdk_path_line_edit']['text']
-                            self.threads_data[thread_number]['java_home'] = \
-                                self.serialized_widgets['mdk_java_home_line_edit']['text']
-                        case DeobfuscationAlgorithm.BON2:
-                            deobf_function = deobfuscate_bon2
-                            self.threads_data[thread_number]['bon2_cmd'] = \
-                                self.serialized_widgets['bon2_cmd_line_edit']['text']
-                            self.threads_data[thread_number]['bon2_version'] = \
-                                self.serialized_widgets['bon2_version_combo_box']['currentText']
-                            self.threads_data[thread_number]['bon2_mappings'] = \
-                                self.serialized_widgets['bon2_mappings_combo_box']['currentText']
-                            self.threads_data[thread_number]['bon2_path'] = \
-                                self.serialized_widgets['bon2_path_line_edit']['text']
-                            self.threads_data[thread_number]['java_home'] = \
-                                self.serialized_widgets['bon2_java_home_line_edit']['text']
+                with self.lock:
+                    for thread_number, mod_name in enumerate(self.mods_list):
+                        self.threads_data[thread_number] = {
+                            'mod_path': os.path.join(PathUtils.TMP_MODS_PATH, mod_name),
+                            'out_path': PathUtils.DEOBFUSCATED_MODS_PATH,
+                            'thread_number': thread_number,
+                            'lock': self.lock,
+                            'status': manager.Value(int, Status.CREATED),
+                            'stdout': manager.Value(str, ''),
+                            'stderr': manager.Value(str, ''),
+                            'stdall': manager.Value(str, ''),
+                            'cmd_pid': manager.Value(int, -1)}
+                        deobf_function = None
+                        match self.deofb_algo:
+                            case DeobfuscationAlgorithm.MDK_SAFE:
+                                deobf_function = deobfuscate_safe_mdk
+                                self.threads_data[thread_number]['mdk_path'] = \
+                                    self.serialized_widgets['mdk_path_line_edit']['text']
+                                self.threads_data[thread_number]['java_home'] = \
+                                    self.serialized_widgets['mdk_java_home_line_edit']['text']
+                            case DeobfuscationAlgorithm.MDK_FAST:
+                                deobf_function = NotImplemented
+                                self.threads_data[thread_number]['mdk_path'] = \
+                                    self.serialized_widgets['mdk_path_line_edit']['text']
+                                self.threads_data[thread_number]['java_home'] = \
+                                    self.serialized_widgets['mdk_java_home_line_edit']['text']
+                            case DeobfuscationAlgorithm.BON2:
+                                deobf_function = deobfuscate_bon2
+                                self.threads_data[thread_number]['bon2_cmd'] = \
+                                    self.serialized_widgets['bon2_cmd_line_edit']['text']
+                                self.threads_data[thread_number]['bon2_version'] = \
+                                    self.serialized_widgets['bon2_version_combo_box']['currentText']
+                                self.threads_data[thread_number]['bon2_mappings'] = \
+                                    self.serialized_widgets['bon2_mappings_combo_box']['currentText']
+                                self.threads_data[thread_number]['bon2_path'] = \
+                                    self.serialized_widgets['bon2_path_line_edit']['text']
+                                self.threads_data[thread_number]['java_home'] = \
+                                    self.serialized_widgets['bon2_java_home_line_edit']['text']
 
-                    pool.apply_async(deobf_function,
-                                     kwds=self.threads_data[thread_number],
-                                     callback=lambda x, n=thread_number: self.deobf_callback(n),
-                                     error_callback=lambda e, n=thread_number: self.deobf_callback(n, exception=e))
+                        pool.apply_async(deobf_function,
+                                         kwds=self.threads_data[thread_number],
+                                         callback=lambda x, n=thread_number: self.deobf_callback(n),
+                                         error_callback=lambda e, n=thread_number: self.deobf_callback(n, exception=e))
                 pool.close()
                 while len(pool._cache):
                     if self.terminated:

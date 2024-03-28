@@ -43,7 +43,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 2454))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, -1177, 1163, 2520))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)
@@ -151,6 +151,17 @@ class Ui_MDGHelpWindow(object):
         self.decomp_mods.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
 
         self.verticalLayout_2.addWidget(self.decomp_mods)
+
+        self.decomp_logging = QTextBrowser(self.scrollAreaWidgetContents)
+        self.decomp_logging.setObjectName(u"decomp_logging")
+        sizePolicy1.setHeightForWidth(self.decomp_logging.sizePolicy().hasHeightForWidth())
+        self.decomp_logging.setSizePolicy(sizePolicy1)
+        self.decomp_logging.setMinimumSize(QSize(0, 60))
+        self.decomp_logging.setMaximumSize(QSize(16777215, 60))
+        self.decomp_logging.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.decomp_logging.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+
+        self.verticalLayout_2.addWidget(self.decomp_logging)
 
         self.decomp_cmd = QTextBrowser(self.scrollAreaWidgetContents)
         self.decomp_cmd.setObjectName(u"decomp_cmd")
@@ -353,6 +364,15 @@ class Ui_MDGHelpWindow(object):
                         "pilation is often used in Minecraft modding communities by developers who want to gain insights into how a mod works, fix issues, add new features, or create derivative works based on existing mods. </p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">If enabled: deobfusacted code will be decompiled. Results can be found in the &quot;<span style=\" font-weight:700;\">decompiled_mods</span>&quot; folder. </p></body></html>", None))
+        self.decomp_logging.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-weight:700;\">Show erros/warnings:</span> </p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This option allows you to configure the display of warnings/errors from the decompiler in the ProgressWindow logging widget.</p></body></html>", None))
         self.decomp_cmd.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

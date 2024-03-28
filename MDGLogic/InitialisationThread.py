@@ -80,7 +80,7 @@ class InitialisationThread(AbstractMDGThread):
             except Exception as e:
                 thread = ExceptionThread(e)
                 thread.start()
-                time.sleep(0.1)
+                thread.wait()
                 if cmd_analyse_thread is not None and 'has been compiled by a more recent version of the Java' in cmd_analyse_thread.err:
                     self.critical_signal.emit('Incorrect java version for decompiler',
                                               'This message indicates that decompiler was '
@@ -128,7 +128,7 @@ class InitialisationThread(AbstractMDGThread):
             except Exception as e:
                 thread = ExceptionThread(e)
                 thread.start()
-                time.sleep(0.1)
+                thread.wait()
                 if cmd_analyse_thread is not None and 'has been compiled by a more recent version of the Java' in cmd_analyse_thread.err:
                     self.critical_signal.emit('Incorrect java version for bon2',
                                               'This message indicates that bon2 was '

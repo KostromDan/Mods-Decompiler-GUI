@@ -6,6 +6,7 @@ import shutil
 import zipfile
 from typing import Iterator
 
+from MDGLogic.InitialisationThread import ExceptionThread
 from MDGUtil import PathUtils
 
 
@@ -35,29 +36,35 @@ def walk_in_zipfile(zip_ref: zipfile.ZipFile) -> Iterator[str]:
 
 def extract_jars_from_jar(jar_path: str | os.PathLike,
                           extract_to: str | os.PathLike) -> None:
-    with zipfile.ZipFile(jar_path, 'r') as zip_ref:
-        for file in walk_in_zipfile(zip_ref):
-            if file.endswith('.jar'):
-                zip_ref.extract(file, extract_to)
+    try:
+        with zipfile.ZipFile(jar_path, 'r') as zip_ref:
+            for file in walk_in_zipfile(zip_ref):
+                if file.endswith('.jar'):
+                    zip_ref.extract(file, extract_to)
 
-                iter_count = 0
-                old_jar_path = os.path.join(extract_to, file)
-                while True:
-                    suffix = (f'_{iter_count}' if iter_count > 0 else '') + '.jar'
-                    new_file_name = remove_unsupported_symbols(os.path.basename(file)).removesuffix('.jar')
-                    new_jar_path = os.path.join(extract_to, new_file_name) + suffix
-                    try:
-                        os.rename(old_jar_path, new_jar_path)
-                        break
-                    except FileExistsError:
-                        if filecmp.cmp(old_jar_path, new_jar_path):
+                    iter_count = 0
+                    old_jar_path = os.path.join(extract_to, file)
+                    while True:
+                        suffix = (f'_{iter_count}' if iter_count > 0 else '') + '.jar'
+                        new_file_name = remove_unsupported_symbols(os.path.basename(file)).removesuffix('.jar')
+                        new_jar_path = os.path.join(extract_to, new_file_name) + suffix
+                        try:
+                            os.rename(old_jar_path, new_jar_path)
                             break
-                        iter_count += 1
-                logging.info(f'Found and extracted {new_file_name} from {os.path.basename(jar_path)}')
-                path_elements = file.split('/')
-                if len(path_elements) != 1:
-                    shutil.rmtree(os.path.join(extract_to, path_elements[0]))
-                extract_jars_from_jar(new_jar_path, extract_to)  # Extract jar in jar in jar and so on
+                        except FileExistsError:
+                            if filecmp.cmp(old_jar_path, new_jar_path):
+                                break
+                            iter_count += 1
+                    logging.info(f'Found and extracted {new_file_name} from {os.path.basename(jar_path)}')
+                    path_elements = file.split('/')
+                    if len(path_elements) != 1:
+                        shutil.rmtree(os.path.join(extract_to, path_elements[0]))
+                    extract_jars_from_jar(new_jar_path, extract_to)  # Extract jar in jar in jar and so on
+    except zipfile.BadZipFile as e:
+        thread = ExceptionThread(e)
+        thread.start()
+        thread.wait()
+        logging.error(f'{os.path.basename(jar_path)} is corrupted. Failed to extract jar in jar from it.')
 
 
 def append_cache(cache_path: str | os.PathLike, key: str, value: str) -> None:

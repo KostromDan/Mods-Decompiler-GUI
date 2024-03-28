@@ -74,7 +74,8 @@ class MdkInitialisationThread(AbstractMDGThread):
             UiUtils.is_checked_and_enabled(self.serialized_widgets['download_sources_check_box']))
         mdk_path = self.serialized_widgets['mdk_path_line_edit']['text']
 
-        if (self.serialized_widgets['deobf_algo_radio_bon2']['isChecked'] or
+        if (not self.serialized_widgets['deobf_check_box']['isChecked'] or
+                self.serialized_widgets['deobf_algo_radio_bon2']['isChecked'] or
                 not self.serialized_widgets['mdk_path_line_edit']['isEnabled'] or
                 len(os.listdir(PathUtils.TMP_MODS_PATH)) == 0):
             if UiUtils.is_checked_and_enabled(self.serialized_widgets['merge_check_box']):
