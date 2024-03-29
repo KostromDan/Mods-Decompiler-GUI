@@ -100,31 +100,48 @@ class DecompilationThread(AbstractMDGThread):
                         logging.warning(f'Finished decompilation of {mod_name} with error.')
                     self.failed_mod_signal.emit(mod_name)
         if smth_failed:
-            for n, msg in enumerate(thread_data['all_msgs']):
-                if ' in class ' not in msg:
-                    continue
-                path = msg.split(' in class ')[1].split(' ')[0]
-                class_path = path + '.class'
-                java_path = os.path.join(thread_data['out_path'], path.split('$')[0]) + '.java'
-                FileUtils.create_folder(PathUtils.VINEFLOWER_ISSUES)
-                current_issue_folder = os.path.join(PathUtils.VINEFLOWER_ISSUES,
-                                                    f'{str(len(os.listdir(PathUtils.VINEFLOWER_ISSUES)))}_{mod_name}')
-                FileUtils.create_folder(current_issue_folder)
-                process = multiprocessing.Process(target=unzip_class, args=(
-                    thread_data['mod_path'], class_path, current_issue_folder))
-                process.start()
+            try:
+                for n, msg in enumerate(thread_data['all_msgs']):
+                    if ' for class ' in msg:
+                        path = msg.split(' for class ')[1].split(' ')[0]
+                    elif ' in class ' in msg:
+                        path = msg.split(' in class ')[1].split(' ')[0]
+                    else:
+                        continue
+                    path = path.split('\n')[0]
 
-                with open(PathUtils.VINEFLOWER_ISSUE_TEMPLATE, 'r') as f:
-                    issue_text = f.read()
-                with self.lock:
-                    issue_text = issue_text.format(mod_name=mod_name,
-                                                   decompiler_cmd=thread_data['formatted_cmd'].value,
-                                                   class_path=class_path,
-                                                   error_msg=msg + '\n' + thread_data['all_msgs'][n + 1],
-                                                   java_text=open(java_path, 'r').read())
-                with open(os.path.join(current_issue_folder, 'issue.md'), 'w') as f:
-                    f.write(issue_text)
-                process.join()
+                    class_path = path + '.class'
+                    java_path = os.path.join(thread_data['out_path'], path.split('$')[0]) + '.java'
+                    FileUtils.create_folder(PathUtils.VINEFLOWER_ISSUES)
+                    current_issue_folder = os.path.join(PathUtils.VINEFLOWER_ISSUES,
+                                                        f'{str(len(os.listdir(PathUtils.VINEFLOWER_ISSUES)))}_{mod_name}')
+                    FileUtils.create_folder(current_issue_folder)
+                    process = multiprocessing.Process(target=unzip_class, args=(
+                        thread_data['mod_path'], class_path, current_issue_folder))
+                    process.start()
+
+                    with open(PathUtils.VINEFLOWER_ISSUE_TEMPLATE, 'r') as f:
+                        issue_text = f.read()
+                    append_str = ''
+                    try:
+                        if thread_data['all_msgs'][n + 1].split('\n')[1].startswith('\t'):
+                            append_str = '\n' + thread_data['all_msgs'][n + 1]
+                    except:
+                        pass
+                    with self.lock:
+                        issue_text = issue_text.format(mod_name=mod_name,
+                                                       decompiler_cmd=thread_data['formatted_cmd'].value,
+                                                       class_path=class_path,
+                                                       error_msg=msg + append_str,
+                                                       java_text=open(java_path, 'r').read())
+                    with open(os.path.join(current_issue_folder, 'issue.md'), 'w') as f:
+                        f.write(issue_text)
+                    process.join()
+            except Exception as e:
+                print(12312313123)
+                thread = ExceptionThread(e)
+                thread.start()
+                thread.wait()
 
     def run(self) -> None:
         if not self.serialized_widgets['decomp_check_box']['isChecked']:
