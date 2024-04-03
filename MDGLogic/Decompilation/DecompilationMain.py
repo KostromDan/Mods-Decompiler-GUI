@@ -106,6 +106,8 @@ class DecompilationThread(AbstractMDGThread):
                         path = msg.split(' for class ')[1].split(' ')[0]
                     elif ' in class ' in msg:
                         path = msg.split(' in class ')[1].split(' ')[0]
+                    elif msg.startswith('Class ') and msg.endswith(" couldn't be fully decompiled."):
+                        path = msg.split(' ')[1][0]
                     else:
                         continue
                     path = path.split('\n')[0]
@@ -138,7 +140,6 @@ class DecompilationThread(AbstractMDGThread):
                         f.write(issue_text)
                     process.join()
             except Exception as e:
-                print(12312313123)
                 thread = ExceptionThread(e)
                 thread.start()
                 thread.wait()
