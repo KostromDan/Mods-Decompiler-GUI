@@ -26,7 +26,7 @@ FORGE_GRADLE_DEOBF_CACHE_FOLDER = os.path.join(get_gradle_caches_path(),
 
 DECOMPILER_FOLDER_PATH = os.path.join('decompiler')
 TEST_MOD_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'test-mod.jar')
-DECOMPILER_JAR_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'vineflower-1.10.0+local.jar')
+DECOMPILER_JAR_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'vineflower-1.10.0.jar')
 BON2_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'BON2-2.5.1-CUSTOM-all.jar')
 
 TMP_FOLDER_PATH = os.path.join('tmp')
