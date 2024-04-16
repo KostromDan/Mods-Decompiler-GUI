@@ -18,6 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
     QMenuBar, QPushButton, QSizePolicy, QTextEdit,
     QVBoxLayout, QWidget)
+from . import resources_rc
 
 class Ui_MDGResultWindow(object):
     def setupUi(self, MDGResultWindow):
@@ -25,6 +26,9 @@ class Ui_MDGResultWindow(object):
             MDGResultWindow.setObjectName(u"MDGResultWindow")
         MDGResultWindow.resize(800, 418)
         MDGResultWindow.setMaximumSize(QSize(16777215, 16777215))
+        icon = QIcon()
+        icon.addFile(u":/images/logo.png", QSize(), QIcon.Normal, QIcon.Off)
+        MDGResultWindow.setWindowIcon(icon)
         self.centralwidget = QWidget(MDGResultWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setEnabled(True)

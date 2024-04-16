@@ -18,6 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
     QMenuBar, QProgressBar, QPushButton, QSizePolicy,
     QSpacerItem, QTextEdit, QVBoxLayout, QWidget)
+from . import resources_rc
 
 class Ui_MDGProgressWindow(object):
     def setupUi(self, MDGProgressWindow):
@@ -25,6 +26,9 @@ class Ui_MDGProgressWindow(object):
             MDGProgressWindow.setObjectName(u"MDGProgressWindow")
         MDGProgressWindow.resize(1100, 546)
         MDGProgressWindow.setMaximumSize(QSize(16777215, 16777215))
+        icon = QIcon()
+        icon.addFile(u":/images/logo.png", QSize(), QIcon.Normal, QIcon.Off)
+        MDGProgressWindow.setWindowIcon(icon)
         self.centralwidget = QWidget(MDGProgressWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setEnabled(True)

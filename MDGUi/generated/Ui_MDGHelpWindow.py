@@ -18,6 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QHBoxLayout, QMainWindow,
     QMenuBar, QPushButton, QScrollArea, QSizePolicy,
     QTextBrowser, QVBoxLayout, QWidget)
+from . import resources_rc
 
 class Ui_MDGHelpWindow(object):
     def setupUi(self, MDGHelpWindow):
@@ -31,6 +32,9 @@ class Ui_MDGHelpWindow(object):
         MDGHelpWindow.setSizePolicy(sizePolicy)
         MDGHelpWindow.setMinimumSize(QSize(1200, 0))
         MDGHelpWindow.setMaximumSize(QSize(1200, 16777215))
+        icon = QIcon()
+        icon.addFile(u":/images/logo.png", QSize(), QIcon.Normal, QIcon.Off)
+        MDGHelpWindow.setWindowIcon(icon)
         self.centralwidget = QWidget(MDGHelpWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setEnabled(True)
@@ -43,7 +47,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -1177, 1163, 2520))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 2520))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)

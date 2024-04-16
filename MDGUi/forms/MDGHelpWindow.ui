@@ -31,6 +31,10 @@
   <property name="windowTitle">
    <string>MDGHelpWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../resources.qrc">
+    <normaloff>:/images/logo.png</normaloff>:/images/logo.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="enabled">
     <bool>true</bool>
@@ -51,7 +55,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-1177</y>
+         <y>0</y>
          <width>1163</width>
          <height>2520</height>
         </rect>
@@ -759,6 +763,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

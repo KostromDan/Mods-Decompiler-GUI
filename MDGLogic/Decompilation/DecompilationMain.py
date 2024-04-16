@@ -83,8 +83,10 @@ class DecompilationThread(AbstractMDGThread):
                 for msg in thread_data['all_msgs']:
                     if 'ERROR: ' in msg:
                         logging_func = logging_func_err
+                        msg = msg.removeprefix('ERROR: ')
                     if 'WARN: ' in msg:
                         logging_func = logging_func_warn
+                        msg = msg.removeprefix('WARN: ')
                     logging_func(msg)
 
             match thread_data['status'].value:
