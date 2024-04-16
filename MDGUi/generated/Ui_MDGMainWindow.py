@@ -19,27 +19,38 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QGroupBox,
     QHBoxLayout, QLabel, QLineEdit, QMainWindow,
     QMenu, QMenuBar, QPushButton, QRadioButton,
-    QSizePolicy, QSlider, QSpacerItem, QSpinBox,
-    QVBoxLayout, QWidget)
+    QScrollArea, QSizePolicy, QSlider, QSpacerItem,
+    QSpinBox, QVBoxLayout, QWidget)
 
 class Ui_MDGMainWindow(object):
     def setupUi(self, MDGMainWindow):
         if not MDGMainWindow.objectName():
             MDGMainWindow.setObjectName(u"MDGMainWindow")
-        MDGMainWindow.resize(1201, 952)
+        MDGMainWindow.resize(1002, 982)
         MDGMainWindow.setMaximumSize(QSize(16777215, 16777215))
         MDGMainWindow.setLayoutDirection(Qt.LeftToRight)
         self.action_reset = QAction(MDGMainWindow)
         self.action_reset.setObjectName(u"action_reset")
         self.action_save = QAction(MDGMainWindow)
         self.action_save.setObjectName(u"action_save")
+        self.action_adjust_height = QAction(MDGMainWindow)
+        self.action_adjust_height.setObjectName(u"action_adjust_height")
         self.centralwidget = QWidget(MDGMainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setEnabled(True)
         self.centralwidget.setAutoFillBackground(False)
         self.verticalLayout_8 = QVBoxLayout(self.centralwidget)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
-        self.mods_path_vertical_group_box = QGroupBox(self.centralwidget)
+        self.scrollArea = QScrollArea(self.centralwidget)
+        self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 982, 910))
+        self.verticalLayout_9 = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.mods_path_vertical_group_box = QGroupBox(self.scrollAreaWidgetContents)
         self.mods_path_vertical_group_box.setObjectName(u"mods_path_vertical_group_box")
         self.mods_path_vertical_group_box.setEnabled(True)
         self.mods_path_vertical_group_box.setMinimumSize(QSize(0, 58))
@@ -100,9 +111,9 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout_2.addLayout(self.horizontalLayout_8)
 
 
-        self.verticalLayout_8.addWidget(self.mods_path_vertical_group_box)
+        self.verticalLayout_9.addWidget(self.mods_path_vertical_group_box)
 
-        self.mdk_path_vertical_group_box = QGroupBox(self.centralwidget)
+        self.mdk_path_vertical_group_box = QGroupBox(self.scrollAreaWidgetContents)
         self.mdk_path_vertical_group_box.setObjectName(u"mdk_path_vertical_group_box")
         self.mdk_path_vertical_group_box.setMinimumSize(QSize(0, 58))
         self.mdk_path_vertical_group_box.setAcceptDrops(True)
@@ -157,9 +168,9 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout_4.addLayout(self.horizontalLayout_11)
 
 
-        self.verticalLayout_8.addWidget(self.mdk_path_vertical_group_box)
+        self.verticalLayout_9.addWidget(self.mdk_path_vertical_group_box)
 
-        self.deobf_main_group_box = QGroupBox(self.centralwidget)
+        self.deobf_main_group_box = QGroupBox(self.scrollAreaWidgetContents)
         self.deobf_main_group_box.setObjectName(u"deobf_main_group_box")
         self.verticalLayout = QVBoxLayout(self.deobf_main_group_box)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -401,9 +412,9 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout.addWidget(self.deobf_failed_group_box)
 
 
-        self.verticalLayout_8.addWidget(self.deobf_main_group_box)
+        self.verticalLayout_9.addWidget(self.deobf_main_group_box)
 
-        self.decomp_main_group_box = QGroupBox(self.centralwidget)
+        self.decomp_main_group_box = QGroupBox(self.scrollAreaWidgetContents)
         self.decomp_main_group_box.setObjectName(u"decomp_main_group_box")
         self.verticalLayout_3 = QVBoxLayout(self.decomp_main_group_box)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
@@ -545,9 +556,9 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout_3.addWidget(self.decomp_cmd_groupbox)
 
 
-        self.verticalLayout_8.addWidget(self.decomp_main_group_box)
+        self.verticalLayout_9.addWidget(self.decomp_main_group_box)
 
-        self.merge_main_group_box = QGroupBox(self.centralwidget)
+        self.merge_main_group_box = QGroupBox(self.scrollAreaWidgetContents)
         self.merge_main_group_box.setObjectName(u"merge_main_group_box")
         self.verticalLayout_5 = QVBoxLayout(self.merge_main_group_box)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -634,13 +645,13 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout_5.addWidget(self.patch_mdk_group_box)
 
 
-        self.verticalLayout_8.addWidget(self.merge_main_group_box)
+        self.verticalLayout_9.addWidget(self.merge_main_group_box)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.verticalLayout_8.addItem(self.verticalSpacer)
+        self.verticalLayout_9.addItem(self.verticalSpacer)
 
-        self.java_home_main_group_box = QGroupBox(self.centralwidget)
+        self.java_home_main_group_box = QGroupBox(self.scrollAreaWidgetContents)
         self.java_home_main_group_box.setObjectName(u"java_home_main_group_box")
         self.verticalLayout_7 = QVBoxLayout(self.java_home_main_group_box)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
@@ -793,9 +804,9 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout_7.addWidget(self.decompiler_java_home_group_box)
 
 
-        self.verticalLayout_8.addWidget(self.java_home_main_group_box)
+        self.verticalLayout_9.addWidget(self.java_home_main_group_box)
 
-        self.additional_options_group_box = QGroupBox(self.centralwidget)
+        self.additional_options_group_box = QGroupBox(self.scrollAreaWidgetContents)
         self.additional_options_group_box.setObjectName(u"additional_options_group_box")
         self.verticalLayout_6 = QVBoxLayout(self.additional_options_group_box)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
@@ -867,7 +878,11 @@ class Ui_MDGMainWindow(object):
         self.verticalLayout_6.addWidget(self.commit_after_finish_group_box)
 
 
-        self.verticalLayout_8.addWidget(self.additional_options_group_box)
+        self.verticalLayout_9.addWidget(self.additional_options_group_box)
+
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        self.verticalLayout_8.addWidget(self.scrollArea)
 
         self.start_button = QPushButton(self.centralwidget)
         self.start_button.setObjectName(u"start_button")
@@ -878,7 +893,7 @@ class Ui_MDGMainWindow(object):
         MDGMainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MDGMainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1201, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1002, 22))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         MDGMainWindow.setMenuBar(self.menubar)
@@ -886,6 +901,7 @@ class Ui_MDGMainWindow(object):
         self.menubar.addAction(self.menuFile.menuAction())
         self.menuFile.addAction(self.action_save)
         self.menuFile.addAction(self.action_reset)
+        self.menuFile.addAction(self.action_adjust_height)
 
         self.retranslateUi(MDGMainWindow)
 
@@ -896,6 +912,7 @@ class Ui_MDGMainWindow(object):
         MDGMainWindow.setWindowTitle(QCoreApplication.translate("MDGMainWindow", u"MDG (Mods Decompiler Gui)", None))
         self.action_reset.setText(QCoreApplication.translate("MDGMainWindow", u"reset", None))
         self.action_save.setText(QCoreApplication.translate("MDGMainWindow", u"save", None))
+        self.action_adjust_height.setText(QCoreApplication.translate("MDGMainWindow", u"adjust height", None))
         self.mods_path_label.setText(QCoreApplication.translate("MDGMainWindow", u"Mods folder path:", None))
         self.select_mods_button.setText(QCoreApplication.translate("MDGMainWindow", u"select", None))
         self.help_mods_button.setText(QCoreApplication.translate("MDGMainWindow", u"?", None))

@@ -10,7 +10,7 @@ import psutil
 from PySide6.QtCore import QMimeData, QCoreApplication, QTimer, Qt
 from PySide6.QtGui import QDropEvent, QDragEnterEvent, QDragLeaveEvent, QCloseEvent, QFontMetrics
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QFileSystemModel, QCompleter, QWidget, QLineEdit, \
-    QSlider, QSpinBox, QPushButton, QComboBox
+    QSlider, QSpinBox, QPushButton, QComboBox, QApplication
 
 from MDGUi.generated.Ui_MDGMainWindow import Ui_MDGMainWindow
 from MDGUtil import UiUtils, PathUtils, BON2Utils
@@ -29,6 +29,7 @@ class MDGMainWindow(QMainWindow):
         self.was_decomp_enabled = False
         self.serialized_widgets = None
         self.progress_window = None
+        self.adjusting_min_height = False
         self.default_cmd_configs = dict()
 
         self.bon2_mappings = BON2Utils.DEFAULT_MAPPINGS
@@ -169,6 +170,7 @@ class MDGMainWindow(QMainWindow):
 
         self.ui.action_reset.triggered.connect(self.action_reset)
         self.ui.action_save.triggered.connect(self.save_ui_to_config)
+        self.ui.action_adjust_height.triggered.connect(self.adjust_min_height)
 
         self.ui.bon2_version_combo_box.currentTextChanged.connect(self.bon2_version_changed)
         self.ui.bon2_version_combo_box.addItems(self.bon2_mappings.keys())
@@ -177,10 +179,17 @@ class MDGMainWindow(QMainWindow):
 
         self.load_ui_from_config()
         self.check_widgets_visibility()
+        QTimer.singleShot(3000,
+                          lambda: self.ui.scrollArea.setMinimumWidth(self.ui.scrollArea.widget().sizeHint().width()))
         self.adjust_min_height()
 
         if PathUtils.get_java_home() == '':
             QTimer.singleShot(20, UiUtils.show_java_not_found_message_box)
+
+    def fit_window_to_screen(self):
+        if self.geometry().bottom() > QApplication.primaryScreen().geometry().bottom():
+            self.resize(self.width(),
+                        self.height() - 100 - self.geometry().bottom() + QApplication.primaryScreen().geometry().bottom())
 
     def setup_java_home_combo_box(self, combo_box: QComboBox, line_edit: QLineEdit):
         combo_box.addItems(PathUtils.get_all_java_homes())
@@ -282,20 +291,25 @@ class MDGMainWindow(QMainWindow):
         event.accept()
         return file_paths[0]
 
+    def make_red_and_visible(self, widget: QWidget) -> None:
+        widget.setStyleSheet('border: 1px solid red')
+        self.ui.scrollArea.ensureWidgetVisible(widget)
+
     def help_button_clicked(self) -> None:
         self.help_window.start_help_window(self.help_widget_pairs[self.sender()])
 
     def start_button(self) -> None:
+        self.adjust_min_height()
         self.save_ui_to_config()
         mods_folder_path = self.ui.mods_path_line_edit.text()
         if not os.path.exists(mods_folder_path):
-            self.ui.mods_path_line_edit.setStyleSheet('border: 1px solid red')
+            self.make_red_and_visible(self.ui.mods_path_line_edit)
             QMessageBox.warning(self, 'Incorrect path', 'Path not exists!\n'
                                                         'Check mods folder path.',
                                 QMessageBox.StandardButton.Ok)
             return
         if not os.path.isdir(mods_folder_path):
-            self.ui.mods_path_line_edit.setStyleSheet('border: 1px solid red')
+            self.make_red_and_visible(self.ui.mods_path_line_edit)
             QMessageBox.warning(self, 'Incorrect path', 'Path is not to folder!\n'
                                                         'Check mods folder path.',
                                 QMessageBox.StandardButton.Ok)
@@ -304,7 +318,7 @@ class MDGMainWindow(QMainWindow):
             if mod.endswith('.jar'):
                 break
         else:
-            self.ui.mods_path_line_edit.setStyleSheet('border: 1px solid red')
+            self.make_red_and_visible(self.ui.mods_path_line_edit)
             QMessageBox.warning(self, 'Incorrect path', 'Not found a single .jar file in mods folder!\n'
                                                         'Check mods folder path.',
                                 QMessageBox.StandardButton.Ok)
@@ -312,13 +326,13 @@ class MDGMainWindow(QMainWindow):
         if self.ui.mdk_path_vertical_group_box.isEnabled():
             mdk_path = self.ui.mdk_path_line_edit.text()
             if not os.path.exists(mdk_path):
-                self.ui.mdk_path_line_edit.setStyleSheet('border: 1px solid red')
+                self.make_red_and_visible(self.ui.mdk_path_line_edit)
                 QMessageBox.warning(self, 'Incorrect path', 'Path not exists!\n'
                                                             'Check mdk archive path.',
                                     QMessageBox.StandardButton.Ok)
                 return
             if not zipfile.is_zipfile(mdk_path):
-                self.ui.mdk_path_line_edit.setStyleSheet('border: 1px solid red')
+                self.make_red_and_visible(self.ui.mdk_path_line_edit)
                 QMessageBox.warning(self, 'Incorrect path', 'Path is not to zip archive!\n'
                                                             'Check mdk archive path.',
                                     QMessageBox.StandardButton.Ok)
@@ -328,7 +342,7 @@ class MDGMainWindow(QMainWindow):
                     with mdk.open('build.gradle'):
                         pass
                 except KeyError:
-                    self.ui.mdk_path_line_edit.setStyleSheet('border: 1px solid red')
+                    self.make_red_and_visible(self.ui.mdk_path_line_edit)
                     QMessageBox.warning(self, 'Incorrect path', '"build.gradle" not found in mdk!\n'
                                                                 'Check that mdk is valid.',
                                         QMessageBox.StandardButton.Ok)
@@ -339,7 +353,7 @@ class MDGMainWindow(QMainWindow):
             return
         if UiUtils.is_checked_and_enabled(self.ui.deobf_algo_radio_bon2):
             if not os.path.exists(self.ui.bon2_path_line_edit.text()):
-                self.ui.bon2_path_line_edit.setStyleSheet('border: 1px solid red')
+                self.make_red_and_visible(self.ui.bon2_path_line_edit)
                 QMessageBox.warning(self, 'Incorrect path', "Bon2 path doesn't exists.",
                                     QMessageBox.StandardButton.Ok)
         for group_box, data in self.java_home_dict.items():
@@ -348,7 +362,7 @@ class MDGMainWindow(QMainWindow):
             try:
                 PathUtils.get_path_to_java(data['line_edit'].text())
             except FileNotFoundError:
-                data['line_edit'].setStyleSheet('border: 1px solid red')
+                self.make_red_and_visible(data['line_edit'])
                 QMessageBox.warning(self, 'Incorrect JAVA_HOME path',
                                     "Can't find executable java in this path.\n"
                                     'Check this JAVA_HOME path.',
@@ -436,7 +450,7 @@ class MDGMainWindow(QMainWindow):
 
     def critical_from_progress_window(self, title: str, text: str, widget_name: str) -> None:
         if widget_name not in [None, '']:
-            getattr(self.ui, widget_name).setStyleSheet('border: 1px solid red')
+            self.make_red_and_visible(getattr(self.ui, widget_name))
         self.setEnabled(True)
         self.show()
         QMessageBox.critical(self, title, text, QMessageBox.StandardButton.Ok)
@@ -461,14 +475,27 @@ class MDGMainWindow(QMainWindow):
         fs_completer = QCompleter(fs_model, line_edit)
         line_edit.setCompleter(fs_completer)
 
-    def adjust_min_height(self) -> None:
-        QCoreApplication.processEvents()
-        if self.minimumSizeHint().height() != self.height():
-            self.resize(self.width(), self.minimumSizeHint().height())
-            QTimer.singleShot(20, self.adjust_min_height)
+    def get_min_height(self) -> int:
+        current_scroll_area_height = self.ui.scrollArea.height()
+        min_scroll_area_height = self.ui.scrollArea.widget().minimumSizeHint().height() + 2
+        dif = min_scroll_area_height - current_scroll_area_height
+        return self.height() + dif
+
+    def adjust_min_height(self, recursive=False) -> None:
+        if not recursive and self.adjusting_min_height:
+            return
+        self.adjusting_min_height = True
+        min_height = self.get_min_height()
+        if min_height != self.height():
+            self.resize(self.width(), min_height)
+            QCoreApplication.processEvents()
+            QTimer.singleShot(20, lambda: self.adjust_min_height(True))
+        else:
+            self.fit_window_to_screen()
+            self.adjusting_min_height = False
 
     def change_visibility_of_widget(self, element: QWidget, visible: bool) -> None:
-        was_min_size = self.minimumSizeHint().height() == self.height()
+        was_min_size = self.get_min_height() == self.height()
         element.setVisible(visible)
         element.setEnabled(visible)
         if was_min_size:
@@ -476,6 +503,8 @@ class MDGMainWindow(QMainWindow):
 
     def check_widgets_visibility(self, recursive: int = 0) -> None:
         """Setting visibility of widgets according to settings."""
+        if recursive == 0:
+            QTimer.singleShot(0, lambda: self.check_widgets_visibility(3))
 
         QCoreApplication.processEvents()
         fast_deobf_selected = self.ui.deobf_algo_radio_fast_mdk.isChecked()
@@ -558,7 +587,5 @@ class MDGMainWindow(QMainWindow):
                 self.was_decomp_enabled = False
                 self.ui.deobf_failed_radio_decompile.setChecked(True)
 
-        if recursive == 0:
-            recursive = 3
         if recursive > 1:
-            self.check_widgets_visibility(recursive=recursive - 1)
+            QTimer.singleShot(0, lambda: self.check_widgets_visibility(recursive=recursive - 1))
