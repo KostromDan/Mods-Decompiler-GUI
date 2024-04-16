@@ -26,7 +26,7 @@ FORGE_GRADLE_DEOBF_CACHE_FOLDER = os.path.join(get_gradle_caches_path(),
 
 DECOMPILER_FOLDER_PATH = os.path.join('decompiler')
 TEST_MOD_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'test-mod.jar')
-DECOMPILER_JAR_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'vineflower-1.10.0.jar')
+DECOMPILER_JAR_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'vineflower-1.10.1.jar')
 BON2_PATH = os.path.join(DECOMPILER_FOLDER_PATH, 'BON2-2.5.1-CUSTOM-all.jar')
 
 TMP_FOLDER_PATH = os.path.join('tmp')
@@ -44,7 +44,7 @@ DECOMPILED_MODS_PATH = os.path.join(RESULT_FOLDER_PATH, 'decompiled_mods')
 DECOMPILED_CACHE_PATH = os.path.join(DECOMPILED_MODS_PATH, 'cache.json')
 MERGED_MDK_PATH = os.path.join(RESULT_FOLDER_PATH, 'merged_mdk')
 VINEFLOWER_ISSUES = os.path.join(RESULT_FOLDER_PATH, 'vineflower_issues')
-VINEFLOWER_ISSUE_TEMPLATE = os.path.join(DECOMPILER_FOLDER_PATH, 'vineflower_issue_template.md')
+VINEFLOWER_ISSUE_TEMPLATE = os.path.join(DECOMPILER_FOLDER_PATH, 'issue_template.md')
 
 MERGED_MDK_SRC_PATH = os.path.join(MERGED_MDK_PATH, 'src', 'main')
 MERGED_MDK_RESOURCES_PATH = os.path.join(MERGED_MDK_SRC_PATH, 'resources')

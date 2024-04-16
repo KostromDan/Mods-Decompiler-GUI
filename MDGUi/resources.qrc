@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/">
     <file>images/mdk_instruction.png</file>
+    <file>images/logo.png</file>
   </qresource>
 </RCC>

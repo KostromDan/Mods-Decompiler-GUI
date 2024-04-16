@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QGroupBox,
     QMenu, QMenuBar, QPushButton, QRadioButton,
     QScrollArea, QSizePolicy, QSlider, QSpacerItem,
     QSpinBox, QVBoxLayout, QWidget)
+from . import resources_rc
 
 class Ui_MDGMainWindow(object):
     def setupUi(self, MDGMainWindow):
@@ -28,6 +29,9 @@ class Ui_MDGMainWindow(object):
             MDGMainWindow.setObjectName(u"MDGMainWindow")
         MDGMainWindow.resize(1002, 982)
         MDGMainWindow.setMaximumSize(QSize(16777215, 16777215))
+        icon = QIcon()
+        icon.addFile(u":/images/logo.png", QSize(), QIcon.Normal, QIcon.Off)
+        MDGMainWindow.setWindowIcon(icon)
         MDGMainWindow.setLayoutDirection(Qt.LeftToRight)
         self.action_reset = QAction(MDGMainWindow)
         self.action_reset.setObjectName(u"action_reset")

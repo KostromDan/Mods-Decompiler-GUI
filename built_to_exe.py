@@ -1,12 +1,14 @@
 import os
 import shutil
 
+from MDGUi.generate_ui import generate_ui
 from MDGUtil import PathUtils, FileUtils
 
 VERSION = '2.3.0BETA_3'
 
 
 def main():
+    generate_ui()
     os.system('flake8')
     FileUtils.remove_folder('build')
     FileUtils.remove_folder('dist')

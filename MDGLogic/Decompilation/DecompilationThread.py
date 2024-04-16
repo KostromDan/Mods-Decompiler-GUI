@@ -26,7 +26,6 @@ def decompile(mod_path: str | os.PathLike,
     mod_name = os.path.basename(mod_path)
     FileUtils.create_folder(out_path)
 
-
     with lock:
         decomp_cmd_formatted = (PathUtils.format_decompiler_command(decomp_cmd,
                                                                     java_home,
