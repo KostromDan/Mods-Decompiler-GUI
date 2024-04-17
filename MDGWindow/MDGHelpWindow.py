@@ -2,7 +2,7 @@
 import webbrowser
 
 from MDGUi.generated.Ui_MDGHelpWindow import Ui_MDGHelpWindow
-from PySide6.QtWidgets import QMainWindow, QTextBrowser, QWidget
+from PySide6.QtWidgets import QMainWindow, QTextBrowser, QWidget, QApplication
 
 from MDGUtil import PathUtils
 from MDGWindow.MDGMdkWindow import MDGMdkWindow
@@ -18,6 +18,12 @@ class MDGHelpWindow(QMainWindow):
         self.ui.mdk_button.clicked.connect(self.open_minecraft_forge)
         self.ui.mdk_help_download_button.clicked.connect(self.open_mdk_help)
         self.ui.close_button.clicked.connect(self.hide)
+        self.fit_window_to_screen()
+
+    def fit_window_to_screen(self):
+        if self.geometry().bottom() > QApplication.primaryScreen().geometry().bottom():
+            self.resize(self.width(),
+                        self.height() - 100 - self.geometry().bottom() + QApplication.primaryScreen().geometry().bottom())
 
     def start_help_window(self, help_about: QWidget) -> None:
         self.show()

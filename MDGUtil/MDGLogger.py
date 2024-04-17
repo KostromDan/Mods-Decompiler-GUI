@@ -59,13 +59,14 @@ class MDGLogger:
             return
 
         if not PathUtils.check_pyinstaller_env():
-            FileUtils.remove_folder('logs')
+            FileUtils.remove_folder(PathUtils.LOGS_FOLDER)
 
         self.logger_signal = LoggerSignal()
 
-        FileUtils.create_folder('logs')
+        FileUtils.create_folder(PathUtils.LOGS_FOLDER)
 
-        logging.basicConfig(level=logging.INFO, filename=os.path.join('logs', self.get_log_name()),
+        self.log_name = self.get_log_name()
+        logging.basicConfig(level=logging.INFO, filename=self.get_path_to_log(),
                             filemode='w',
                             format=LOGGER_FORMAT)
 
@@ -87,7 +88,10 @@ class MDGLogger:
     def get_log_name(self) -> str:
         current_date = datetime.now().strftime('%Y-%m-%d')
         current_date_count = 0
-        for file in os.listdir('logs'):
+        for file in os.listdir(PathUtils.LOGS_FOLDER):
             if file.startswith(current_date):
                 current_date_count += 1
         return f'{current_date}-{current_date_count}.log'
+
+    def get_path_to_log(self) -> str:
+        return os.path.join(PathUtils.LOGS_FOLDER, self.log_name)

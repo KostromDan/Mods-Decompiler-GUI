@@ -90,6 +90,11 @@ class Ui_MDGResultWindow(object):
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.open_log_button = QPushButton(self.centralwidget)
+        self.open_log_button.setObjectName(u"open_log_button")
+
+        self.horizontalLayout_2.addWidget(self.open_log_button)
+
         self.close_button = QPushButton(self.centralwidget)
         self.close_button.setObjectName(u"close_button")
 
@@ -130,16 +135,18 @@ class Ui_MDGResultWindow(object):
 "<li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Open result folders you are interested in.</li>\n"
 "<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Open in IntelliJ IDEA as project merged_mdk.</li>\n"
 "<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Exit program using exit button.</li>\n"
-"<li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Return to previous window using close button.</li></ul>\n"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Return to previous window using close button.</li>\n"
+"<li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Open complete log with open log button.</li></ul>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Errors:</p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></ht"
-                        "ml>", None))
+""
+                        "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.label.setText(QCoreApplication.translate("MDGResultWindow", u"Open folders:", None))
         self.deobfuscated_mods_button.setText(QCoreApplication.translate("MDGResultWindow", u"deobfuscated_mods", None))
         self.decompiled_mods_button.setText(QCoreApplication.translate("MDGResultWindow", u"decompiled_mods", None))
         self.merged_mdk_button.setText(QCoreApplication.translate("MDGResultWindow", u"merged_mdk", None))
         self.label_2.setText(QCoreApplication.translate("MDGResultWindow", u"Open in IntelliJ IDEA as project:", None))
         self.intellij_idea_button.setText(QCoreApplication.translate("MDGResultWindow", u"merged_mdk", None))
+        self.open_log_button.setText(QCoreApplication.translate("MDGResultWindow", u"open log", None))
         self.close_button.setText(QCoreApplication.translate("MDGResultWindow", u"close", None))
         self.exit_button.setText(QCoreApplication.translate("MDGResultWindow", u"exit", None))
     # retranslateUi

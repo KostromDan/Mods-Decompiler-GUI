@@ -2,7 +2,6 @@ import logging
 import os
 import shutil
 import subprocess
-import time
 
 from PySide6.QtCore import QThread
 

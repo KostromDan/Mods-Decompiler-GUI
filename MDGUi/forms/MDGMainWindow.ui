@@ -1844,6 +1844,7 @@
     </property>
     <addaction name="action_save"/>
     <addaction name="action_reset"/>
+    <addaction name="action_open_log"/>
     <addaction name="action_adjust_height"/>
    </widget>
    <addaction name="menuFile"/>
@@ -1861,6 +1862,11 @@
   <action name="action_adjust_height">
    <property name="text">
     <string>adjust height</string>
+   </property>
+  </action>
+  <action name="action_open_log">
+   <property name="text">
+    <string>open log</string>
    </property>
   </action>
  </widget>

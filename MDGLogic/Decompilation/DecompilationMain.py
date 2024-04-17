@@ -63,7 +63,7 @@ class DecompilationThread(AbstractMDGThread):
             thread.start()
             thread.wait()
 
-        with self.lock:
+        with (self.lock):
             thread_data = self.threads_data[thread_number]
             mod_path = thread_data['mod_path']
             mod_name = os.path.basename(mod_path)
@@ -75,10 +75,13 @@ class DecompilationThread(AbstractMDGThread):
                 logging.warning(f'Something happened while decompiling {mod_name}. stdout & stderr:', extra={
                     'debug': (not ((show_warn and 'WARN: ' in thread_data['stdall'].value) or
                                    (show_err and 'ERROR: ' in thread_data['stdall'].value)))})
-                logging_func_warn = lambda e: logging.warning(e, extra={
-                    'debug': not show_warn})
-                logging_func_err = lambda e: logging.error(e, extra={
-                    'debug': not show_err})
+
+                def logging_func_warn(e):
+                    logging.warning(e, extra={'debug': not show_warn})
+
+                def logging_func_err(e):
+                    logging.error(e, extra={'debug': not show_err})
+
                 logging_func = logging_func_warn
                 for msg in thread_data['all_msgs']:
                     if 'ERROR: ' in msg:

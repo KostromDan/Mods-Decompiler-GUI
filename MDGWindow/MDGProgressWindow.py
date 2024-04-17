@@ -16,7 +16,7 @@ from MDGLogic.Deobfuscation.DeobfuscationMain import DeobfuscationThread, FailLo
 from MDGLogic.InitialisationThread import InitialisationThread
 from MDGLogic.MdkInitialisationThread import MdkInitialisationThread
 from MDGLogic.MergingThread import MergingThread
-from MDGUtil import FileUtils
+from MDGUtil import FileUtils, PathUtils
 from MDGUtil.MDGLogger import MDGLogger
 from MDGWindow.MDGResultWindow import MDGResultWindow
 
@@ -41,6 +41,7 @@ class MDGProgressWindow(QMainWindow):
         self.current_progress_bar = self.ui.init_progress_bar
 
         self.ui.stop_button.clicked.connect(self.stop_button)
+        self.ui.open_log_button.clicked.connect(PathUtils.open_log)
 
         MDGLogger().logger_signal.append_logger_signal.connect(self.append_logger)
 

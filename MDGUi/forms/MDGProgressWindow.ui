@@ -192,11 +192,22 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="stop_button">
-      <property name="text">
-       <string>stop</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QPushButton" name="open_log_button">
+        <property name="text">
+         <string>open full log</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="stop_button">
+        <property name="text">
+         <string>stop</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

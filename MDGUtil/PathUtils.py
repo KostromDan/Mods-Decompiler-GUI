@@ -1,11 +1,16 @@
 import os
 import platform
+import re
 import subprocess
 import sys
+
+from MDGUtil.MDGLogger import MDGLogger
 
 MINECRAFT_FORGE_DOWNLOADS_PAGE = 'https://files.minecraftforge.net/net/minecraftforge/forge/'
 ADOPTIUM_DOWNLOADS_PAGE = ('https://adoptium.net/temurin/releases/'
                            f"?version=18&package=jdk&arch=x{platform.architecture()[0].removesuffix('bit')}")
+
+java_homes = None
 
 
 def get_gradle_caches_path():
@@ -50,6 +55,8 @@ MERGED_MDK_SRC_PATH = os.path.join(MERGED_MDK_PATH, 'src', 'main')
 MERGED_MDK_RESOURCES_PATH = os.path.join(MERGED_MDK_SRC_PATH, 'resources')
 MERGED_MDK_JAVA_PATH = os.path.join(MERGED_MDK_SRC_PATH, 'java')
 
+LOGS_FOLDER = os.path.join('logs')
+
 DEFAULT_DECOMPILER_CMD = rf'{{java}} -jar {DECOMPILER_JAR_PATH} -dgs=1 -din=1 -log=WARN {{path_to_jar}} {{out_path}}'
 DEFAULT_BON2_CMD = (
     r'{java} -jar {bon2_path} --inputJar {path_to_jar} --outputJar {out_path} --mcVer {mc_ver} '
@@ -61,6 +68,9 @@ def check_pyinstaller_env() -> bool:
 
 
 def get_all_java_homes() -> list[str]:
+    global java_homes
+    if java_homes is not None:
+        return java_homes
     java_homes = list()
 
     """JAVA_HOME"""
@@ -71,13 +81,13 @@ def get_all_java_homes() -> list[str]:
     """java cmd"""
     try:
         output = subprocess.check_output(['java', '-XshowSettings:properties', '-version'], stderr=subprocess.STDOUT)
-        output_lines = output.decode('utf-8').split('\n')
+        output_lines = output.decode('utf-8', errors='ignore').split('\n')
         for line in output_lines:
             if line.strip().startswith('java.home'):
                 java_path = line.split('=', 1)[1].strip().rstrip('/\\')
                 if java_path not in java_homes:
                     java_homes.append(java_path)
-    except subprocess.CalledProcessError:
+    except Exception:
         pass
 
     """PATH"""
@@ -90,6 +100,21 @@ def get_all_java_homes() -> list[str]:
                 if java_home not in java_homes:
                     java_homes.append(java_home.rstrip('/\\'))
     except KeyError:
+        pass
+
+    """ftype"""
+    try:
+        output = subprocess.check_output(['ftype', ], shell=True, stderr=subprocess.STDOUT)
+        output_lines = output.decode('utf-8', errors='ignore').split('\n')
+        for line in output_lines:
+            line = line.strip()
+            line = re.sub(r'[/\\]+', r'\\', line)
+            line = line.replace('bin\\javaw.exe', 'bin\\java.exe')
+            if 'bin\\java.exe' in line:
+                java_path = line.split('=')[1].split('bin\\java.exe')[0].strip('"\\')
+                if java_path not in java_homes:
+                    java_homes.append(java_path)
+    except Exception:
         pass
     return java_homes
 
@@ -137,3 +162,7 @@ def format_bon2_command(cmd: str,
                       out_path=f'"{os.path.abspath(out_path)}"',
                       mc_ver=version,
                       mappings_ver=mappings)
+
+
+def open_log():
+    os.startfile(MDGLogger().get_path_to_log())

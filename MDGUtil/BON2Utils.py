@@ -1,5 +1,4 @@
 import os
-import time
 from collections import OrderedDict
 
 import jpype

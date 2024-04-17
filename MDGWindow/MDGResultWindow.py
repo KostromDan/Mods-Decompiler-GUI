@@ -3,11 +3,11 @@ import os.path
 import subprocess
 import sys
 
-from MDGUi.generated.Ui_MDGResultWindow import Ui_MDGResultWindow
 from PySide6.QtGui import QTextCursor, QColor, QCloseEvent
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 
 from MDGLogic.Deobfuscation.DeobfuscatioUtils import FailLogic
+from MDGUi.generated.Ui_MDGResultWindow import Ui_MDGResultWindow
 from MDGUtil import PathUtils
 
 
@@ -32,6 +32,7 @@ class MDGResultWindow(QMainWindow):
         self.ui.intellij_idea_button.clicked.connect(self.intellij_idea_button)
         self.ui.exit_button.clicked.connect(self.exit_button)
         self.ui.close_button.clicked.connect(self.close_button)
+        self.ui.open_log_button.clicked.connect(PathUtils.open_log)
 
         if self.progress_window.failed_deobfuscation_mods or self.progress_window.failed_decompilation_mods:
             for mod_name in self.progress_window.failed_deobfuscation_mods:

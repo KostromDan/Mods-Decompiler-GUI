@@ -171,6 +171,7 @@ class MDGMainWindow(QMainWindow):
         self.ui.action_reset.triggered.connect(self.action_reset)
         self.ui.action_save.triggered.connect(self.save_ui_to_config)
         self.ui.action_adjust_height.triggered.connect(self.adjust_min_height)
+        self.ui.action_open_log.triggered.connect(PathUtils.open_log)
 
         self.ui.bon2_version_combo_box.currentTextChanged.connect(self.bon2_version_changed)
         self.ui.bon2_version_combo_box.addItems(self.bon2_mappings.keys())
@@ -299,7 +300,6 @@ class MDGMainWindow(QMainWindow):
         self.help_window.start_help_window(self.help_widget_pairs[self.sender()])
 
     def start_button(self) -> None:
-        self.adjust_min_height()
         self.save_ui_to_config()
         mods_folder_path = self.ui.mods_path_line_edit.text()
         if not os.path.exists(mods_folder_path):
