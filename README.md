@@ -12,6 +12,8 @@ In almost all English-speaking modding communities, the topic of decompilation i
 discuss decompilation and deobfuscation, ARR hamsters will immediately stop it. Since someone will be able to decompile
 their paid mods and disrupt their profits. Although the majority (95%) those who are interested in this really need to
 see how something works, find a bug, they are not going to decompile their paid mods in order to break the protection.
+More over decompilation of whole mod is not the best solution in such case because you will need to fix very many
+decompilation artifacts to recompile the mod. In case of modifying 1-3 files and recompiling the mod, [Recaf](https://github.com/Col-E/Recaf) is the best option for you.
 So it is almost impossible for a novice modder, and even more so for a modpack maker, to learn how to do what this
 program does. I want to overcome this and make sure that mods decompilation and deobfuscation can be used by any person,
 who needs it, even those who only came to modding. A super intuitive one-click solution. You don't know how things work?
@@ -59,9 +61,7 @@ deobfuscate -> decompile -> merge to mdk
     * Maybe(if I will see many people need it). But tool already can be used for fabric mods. Forge mdk can deobfucate fabric mods, since mappings are same. The only thing you will miss is you can't see Fabric source code in merged mdk.
 * Version range?
     * Decompilation: Any version.
-    * Deobfuscation: Any version where exist forge mdk and implemented fg.deobf(). (1.12.2+)
-
-      Maybe later will be added option for using bon2 for legacy versions.
+    * Deobfuscation: 1.7.10+
 
 ## Screenshots:
 
