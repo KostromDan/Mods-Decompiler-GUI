@@ -4,7 +4,7 @@ import shutil
 from MDGUi.generate_ui import generate_ui
 from MDGUtil import PathUtils, FileUtils
 
-VERSION = '2.3.1'
+VERSION = '2.3.2'
 
 
 def main():
