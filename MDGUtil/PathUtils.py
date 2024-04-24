@@ -127,13 +127,13 @@ def get_all_programs() -> list[str]:
 
     """Start Menu/Programs"""
     programs_paths = {r'C:\ProgramData\Microsoft\Windows\Start Menu\Programs',
-                      os.path.join(os.environ["userprofile"], "Start Menu", "Programs"),
+                      os.path.join(os.environ['userprofile'], 'Start Menu', 'Programs'),
                       winshell.programs()}
     for programs_path in programs_paths:
         if not os.path.isdir(programs_path):
             continue
         for lnk_path in Path(programs_path).rglob('*.lnk'):
-            shell = win32com.client.Dispatch("WScript.Shell")
+            shell = win32com.client.Dispatch('WScript.Shell')
             shortcut = shell.CreateShortCut(str(lnk_path))
             paths.add(shortcut.Targetpath)
 
