@@ -1,8 +1,13 @@
+import locale
 import os
 import platform
 import re
 import subprocess
 import sys
+from pathlib import Path
+
+import win32com.client
+import winshell
 
 from MDGUtil.MDGLogger import MDGLogger
 
@@ -71,12 +76,12 @@ def get_all_java_homes() -> list[str]:
     global java_homes
     if java_homes is not None:
         return java_homes
-    java_homes = list()
+    java_homes = set()
 
     """JAVA_HOME"""
     java_home = os.environ.get('JAVA_HOME', '')
     if java_home != '':
-        java_homes.append(java_home.rstrip('/\\'))
+        java_homes.add(java_home.rstrip('/\\'))
 
     """java cmd"""
     try:
@@ -85,8 +90,7 @@ def get_all_java_homes() -> list[str]:
         for line in output_lines:
             if line.strip().startswith('java.home'):
                 java_path = line.split('=', 1)[1].strip().rstrip('/\\')
-                if java_path not in java_homes:
-                    java_homes.append(java_path)
+                java_homes.add(java_path)
     except Exception:
         pass
 
@@ -97,8 +101,7 @@ def get_all_java_homes() -> list[str]:
             java_path = os.path.join(path, 'java.exe')
             if os.path.exists(java_path):
                 java_home = os.path.dirname(os.path.dirname(java_path))
-                if java_home not in java_homes:
-                    java_homes.append(java_home.rstrip('/\\'))
+                java_homes.add(java_home.rstrip('/\\'))
     except KeyError:
         pass
 
@@ -112,11 +115,40 @@ def get_all_java_homes() -> list[str]:
             line = line.replace('bin\\javaw.exe', 'bin\\java.exe')
             if 'bin\\java.exe' in line:
                 java_path = line.split('=')[1].split('bin\\java.exe')[0].strip('"\\')
-                if java_path not in java_homes:
-                    java_homes.append(java_path)
+                java_homes.add(java_path)
     except Exception:
         pass
+    java_homes = list(java_homes)
     return java_homes
+
+
+def get_all_programs() -> list[str]:
+    paths = set()
+
+    """Start Menu/Programs"""
+    programs_paths = {r'C:\ProgramData\Microsoft\Windows\Start Menu\Programs',
+                      os.path.join(os.environ["userprofile"], "Start Menu", "Programs"),
+                      winshell.programs()}
+    for programs_path in programs_paths:
+        if not os.path.isdir(programs_path):
+            continue
+        for lnk_path in Path(programs_path).rglob('*.lnk'):
+            shell = win32com.client.Dispatch("WScript.Shell")
+            shortcut = shell.CreateShortCut(str(lnk_path))
+            paths.add(shortcut.Targetpath)
+
+    """wmic"""
+    p = subprocess.Popen(['wmic', 'process', 'get', 'executablepath'], shell=True, stdout=subprocess.PIPE, )
+    stdout = p.communicate()[0].decode(locale.getpreferredencoding())
+    arr = [i.strip() for i in stdout.split('\n') if i.strip() not in ['ExecutablePath', '']]
+    for i in arr:
+        paths.add(i)
+
+    return list(paths)
+
+
+def get_eclipse_paths() -> list[str]:
+    return list(filter(lambda p: p.endswith('eclipse.exe'), get_all_programs()))
 
 
 def get_java_home() -> str:

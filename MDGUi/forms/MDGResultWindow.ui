@@ -106,14 +106,21 @@ li.checked::marker { content: &quot;\2612&quot;; }
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Open in IntelliJ IDEA as project:</string>
+         <string>Open merged_mdk in IDE as project:</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="intellij_idea_button">
         <property name="text">
-         <string>merged_mdk</string>
+         <string>IntelliJ IDEA</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="eclipse_button">
+        <property name="text">
+         <string>Eclipse</string>
         </property>
        </widget>
       </item>

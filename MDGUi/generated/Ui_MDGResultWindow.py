@@ -85,6 +85,11 @@ class Ui_MDGResultWindow(object):
 
         self.horizontalLayout_3.addWidget(self.intellij_idea_button)
 
+        self.eclipse_button = QPushButton(self.centralwidget)
+        self.eclipse_button.setObjectName(u"eclipse_button")
+
+        self.horizontalLayout_3.addWidget(self.eclipse_button)
+
 
         self.verticalLayout.addLayout(self.horizontalLayout_3)
 
@@ -144,8 +149,9 @@ class Ui_MDGResultWindow(object):
         self.deobfuscated_mods_button.setText(QCoreApplication.translate("MDGResultWindow", u"deobfuscated_mods", None))
         self.decompiled_mods_button.setText(QCoreApplication.translate("MDGResultWindow", u"decompiled_mods", None))
         self.merged_mdk_button.setText(QCoreApplication.translate("MDGResultWindow", u"merged_mdk", None))
-        self.label_2.setText(QCoreApplication.translate("MDGResultWindow", u"Open in IntelliJ IDEA as project:", None))
-        self.intellij_idea_button.setText(QCoreApplication.translate("MDGResultWindow", u"merged_mdk", None))
+        self.label_2.setText(QCoreApplication.translate("MDGResultWindow", u"Open merged_mdk in IDE as project:", None))
+        self.intellij_idea_button.setText(QCoreApplication.translate("MDGResultWindow", u"IntelliJ IDEA", None))
+        self.eclipse_button.setText(QCoreApplication.translate("MDGResultWindow", u"Eclipse", None))
         self.open_log_button.setText(QCoreApplication.translate("MDGResultWindow", u"open log", None))
         self.close_button.setText(QCoreApplication.translate("MDGResultWindow", u"close", None))
         self.exit_button.setText(QCoreApplication.translate("MDGResultWindow", u"exit", None))

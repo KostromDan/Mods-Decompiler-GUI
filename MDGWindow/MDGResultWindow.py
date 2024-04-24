@@ -24,12 +24,14 @@ class MDGResultWindow(QMainWindow):
         if not os.path.exists(PathUtils.MERGED_MDK_PATH):
             self.ui.merged_mdk_button.setEnabled(False)
             self.ui.intellij_idea_button.setEnabled(False)
+            self.ui.eclipse_button.setEnabled(False)
 
         self.ui.close_button.clicked.connect(self.hide)
         self.ui.deobfuscated_mods_button.clicked.connect(lambda e: self.open_folder(PathUtils.DEOBFUSCATED_MODS_PATH))
         self.ui.decompiled_mods_button.clicked.connect(lambda e: self.open_folder(PathUtils.DECOMPILED_MODS_PATH))
         self.ui.merged_mdk_button.clicked.connect(lambda e: self.open_folder(PathUtils.MERGED_MDK_PATH))
         self.ui.intellij_idea_button.clicked.connect(self.intellij_idea_button)
+        self.ui.eclipse_button.clicked.connect(self.eclipse_button)
         self.ui.exit_button.clicked.connect(self.exit_button)
         self.ui.close_button.clicked.connect(self.close_button)
         self.ui.open_log_button.clicked.connect(PathUtils.open_log)
@@ -64,6 +66,19 @@ class MDGResultWindow(QMainWindow):
                                 f"Can't open {PathUtils.MERGED_MDK_PATH} as project in IntelliJ IDEA\n"
                                 'due to "idea64.exe" not found!',
                                 QMessageBox.StandardButton.Ok)
+
+    def eclipse_button(self) -> None:
+        eclipse_paths = PathUtils.get_eclipse_paths()
+        if not eclipse_paths:
+            QMessageBox.warning(self, 'Eclipse not found',
+                                f"Can't open {PathUtils.MERGED_MDK_PATH} as project in Eclipse\n"
+                                'due to "eclipse.exe" not found in Start Menu\\Programs!',
+                                QMessageBox.StandardButton.Ok)
+            return
+        try:
+            subprocess.Popen([eclipse_paths[0], PathUtils.MERGED_MDK_PATH])
+        except FileNotFoundError:
+            pass
 
     def close_button(self) -> None:
         self.progress_window.setEnabled(True)
