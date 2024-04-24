@@ -1,4 +1,6 @@
 # This Python file uses the following encoding: utf-8
+import json
+import logging
 import multiprocessing
 import os
 import sys
@@ -301,6 +303,7 @@ class MDGMainWindow(QMainWindow):
 
     def start_button(self) -> None:
         self.save_ui_to_config()
+        logging.info(json.dumps(self.config.config))
         mods_folder_path = self.ui.mods_path_line_edit.text()
         if not os.path.exists(mods_folder_path):
             self.make_red_and_visible(self.ui.mods_path_line_edit)

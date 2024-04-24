@@ -2,6 +2,8 @@ import json
 import os
 from typing import Any
 
+from built_to_exe import VERSION
+
 
 class LocalConfig:
     config = dict()
@@ -14,6 +16,7 @@ class LocalConfig:
         try:
             with open(self.config_path, 'r') as file:
                 self.config = json.loads(file.read())
+                self.config['last_launch_version'] = VERSION
         except FileNotFoundError:
             self.save()
 
@@ -28,6 +31,7 @@ class LocalConfig:
     def is_first_launch(self) -> bool:
         if 'launched' not in self.config:
             self.config['launched'] = True
+            self.config['first_launch_version'] = VERSION
             self.save()
             return True
         return False
