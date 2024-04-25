@@ -201,6 +201,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="result_window_button">
+        <property name="text">
+         <string>result window</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="stop_button">
         <property name="text">
          <string>stop</string>

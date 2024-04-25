@@ -42,6 +42,8 @@ class MDGProgressWindow(QMainWindow):
 
         self.ui.stop_button.clicked.connect(self.stop_button)
         self.ui.open_log_button.clicked.connect(PathUtils.open_log)
+        self.ui.result_window_button.setVisible(False)
+        self.ui.result_window_button.clicked.connect(self.complete)
 
         MDGLogger().logger_signal.append_logger_signal.connect(self.append_logger)
 
@@ -145,6 +147,7 @@ class MDGProgressWindow(QMainWindow):
         self.ui.stop_button.setText('exit')
         self.completed = True
         self.setEnabled(False)
+        self.ui.result_window_button.setVisible(True)
         self.hide()
         self.result_window = MDGResultWindow(self)
         self.result_window.show()

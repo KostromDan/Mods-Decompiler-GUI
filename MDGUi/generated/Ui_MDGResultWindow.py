@@ -138,13 +138,13 @@ class Ui_MDGResultWindow(object):
 "<ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt"
                         "-list-indent: 1;\">\n"
 "<li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Open result folders you are interested in.</li>\n"
-"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Open in IntelliJ IDEA as project merged_mdk.</li>\n"
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Open in IntelliJ IDEA / Eclipse as project merged_mdk.</li>\n"
 "<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Exit program using exit button.</li>\n"
 "<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Return to previous window using close button.</li>\n"
 "<li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Open complete log with open log button.</li></ul>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Errors:</p>\n"
-""
-                        "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Er"
+                        "rors:</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.label.setText(QCoreApplication.translate("MDGResultWindow", u"Open folders:", None))
         self.deobfuscated_mods_button.setText(QCoreApplication.translate("MDGResultWindow", u"deobfuscated_mods", None))
         self.decompiled_mods_button.setText(QCoreApplication.translate("MDGResultWindow", u"decompiled_mods", None))
@@ -153,7 +153,7 @@ class Ui_MDGResultWindow(object):
         self.intellij_idea_button.setText(QCoreApplication.translate("MDGResultWindow", u"IntelliJ IDEA", None))
         self.eclipse_button.setText(QCoreApplication.translate("MDGResultWindow", u"Eclipse", None))
         self.open_log_button.setText(QCoreApplication.translate("MDGResultWindow", u"open log", None))
-        self.close_button.setText(QCoreApplication.translate("MDGResultWindow", u"close", None))
+        self.close_button.setText(QCoreApplication.translate("MDGResultWindow", u"back", None))
         self.exit_button.setText(QCoreApplication.translate("MDGResultWindow", u"exit", None))
     # retranslateUi
 

@@ -149,6 +149,11 @@ class Ui_MDGProgressWindow(object):
 
         self.horizontalLayout_2.addWidget(self.open_log_button)
 
+        self.result_window_button = QPushButton(self.centralwidget)
+        self.result_window_button.setObjectName(u"result_window_button")
+
+        self.horizontalLayout_2.addWidget(self.result_window_button)
+
         self.stop_button = QPushButton(self.centralwidget)
         self.stop_button.setObjectName(u"stop_button")
 
@@ -189,6 +194,7 @@ class Ui_MDGProgressWindow(object):
         self.logger_text_edit.setAccessibleName("")
 #endif // QT_CONFIG(accessibility)
         self.open_log_button.setText(QCoreApplication.translate("MDGProgressWindow", u"open full log", None))
+        self.result_window_button.setText(QCoreApplication.translate("MDGProgressWindow", u"result window", None))
         self.stop_button.setText(QCoreApplication.translate("MDGProgressWindow", u"stop", None))
     # retranslateUi
 
