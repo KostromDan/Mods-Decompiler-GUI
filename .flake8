@@ -1,6 +1,6 @@
 [flake8]
 exclude =
-    MDGUi,
+    MDGUi/generated,
     .venv,
     result,
     tmp

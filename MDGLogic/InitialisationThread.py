@@ -138,7 +138,7 @@ class InitialisationThread(AbstractMDGThread):
                     return
                 self.critical_signal.emit('Incorrect bon2 cmd',
                                           "With this bon2/bon2 cmd program won't work.\n"
-                                          'This message indicates that {path_to_jar} is not decompiled to {out_path}.\n'
+                                          'This message indicates that {path_to_jar} is not deobfuscated to {out_path}.\n'
                                           'Check bon2/bon2 cmd: path, syntax, etc. And try again.\n'
                                           'Open the lastest log for more details.\n',
                                           'bon2_cmd_line_edit')

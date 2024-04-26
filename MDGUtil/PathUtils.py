@@ -126,23 +126,29 @@ def get_all_programs() -> list[str]:
     paths = set()
 
     """Start Menu/Programs"""
-    programs_paths = {r'C:\ProgramData\Microsoft\Windows\Start Menu\Programs',
-                      os.path.join(os.environ['userprofile'], 'Start Menu', 'Programs'),
-                      winshell.programs()}
-    for programs_path in programs_paths:
-        if not os.path.isdir(programs_path):
-            continue
-        for lnk_path in Path(programs_path).rglob('*.lnk'):
-            shell = win32com.client.Dispatch('WScript.Shell')
-            shortcut = shell.CreateShortCut(str(lnk_path))
-            paths.add(shortcut.Targetpath)
+    try:
+        programs_paths = {r'C:\ProgramData\Microsoft\Windows\Start Menu\Programs',
+                          os.path.join(os.environ['userprofile'], 'Start Menu', 'Programs'),
+                          winshell.programs()}
+        for programs_path in programs_paths:
+            if not os.path.isdir(programs_path):
+                continue
+            for lnk_path in Path(programs_path).rglob('*.lnk'):
+                shell = win32com.client.Dispatch('WScript.Shell')
+                shortcut = shell.CreateShortCut(str(lnk_path))
+                paths.add(shortcut.Targetpath)
+    except Exception:
+        pass
 
     """wmic"""
-    p = subprocess.Popen(['wmic', 'process', 'get', 'executablepath'], shell=True, stdout=subprocess.PIPE, )
-    stdout = p.communicate()[0].decode(locale.getpreferredencoding())
-    arr = [i.strip() for i in stdout.split('\n') if i.strip() not in ['ExecutablePath', '']]
-    for i in arr:
-        paths.add(i)
+    try:
+        p = subprocess.Popen(['wmic', 'process', 'get', 'executablepath'], shell=True, stdout=subprocess.PIPE, )
+        stdout = p.communicate()[0].decode(locale.getpreferredencoding())
+        arr = [i.strip() for i in stdout.split('\n') if i.strip() not in ['ExecutablePath', '']]
+        for i in arr:
+            paths.add(i)
+    except Exception:
+        pass
 
     return list(paths)
 

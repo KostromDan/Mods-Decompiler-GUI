@@ -47,7 +47,7 @@ class Ui_MDGHelpWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1163, 2520))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, -1183, 1163, 2535))
         self.verticalLayout_2 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.textBrowser_2 = QTextBrowser(self.scrollAreaWidgetContents)
@@ -215,8 +215,8 @@ class Ui_MDGHelpWindow(object):
         self.java_home.setObjectName(u"java_home")
         sizePolicy1.setHeightForWidth(self.java_home.sizePolicy().hasHeightForWidth())
         self.java_home.setSizePolicy(sizePolicy1)
-        self.java_home.setMinimumSize(QSize(0, 120))
-        self.java_home.setMaximumSize(QSize(16777215, 120))
+        self.java_home.setMinimumSize(QSize(0, 135))
+        self.java_home.setMaximumSize(QSize(16777215, 135))
         self.java_home.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.java_home.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
 
@@ -445,7 +445,8 @@ class Ui_MDGHelpWindow(object):
                         " 0px; -qt-list-indent: 1;\">\n"
 "<li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">BON2: select Java 17+</li>\n"
 "<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">MDK: select the version of Java that is suitable for your MDK.</li>\n"
-"<li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Decompiler: select Java 17+</li></ul></body></html>", None))
+"<li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Decompiler: select Java 17+</li></ul>\n"
+"<p style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:700;\">Warning JRE != JDK. You need to select exatly JDK.</span></p></body></html>", None))
         self.jar_in_jar.setHtml(QCoreApplication.translate("MDGHelpWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
