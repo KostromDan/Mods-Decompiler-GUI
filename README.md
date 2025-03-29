@@ -28,6 +28,8 @@ Feel free to experiment with the settings, the GUI will not allow you to create 
 Program works by this algorithm; if some option is disabled, it will be skipped:
 deobfuscate -> decompile -> merge to mdk
 
+If you have any questions, feel free to join my Discord server: https://discord.gg/RHX9v3TTCf
+
 ## Usage cases:
 
 * If you need to deobfuscate and/or decompile mod(s).
